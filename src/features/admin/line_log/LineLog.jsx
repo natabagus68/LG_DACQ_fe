@@ -34,17 +34,7 @@ const Line1AsisLogTable = ({ alert: _alert }) => {
         end_date: queryParam.get("end_date") || "",
     });
     const { data: line1AsisLogs, isLoading: line1AsisLogsLoading } =
-        useGetLine1AsisLogsQuery({
-            page: qParams.page,
-            q: qParams.q,
-            per_page: qParams.per_page,
-            judgement: qParams.judgement,
-            start_date: qParams.start_date,
-            end_date: qParams.end_date,
-        });
-    useEffect(() => {
-        setQueryParam(qParams, { replace: true });
-    }, [qParams]);
+        useGetLine1AsisLogsQuery(qParams);
     const viewImage = (e, image) => {
         e.preventDefault();
         dispatch(line1AsisSetSelectedLogImage(image));
@@ -59,6 +49,9 @@ const Line1AsisLogTable = ({ alert: _alert }) => {
         id: null,
         judgement: null,
     });
+    useEffect(() => {
+        setQueryParam(qParams, { replace: true });
+    }, [qParams]);
     const updateAsisJudgement = (e) => {
         e.preventDefault();
         _updateAsisJudgement(selectedAsis).then(() => {
@@ -89,7 +82,12 @@ const Line1AsisLogTable = ({ alert: _alert }) => {
                 </div>
                 <div className="relative flex gap-2 items-center rounded-lg overflow-hidden border py-3">
                     <div className="absolute top-0 h-full flex justify-center items-center p-3">
-                        <FilterIcon width={20} height={20} fill={`#A9A8A8`} className={``} />
+                        <FilterIcon
+                            width={20}
+                            height={20}
+                            fill={`#A9A8A8`}
+                            className={``}
+                        />
                     </div>
                     <select
                         className="pl-10 pr-2 py-1 bg-white rounded-lg"
@@ -101,10 +99,14 @@ const Line1AsisLogTable = ({ alert: _alert }) => {
                             }))
                         }
                     >
-                        <option value="">Filter Judgement</option>
+                        <option value="" disabled>
+                            Filter Judgement
+                        </option>
                         <option value="">All</option>
                         <option value="ng">NG</option>
                         <option value="ok">OK</option>
+                        <option value="int">INT</option>
+                        <option value="ndf">NDF</option>
                     </select>
                 </div>
                 <div className="flex gap-2 items-center">
@@ -200,7 +202,7 @@ const Line1AsisLogTable = ({ alert: _alert }) => {
                         </Table.Tr>
                     </Table.Thead>
                     <tbody>
-                        {line1AsisLogs?.map((item, i) => {
+                        {(line1AsisLogs?.data || []).map((item, i) => {
                             return (
                                 <Table.Tr
                                     className={`even:bg-[#F8F7FF]`}
@@ -258,12 +260,15 @@ const Line1AsisLogTable = ({ alert: _alert }) => {
                     </tbody>
                 </Table>
                 <div className="flex justify-between items-center pt-4">
+                    <div className="rounded px-4 py-2 text-semibold border">
+                        TOTAL : {line1AsisLogs?.total}
+                    </div>
                     <div className="ml-auto flex">
                         <div
                             className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-l-[5px] flex items-center cursor-pointer"
                             onClick={(e) =>
-                                setQParams((queryParam) => ({
-                                    ...queryParam,
+                                setQParams((qParams) => ({
+                                    ...qParams,
                                     page:
                                         parseInt(qParams.page || 1) > 1
                                             ? parseInt(qParams.page || 1) - 1
@@ -279,10 +284,12 @@ const Line1AsisLogTable = ({ alert: _alert }) => {
                         <div
                             className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-r-[5px] flex items-center cursor-pointer"
                             onClick={(e) => {
-                                setQParams((queryParam) => ({
-                                    ...queryParam,
+                                setQParams((qParams) => ({
+                                    ...qParams,
                                     page:
-                                        line1AsisLogs.length == qParams.per_page
+                                        parseInt(
+                                            line1AsisLogs?.data?.length || 0
+                                        ) == qParams.per_page
                                             ? parseInt(qParams.page || 1) + 1
                                             : parseInt(qParams.page || 1),
                                 }));
@@ -313,11 +320,26 @@ export const LineLog = () => {
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
-                        <Link to={`${config.pathPrefix}dashboard`} className="font-semibold text-sm">Dashboard</Link>
+                        <Link
+                            to={`${config.pathPrefix}dashboard`}
+                            className="font-semibold text-sm"
+                        >
+                            Dashboard
+                        </Link>
                         <span className="text-sm">/</span>
-                        <Link to={`${config.pathPrefix}lines/line-1`} className="font-semibold text-sm">Line 1</Link>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1`}
+                            className="font-semibold text-sm"
+                        >
+                            Line 1
+                        </Link>
                         <span className="text-sm">/</span>
-                        <Link to={`${config.pathPrefix}lines/line-1/asis`} className="font-semibold text-sm">ASIS</Link>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1/asis`}
+                            className="font-semibold text-sm"
+                        >
+                            ASIS
+                        </Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
                             Log

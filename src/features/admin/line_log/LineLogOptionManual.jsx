@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { HomeIcon, SearchIcon } from "../../../common/components/icons";
-import { NavLink, useSearchParams } from "react-router-dom";
+import { Link, NavLink, useSearchParams } from "react-router-dom";
 import { HiOutlineArrowCircleDown } from "react-icons/hi";
 import { Table } from "../../../common/components/table/Table";
 import { useLine1OptionManualLogsQuery } from "../../../app/services/optionManualService";
 import { OpenAlert } from "../line_detail/OptionManual";
 import { useDispatch } from "react-redux";
 import moment from "moment";
+import { config } from "../../../common/utils";
+import { useEffect } from "react";
 
 export const Line1OptionManualLogTable = ({
     perPage: _perPage,
@@ -194,13 +196,26 @@ export const LineLogOptionManual = () => {
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Dashboard</span>
+                        <Link
+                            to={`${config.pathPrefix}dashboard`}
+                            className="font-semibold text-sm"
+                        >
+                            Dashboard
+                        </Link>
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Line 1</span>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1`}
+                            className="font-semibold text-sm"
+                        >
+                            Line 1
+                        </Link>
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1/option-manual`}
+                            className="font-semibold text-sm"
+                        >
                             OptionManual
-                        </span>
+                        </Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
                             Log

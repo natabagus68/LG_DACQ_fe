@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { HomeIcon, SearchIcon } from "../../../common/components/icons";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { HiOutlineArrowCircleDown } from "react-icons/hi";
 import { Table } from "../../../common/components/table/Table";
 import { useLine1WhiteBalanceLogsQuery } from "../../../app/services/whiteBalanceService";
 import { OpenAlert } from "../line_detail/WhiteBalance";
 import { useDispatch } from "react-redux";
 import moment from "moment";
+import { config } from "../../../common/utils";
 
 export const Line1WhiteBalanceLogTable = ({
     perPage: _perPage,
@@ -202,19 +203,22 @@ export const Line1WhiteBalanceLogTable = ({
                                         {item?.y1 || "~"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
-                                        {item?.y1_min || "~"}-{item?.y1_max || "~"}
+                                        {item?.y1_min || "~"}-
+                                        {item?.y1_max || "~"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         {item?.y2 || "~"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
-                                        {item?.y2_min || "~"}-{item?.y2_max || "~"}
+                                        {item?.y2_min || "~"}-
+                                        {item?.y2_max || "~"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         {item?.y3 || "~"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
-                                        {item?.y3_min || "~"}-{item?.y3_max || "~"}
+                                        {item?.y3_min || "~"}-
+                                        {item?.y3_max || "~"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         <span
@@ -291,13 +295,26 @@ export const LineLogWhiteBalance = () => {
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Dashboard</span>
+                        <Link
+                            to={`${config.pathPrefix}dashboard`}
+                            className="font-semibold text-sm"
+                        >
+                            Dashboard
+                        </Link>
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Line 1</span>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1`}
+                            className="font-semibold text-sm"
+                        >
+                            Line 1
+                        </Link>
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1/white-balance`}
+                            className="font-semibold text-sm"
+                        >
                             WhiteBalance
-                        </span>
+                        </Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
                             Log

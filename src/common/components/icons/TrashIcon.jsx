@@ -3,7 +3,6 @@ import React from "react";
 export const TrashIcon = ({
     width = 18,
     height = 18,
-    fill = `text-red-500`,
     ...props
 }) => {
     return (
@@ -12,7 +11,8 @@ export const TrashIcon = ({
                 width={width}
                 height={height}
                 viewBox="0 0 94 116"
-                fill="currentColor"
+                fill="none"
+                {...props}
                 xmlns="http://www.w3.org/2000/svg"
             >
                 <path

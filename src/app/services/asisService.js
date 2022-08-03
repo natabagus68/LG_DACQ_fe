@@ -43,8 +43,12 @@ export const asisService = apiSlice.injectEndpoints({
             transformResponse: (res) => res?.data || [],
         }),
         getLine1Top5NgCause: builder.query({
-            query: () => ({
-                url: "process/line-1/asis/auto-ng-causes/top5",
+            query: (params) => ({
+                url: `process/line-1/asis/auto-ng-causes/top5?${Object.keys(
+                    params
+                )
+                    .map((item) => `${item}=${params[item]}`)
+                    .join("&")}`,
             }),
             transformResponse: (res) => res?.data || [],
         }),
@@ -70,7 +74,7 @@ export const asisService = apiSlice.injectEndpoints({
                     .join("&")}`,
             }),
             providesTags: ["Line 1 Asis Logs"],
-            transformResponse: (res) => res?.data || [],
+            transformResponse: (res) => res?.data || { total: 0, data: [] },
         }),
         line1AsisUpdateJudgement: builder.mutation({
             query: ({ id, ...data }) => ({

@@ -9,28 +9,17 @@ import {
 } from "../../../common/components/icons";
 import { Link, NavLink } from "react-router-dom";
 import { config } from "../../../common/utils/config";
-import {
-    useGetUsersQuery,
-    useToogleActiveUserMutation,
-} from "../../../app/services/userService";
+import { useGetUsersQuery } from "../../../app/services/userService";
 import Switch from "../../../common/components/input/Switch";
 
-export const Account = () => {
+export const TrashAccount = () => {
     const {
         data: users,
         isLoading: usersIsLoading,
         isError: usersIsError,
         isSuccess: usersIsSuccess,
         errors: usersErrors,
-    } = useGetUsersQuery();
-
-    const [
-        toogleActiveUser,
-        {
-            error: useToogleActiveUserMutationError,
-            isLoading: useToogleActiveUserMutationIsLoading,
-        },
-    ] = useToogleActiveUserMutation();
+    } = useGetUsersQuery({trashed : true});
     return (
         <>
             <div className="flex bg-white h-full p-[26px] flex-col font-inter">
@@ -40,30 +29,15 @@ export const Account = () => {
                     </Link>
                     <span className="text-[#A9A8A8] text-sm">/</span>
                     <span className="font-semibold text-sm text-[#514E4E]">
-                        Account
+                        Trash Account
                     </span>
                 </div>
                 <div className="flex-1">
                     <div className="w-full h-full flex-col flex border-[1px] border-[#EAEAEA] rounded-lg">
                         <div className="flex items-center justify-between py-[8px] px-[24px] bg-[#F7F9FA] border-b-[1px] border-[#E3E5E6]">
                             <span className="text-[20px] font-semibold text-[#383E49]">
-                                Account
+                                Trash Account
                             </span>
-                            <div className="flex gap-2">
-                                <Link
-                                    to={`${config.pathPrefix}trash-account`}
-                                    className="flex gap-1 text-white items-center px-[14px] py-[6px] bg-[#667085] h-[32px] rounded-md"
-                                >
-                                    <span>Trash</span>
-                                </Link>
-                                <NavLink
-                                    to={"motor"}
-                                    className="flex gap-1 text-white items-center px-[14px] py-[6px] bg-[#229BD8] h-[32px] rounded-md"
-                                >
-                                    <PlusIcon />
-                                    <span>Add Data</span>
-                                </NavLink>
-                            </div>
                         </div>
                         <div className="py-[18px] px-[24px] flex justify-between items-center">
                             <div className="flex gap-2">
@@ -132,26 +106,10 @@ export const Account = () => {
                                                     key={iUser}
                                                     className="border-b even:bg-[#F8F7FF]"
                                                 >
-                                                    <td
-                                                        width={200}
-                                                        className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-                                                    >
+                                                    <td width={200} className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                         {/* <Switch togglePrimary /> */}
                                                         <div className="flex gap-2 text-[#646566]">
-                                                            <Switch
-                                                                defaultValue={
-                                                                    user.active_at &&
-                                                                    user.active_at !==
-                                                                        null
-                                                                }
-                                                                onClick={(
-                                                                    e
-                                                                ) => {
-                                                                    toogleActiveUser(
-                                                                        user.id
-                                                                    );
-                                                                }}
-                                                            >
+                                                            <Switch>
                                                                 {({ active }) =>
                                                                     active
                                                                         ? "Active"
@@ -171,10 +129,7 @@ export const Account = () => {
                                                     </td>
                                                     <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                                         <div className="flex gap-2">
-                                                            <Link
-                                                                to={`${config.pathPrefix}account/${user.id}/detail`}
-                                                                className="flex items-center justify-center w-6 h-6 bg-[#2D8DF4] rounded p-1 text-white"
-                                                            >
+                                                            <Link to={`${config.pathPrefix}account/${user.id}/detail`} className="flex items-center justify-center w-6 h-6 bg-[#2D8DF4] rounded p-1 text-white">
                                                                 <EyeIcon />
                                                             </Link>
                                                             <div className="flex items-center justify-center w-6 h-6 bg-[#F79009] rounded p-1 text-white">

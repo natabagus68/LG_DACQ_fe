@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { HomeIcon, SearchIcon } from "../../../common/components/icons";
-import { NavLink, useSearchParams } from "react-router-dom";
+import { Link, NavLink, useSearchParams } from "react-router-dom";
 import { HiOutlineArrowCircleDown } from "react-icons/hi";
 import { Table } from "../../../common/components/table/Table";
 import { useLine1OptionAutoLogsQuery } from "../../../app/services/optionAutoService";
 import { OpenAlert } from "../line_detail/OptionAuto";
 import { useDispatch } from "react-redux";
 import moment from "moment";
+import { config } from "../../../common/utils";
 
 export const Line1OptionAutoLogTable = ({
     perPage: _perPage,
@@ -193,13 +194,13 @@ export const LineLogOptionAuto = () => {
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Dashboard</span>
+                        <Link to={`${config.pathPrefix}dashboard`} className="font-semibold text-sm">Dashboard</Link>
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Line 1</span>
+                        <Link to={`${config.pathPrefix}lines/line-1`} className="font-semibold text-sm">Line 1</Link>
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">
+                        <Link to={`${config.pathPrefix}lines/line-1/option-auto`} className="font-semibold text-sm">
                             OptionAuto
-                        </span>
+                        </Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
                             Log

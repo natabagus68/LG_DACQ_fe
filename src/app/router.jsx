@@ -28,6 +28,8 @@ import { WhiteBalance } from "../features/admin/line_detail/WhiteBalance";
 import { LineLogWhiteBalance } from "../features/admin/line_log/LineLogWhiteBalance";
 import { DTVInspection } from "../features/admin/line_detail/DTVInspection";
 import { LineLogDTVInspection } from "../features/admin/line_log/LineLogDTVInspection";
+import { AccountDetail } from "../features/admin/account/AccountDetail";
+import { TrashAccount } from "../features/admin/account/TrashAccount";
 
 const Root = () => {
     return <Outlet />;
@@ -137,6 +139,14 @@ export default createBrowserRouter([
             {
                 path: "account",
                 element: <Account />,
+            },
+            {
+                path: "trash-account",
+                element: <TrashAccount />,
+            },
+            {
+                path: "account/:id/detail",
+                element: <AccountDetail />,
             },
             {
                 path: "access",

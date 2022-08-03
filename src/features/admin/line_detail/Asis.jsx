@@ -104,6 +104,12 @@ export const Asis = () => {
                             ASIS
                         </span>
                     </div>
+                    <div className="text-lg font-semibold text-black">
+                        MODEL RUNNING :{" "}
+                        <span className="rounded px-4 py-2 border">
+                            {line1AsisTopTenLogs?.[0]?.model}
+                        </span>
+                    </div>
                 </div>
                 <div className="flex flex-col flex-1">
                     <Card>
@@ -377,7 +383,9 @@ export const Asis = () => {
                     <div className="col-span-2 flex flex-col gap-4 px-6 py-7 border rounded-xl">
                         <div className="flex justify-between items-center pb-1">
                             <span className="font-bold text-lg">
-                                Manual NG Cause
+                                {manualNgOn
+                                    ? "Manual NG Cause"
+                                    : "Trending NG Cause"}
                             </span>
                             <div className="flex gap-4">
                                 <div className="flex items-center gap-2 text-[#2E3032] text-sm">
@@ -402,7 +410,7 @@ export const Asis = () => {
                                             } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                                         />
                                     </Switch>
-                                    <span>Inactive</span>
+                                    <span>Manual NG</span>
                                 </div>
                                 <button
                                     disabled={!manualNgOn}
@@ -423,9 +431,15 @@ export const Asis = () => {
                         </div>
                         <div className="flex">
                             {manualNgOn ? (
-                                <TopManualNgTable />
+                                <TopManualNgTable
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
+                                />
                             ) : (
-                                <TopAutoNgTable />
+                                <TopAutoNgTable
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
+                                />
                             )}
                         </div>
                     </div>
@@ -460,11 +474,15 @@ const AsisChart = ({
     const dispatch = useDispatch();
     const [selectedChart, setSelectedChart] = useState(false);
     useEffect(() => {
-        console.log("Berubah =>", data?.datas?.length - 1)
+        console.log("Berubah =>", data?.datas?.length - 1);
         setNgRate(
-            parseFloat(data?.datas[
-                selectedChart == false ? data?.datas?.length - 1 : selectedChart
-            ]).toFixed(2)
+            parseFloat(
+                data?.datas[
+                    selectedChart == false
+                        ? data?.datas?.length - 1
+                        : selectedChart
+                ]
+            ).toFixed(2)
         );
     }, [data, selectedChart]);
     return (
@@ -478,7 +496,7 @@ const AsisChart = ({
                 ref={chartRef}
                 onClick={(event) => {
                     const [lineEl] = getElementAtEvent(chartRef.current, event);
-                    setSelectedChart(lineEl.index)
+                    setSelectedChart(lineEl.index);
                     if (lineEl) {
                         let from_date = moment(
                             line1AsisProcessChart?.[lineEl.index]?.x,
@@ -813,13 +831,16 @@ export const OpenAlert = ({ alert, setAlert }) => {
     );
 };
 
-const TopAutoNgTable = () => {
+const TopAutoNgTable = ({ searchParams, setSearchParams }) => {
     const {
         data: line1AsisTop5NgCause = [],
         isLoading: line1AsisTop5NgCauseLoading,
-    } = useGetLine1Top5NgCauseQuery(null, {
-        pollingInterval: 5000,
-    });
+    } = useGetLine1Top5NgCauseQuery(
+        searchParams,
+        {
+            pollingInterval: 5000,
+        }
+    );
     return (
         <Table>
             <Table.Thead>
