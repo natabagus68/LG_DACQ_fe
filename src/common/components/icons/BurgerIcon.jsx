@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const BurgerIcon = ({width=20,height=14, ...props}) => {
+export const BurgerIcon = ({width='1.4vw',height='1.4vw', ...props}) => {
     return (
         <>
             <svg width={ width } height={ height } {...props} viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">

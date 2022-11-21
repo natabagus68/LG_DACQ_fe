@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { BurgerIcon, SearchIcon, AppLogoText } from '../../../common/components/icons';
+import { HomeIcon, SearchIcon, AppLogoText } from '../../../common/components/icons';
 import { Loader } from '../../../common/components';
 import userAvatar from '../../../assets/user.png';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { toggle } from './adminLayoutSlice';
 import { Select } from '../../../common/components/input';
 import { Menu } from '@headlessui/react';
 import { SideBar } from './SideBar';
+import { Header } from './Header';
 import { useGetAuthenticatedUserQuery, useLogoutMutation } from '../../auth/authApiSlice';
 
 export const AdminLayout = () => {
@@ -18,8 +19,16 @@ export const AdminLayout = () => {
     if (isLoading || logoutIsLoading) return <Loader />;
     if (isError || !auth?.data) return <Navigate to={ `login` } />;
     return (
-        <div className="w-full">
-            <div className="fixed top-0 flex bg-green-500 z-10 shadow-lg w-full">
+        <div className="w-full bg-[#1B1A1A] flex">
+            <SideBar />
+            <div className='flex flex-1 flex-col'>
+                <Header />
+                <div className='flex-1'>
+                    <Outlet />
+                </div>
+            </div>
+
+            {/* <div className="fixed top-0 flex bg-black z-10 shadow-lg w-full">
                 <div className="py-[15px] px-[48px] lg:w-[274px]">
                     <AppLogoText width={ `auto` } height={ `46px` } />
                 </div>
@@ -60,7 +69,7 @@ export const AdminLayout = () => {
                 <div className={ `${(navOpen == null || navOpen == true) && `md:ml-[274px]`} transition-[margin] mt-[78px] py-[37px] px-[48px] flex-1 overflow-auto` }>
                     <Outlet />
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

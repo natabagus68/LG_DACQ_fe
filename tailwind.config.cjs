@@ -44,7 +44,8 @@ module.exports = {
             },
             fontFamily: {
                 'display': 'Marcellus',
-                'body': 'Lato'
+                'body': 'Lato',
+                'inter': 'Inter'
             },
         },
     },
