@@ -12,6 +12,9 @@ import { Account } from "../features/admin/account/Account";
 import { Access } from "../features/admin/access/Access";
 import { Mapping } from "../features/admin/access/Mapping";
 import { AddData } from "../features/admin/access/AddData";
+import { Lines } from "../features/admin/line";
+import { LineDetail } from "../features/admin/line_detail/LineDetail";
+import { LineLog } from "../features/admin/line_log/LineLog";
 
 const Root = () => { return <Outlet />; };
 
@@ -63,6 +66,19 @@ export default createBrowserRouter([
             {
                 path: 'access/add_data',
                 element: <AddData />,
+            },
+            
+            {
+                path: 'dashboard/lines/',
+                element: <Lines />,
+            },
+            {
+                path: 'dashboard/lines/detail',
+                element: <LineDetail />,
+            },
+            {
+                path: 'dashboard/lines/detail/log',
+                element: <LineLog />,
             }
         ]
     },

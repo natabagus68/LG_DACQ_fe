@@ -1,6 +1,6 @@
 import React from 'react';
 import { HomeIcon, PlusIcon, DownloadIcon, EyeIcon, EditIcon, SearchIcon, TrashIcon } from '../../../common/components/icons';
-import {Switch, Checkbox} from 'tailgrids-react';
+import { Switch } from 'tailgrids-react';
 import { NavLink } from 'react-router-dom';
 
 export const Account = () => {
