@@ -6,48 +6,14 @@ import { Switch } from 'tailgrids-react';
 import chart from '../../../assets/chart.png';
 import { HiOutlineChevronRight } from 'react-icons/hi';
 import { NavLink } from 'react-router-dom';
-
-import { Line } from 'react-chartjs-2';
-import { Chart as ChaerJS, Title, Tooltip, LineElement, Legend, CategoryScale, LinearScale, PointElement, Filler } from 'chart.js';
-ChaerJS.register( Title, Tooltip, LineElement, Legend, CategoryScale, LinearScale, PointElement, Filler );
+import { ChartLine } from '../../../common/components/ChartLine';
 
 export const Lines = () => {
-    const options = {
-        responsive: false,
-        scales: {
-            y: {
-                min: 0,
-                max: 10,
-                stepSize: 0,
-            },
-        },
-        maintainAspectRatio: false, 
-        plugins: {
-            legend: {
-              display: false
-            }
-        },
-    };
     const data = {
         labels: ['jan', 'feb', 'mar', 'apr', 'mei', 'jun'],
-        datasets: [
-            {
-                label: 'Data',
-                data: [10, 2, 6, 8, 1, 7],
-                datasetStrokeWidth : 3,
-                pointDotStrokeWidth : 4,
-                backgroundColor: '#0BA5EC',
-                borderColor: '#0BA5EC',
-                tension: 0.5,
-                pointRadius: 2,
-                borderWidth: 1,
-                fill: {
-                    target: "origin", // 3. Set the fill options
-                    above: "rgba(255, 0, 0, 0.1)"
-                }
-            }
-        ]
+        datas: [10, 2, 6, 8, 1, 7]
     }
+
     return (
         <>
             <div className='relative h-full p-[2%] flex font-inter flex-col bg-white'>
@@ -70,7 +36,7 @@ export const Lines = () => {
                         <Card title='ASIS' subTitle='2%'>
                             <div className='flex flex-col justify-between flex-1'>
                                 <div className='flex gap-[14px] items-center'>
-                                    <Line data={data} height="175px" width="233px" options={options} />
+                                    <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
                                 </div>
                                 <div className='flex flex-col'>
                                     <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
@@ -98,7 +64,7 @@ export const Lines = () => {
                         <Card title='ASIS' subTitle='2%'>
                             <div className='flex flex-col justify-between flex-1'>
                                 <div className='flex gap-[14px] items-center'>
-                                    <Line data={data} height="175px" width="233px" options={options} />
+                                    <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
                                 </div>
                                 <div className='flex flex-col'>
                                     <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
@@ -126,7 +92,7 @@ export const Lines = () => {
                         <Card title='ASIS' subTitle='2%'>
                             <div className='flex flex-col justify-between flex-1'>
                                 <div className='flex gap-[14px] items-center'>
-                                    <Line data={data} height="175px" width="233px" options={options} />
+                                    <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
                                 </div>
                                 <div className='flex flex-col'>
                                     <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
@@ -154,7 +120,7 @@ export const Lines = () => {
                         <Card title='ASIS' subTitle='2%'>
                             <div className='flex flex-col justify-between flex-1'>
                                 <div className='flex gap-[14px] items-center'>
-                                    <Line data={data} height="175px" width="233px" options={options} />
+                                    <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
                                 </div>
                                 <div className='flex flex-col'>
                                     <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
