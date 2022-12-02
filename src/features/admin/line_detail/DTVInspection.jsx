@@ -175,13 +175,13 @@ export const DTVInspection = () => {
                                 <div className='flex-1'>
                                     <Card>
                                         <span className='bg-[#B6E9D1] h-[32px] rounded-[12px] flex items-center justify-center text-[#084D2D] text-sm'>Quantity OK</span>
-                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>312</span>
+                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>543</span>
                                     </Card>
                                 </div>
                                 <div className='flex-1'>
                                     <Card>
                                         <span className='bg-[#FAC5C1] h-[32px] rounded-[12px] flex items-center justify-center text-[#DE1B1B] text-sm'>Quantity NG</span>
-                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>123</span>
+                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>62</span>
                                     </Card>
                                 </div>
                             </div>

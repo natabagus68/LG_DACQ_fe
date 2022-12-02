@@ -169,19 +169,52 @@ export const Shipmode = () => {
                     </Card>
                 </div>
                 <div className='flex-1 flex gap-2'>
-                    <div className='w-[608px] flex flex-col gap-2'>
-                        <div className='h-[143px]'>
+                    <div className='w-[800px] flex flex-col gap-2'>
+                        <div className='h-[160px]'>
                             <div className='h-full flex gap-[15px]'>
                                 <div className='flex-1'>
                                     <Card>
-                                        <span className='bg-[#B6E9D1] h-[32px] rounded-[12px] flex items-center justify-center text-[#084D2D] text-sm'>Quantity OK</span>
-                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>312</span>
+                                        <span className='text-[#2D2A2A] text-center font-bold pb-2'>WB 1</span>
+                                        <div className='flex gap-2 justify-between flex-1'>
+                                            <div className='flex flex-col'>
+                                                <span className='bg-[#B6E9D1] flex-1 px-3 h-[32px] rounded-[12px] flex items-center justify-center text-[#084D2D] text-sm'>Quantity OK</span>
+                                                <span className='text-[#2D2A2A] text-center text-[40px] font-bold'>123</span>
+                                            </div>
+                                            <div className='flex flex-col'>
+                                                <span className='bg-[#FAC5C1] flex-1 px-3 h-[32px] rounded-[12px] flex items-center justify-center text-[#DE1B1B] text-sm'>Quantity NG</span>
+                                                <span className='text-[#2D2A2A] text-center text-[40px] font-bold'>23</span>
+                                            </div>
+                                        </div>
                                     </Card>
                                 </div>
                                 <div className='flex-1'>
                                     <Card>
-                                        <span className='bg-[#FAC5C1] h-[32px] rounded-[12px] flex items-center justify-center text-[#DE1B1B] text-sm'>Quantity NG</span>
-                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>123</span>
+                                        <span className='text-[#2D2A2A] text-center font-bold pb-2'>WB 2</span>
+                                        <div className='flex gap-2 justify-between flex-1'>
+                                            <div className='flex flex-col'>
+                                                <span className='bg-[#B6E9D1] flex-1 px-3 h-[32px] rounded-[12px] flex items-center justify-center text-[#084D2D] text-sm'>Quantity OK</span>
+                                                <span className='text-[#2D2A2A] text-center text-[40px] font-bold'>322</span>
+                                            </div>
+                                            <div className='flex flex-col'>
+                                                <span className='bg-[#FAC5C1] flex-1 px-3 h-[32px] rounded-[12px] flex items-center justify-center text-[#DE1B1B] text-sm'>Quantity NG</span>
+                                                <span className='text-[#2D2A2A] text-center text-[40px] font-bold'>111</span>
+                                            </div>
+                                        </div>
+                                    </Card>
+                                </div>
+                                <div className='flex-1'>
+                                    <Card>
+                                        <span className='text-[#2D2A2A] text-center font-bold pb-2'>WB 3</span>
+                                        <div className='flex gap-2 justify-between flex-1'>
+                                            <div className='flex flex-col'>
+                                                <span className='bg-[#B6E9D1] flex-1 px-3 h-[32px] rounded-[12px] flex items-center justify-center text-[#084D2D] text-sm'>Quantity OK</span>
+                                                <span className='text-[#2D2A2A] text-center text-[40px] font-bold'>145</span>
+                                            </div>
+                                            <div className='flex flex-col'>
+                                                <span className='bg-[#FAC5C1] flex-1 px-3 h-[32px] rounded-[12px] flex items-center justify-center text-[#DE1B1B] text-sm'>Quantity NG</span>
+                                                <span className='text-[#2D2A2A] text-center text-[40px] font-bold'>14</span>
+                                            </div>
+                                        </div>
                                     </Card>
                                 </div>
                             </div>
