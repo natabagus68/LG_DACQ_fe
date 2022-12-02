@@ -1,5 +1,5 @@
 
-import { Bar, Line } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import { Chart as ChaerJS, Title, Tooltip, LineElement, Legend, CategoryScale, LinearScale, PointElement, Filler } from 'chart.js';
 import React from 'react';
 ChaerJS.register( Title, Tooltip, LineElement, Legend, CategoryScale, LinearScale, PointElement, Filler );
