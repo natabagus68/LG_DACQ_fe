@@ -16,7 +16,7 @@ export const Lines = () => {
 
     return (
         <>
-            <div className='relative h-full p-[2%] flex font-inter flex-col bg-white'>
+            <div className='flex-1 p-[2%] flex font-inter flex-col bg-white'>
                 <div className="text-[#A9A8A8] flex items-center justify-between mb-3">
                     <div className='flex items-center gap-1'>
                         <HomeIcon width='12px' height='13px' />
@@ -31,118 +31,234 @@ export const Lines = () => {
                         <span>PPM</span>
                     </div>
                 </div>
-                <div className='flex justify-between'>
-                    <div className='w-[265px] h-[329px]'>
-                        <Card title='ASIS' subTitle='2%'>
-                            <div className='flex flex-col justify-between flex-1'>
-                                <div className='flex gap-[14px] items-center'>
-                                    <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
-                                </div>
-                                <div className='flex flex-col'>
-                                    <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
-                                    <div className='border-[1px] rounded-xl flex justify-between'>
-                                        <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
-                                            <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
-                                            <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
+                <div className='flex flex-col'>
+                    <div className='flex-1 flex justify-between'>
+                        <div className='w-[265px] h-[329px]'>
+                            <Card title='ASIS' subTitle='2%'>
+                                <div className='flex flex-col justify-between flex-1'>
+                                    <div className='flex gap-[14px] items-center'>
+                                        <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
+                                    </div>
+                                    <div className='flex flex-col'>
+                                        <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
+                                        <div className='border-[1px] rounded-xl flex justify-between'>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
+                                            </div>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>LB</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
+                                            </div>
                                         </div>
-                                        <div className='flex flex-col justify-center items-center py-2 flex-1'>
-                                            <span className='text-xs font-bold text-[#12B76A]'>LB</span>
-                                            <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
+                                        <div className='flex justify-end pt-2'>
+                                            <NavLink to={ 'detail?t=asis' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                                <span>Details</span>
+                                                <HiOutlineChevronRight />
+                                            </NavLink>
                                         </div>
                                     </div>
-                                    <div className='flex justify-end pt-2'>
-                                        <NavLink to={ 'detail' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
-                                            <span>Details</span>
-                                            <HiOutlineChevronRight />
-                                        </NavLink>
+                                </div>
+                            </Card>
+                        </div>
+                        <div className='w-[265px] h-[329px]'>
+                            <Card title='OnePole-TwoPole' subTitle='10%'>
+                                <div className='flex flex-col justify-between flex-1'>
+                                    <div className='flex gap-[14px] items-center'>
+                                        <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
+                                    </div>
+                                    <div className='flex flex-col'>
+                                        <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
+                                        <div className='border-[1px] rounded-xl flex justify-between'>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
+                                            </div>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>LB</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
+                                            </div>
+                                        </div>
+                                        <div className='flex justify-end pt-2'>
+                                            <NavLink to={ 'detail?t=onepole' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                                <span>Details</span>
+                                                <HiOutlineChevronRight />
+                                            </NavLink>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </Card>
+                            </Card>
+                        </div>
+                        <div className='w-[265px] h-[329px]'>
+                            <Card title='Hipot' subTitle='2%'>
+                                <div className='flex flex-col justify-between flex-1'>
+                                    <div className='flex gap-[14px] items-center'>
+                                        <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
+                                    </div>
+                                    <div className='flex flex-col'>
+                                        <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
+                                        <div className='border-[1px] rounded-xl flex justify-between'>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
+                                            </div>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>LB</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
+                                            </div>
+                                        </div>
+                                        <div className='flex justify-end pt-2'>
+                                            <NavLink to={ 'detail?t=hipot' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                                <span>Details</span>
+                                                <HiOutlineChevronRight />
+                                            </NavLink>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Card>
+                        </div>
+                        <div className='w-[265px] h-[329px]'>
+                            <Card title='Option Manual' subTitle='19%'>
+                                <div className='flex flex-col justify-between flex-1'>
+                                    <div className='flex gap-[14px] items-center'>
+                                        <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
+                                    </div>
+                                    <div className='flex flex-col'>
+                                        <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
+                                        <div className='border-[1px] rounded-xl flex justify-between'>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
+                                            </div>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>LB</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
+                                            </div>
+                                        </div>
+                                        <div className='flex justify-end pt-2'>
+                                            <NavLink to={ 'detail?t=option_manual' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                                <span>Details</span>
+                                                <HiOutlineChevronRight />
+                                            </NavLink>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Card>
+                        </div>
                     </div>
-                    <div className='w-[265px] h-[329px]'>
-                        <Card title='ASIS' subTitle='2%'>
-                            <div className='flex flex-col justify-between flex-1'>
-                                <div className='flex gap-[14px] items-center'>
-                                    <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
-                                </div>
-                                <div className='flex flex-col'>
-                                    <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
-                                    <div className='border-[1px] rounded-xl flex justify-between'>
-                                        <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
-                                            <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
-                                            <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
-                                        </div>
-                                        <div className='flex flex-col justify-center items-center py-2 flex-1'>
-                                            <span className='text-xs font-bold text-[#12B76A]'>LB</span>
-                                            <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
-                                        </div>
+                    <div className='flex-1 flex justify-between'>
+                        <div className='w-[265px] h-[329px]'>
+                            <Card title='Option Automatic' subTitle='6%'>
+                                <div className='flex flex-col justify-between flex-1'>
+                                    <div className='flex gap-[14px] items-center'>
+                                        <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
                                     </div>
-                                    <div className='flex justify-end pt-2'>
-                                        <NavLink to={ 'detail' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
-                                            <span>Details</span>
-                                            <HiOutlineChevronRight />
-                                        </NavLink>
-                                    </div>
-                                </div>
-                            </div>
-                        </Card>
-                    </div>
-                    <div className='w-[265px] h-[329px]'>
-                        <Card title='ASIS' subTitle='2%'>
-                            <div className='flex flex-col justify-between flex-1'>
-                                <div className='flex gap-[14px] items-center'>
-                                    <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
-                                </div>
-                                <div className='flex flex-col'>
-                                    <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
-                                    <div className='border-[1px] rounded-xl flex justify-between'>
-                                        <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
-                                            <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
-                                            <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
+                                    <div className='flex flex-col'>
+                                        <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
+                                        <div className='border-[1px] rounded-xl flex justify-between'>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
+                                            </div>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>LB</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
+                                            </div>
                                         </div>
-                                        <div className='flex flex-col justify-center items-center py-2 flex-1'>
-                                            <span className='text-xs font-bold text-[#12B76A]'>LB</span>
-                                            <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
+                                        <div className='flex justify-end pt-2'>
+                                            <NavLink to={ 'detail?t=option_automatic' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                                <span>Details</span>
+                                                <HiOutlineChevronRight />
+                                            </NavLink>
                                         </div>
                                     </div>
-                                    <div className='flex justify-end pt-2'>
-                                        <NavLink to={ 'detail' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
-                                            <span>Details</span>
-                                            <HiOutlineChevronRight />
-                                        </NavLink>
+                                </div>
+                            </Card>
+                        </div>
+                        <div className='w-[265px] h-[329px]'>
+                            <Card title='White Balance' subTitle='0%'>
+                                <div className='flex flex-col justify-between flex-1'>
+                                    <div className='flex gap-[14px] items-center'>
+                                        <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
                                     </div>
-                                </div>
-                            </div>
-                        </Card>
-                    </div>
-                    <div className='w-[265px] h-[329px]'>
-                        <Card title='ASIS' subTitle='2%'>
-                            <div className='flex flex-col justify-between flex-1'>
-                                <div className='flex gap-[14px] items-center'>
-                                    <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
-                                </div>
-                                <div className='flex flex-col'>
-                                    <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
-                                    <div className='border-[1px] rounded-xl flex justify-between'>
-                                        <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
-                                            <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
-                                            <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
+                                    <div className='flex flex-col'>
+                                        <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
+                                        <div className='border-[1px] rounded-xl flex justify-between'>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
+                                            </div>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>LB</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
+                                            </div>
                                         </div>
-                                        <div className='flex flex-col justify-center items-center py-2 flex-1'>
-                                            <span className='text-xs font-bold text-[#12B76A]'>LB</span>
-                                            <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
+                                        <div className='flex justify-end pt-2'>
+                                            <NavLink to={ 'detail?t=white_balance' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                                <span>Details</span>
+                                                <HiOutlineChevronRight />
+                                            </NavLink>
                                         </div>
                                     </div>
-                                    <div className='flex justify-end pt-2'>
-                                        <NavLink to={ 'detail' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
-                                            <span>Details</span>
-                                            <HiOutlineChevronRight />
-                                        </NavLink>
+                                </div>
+                            </Card>
+                        </div>
+                        <div className='w-[265px] h-[329px]'>
+                            <Card title='DTV Inspection' subTitle='6%'>
+                                <div className='flex flex-col justify-between flex-1'>
+                                    <div className='flex gap-[14px] items-center'>
+                                        <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
+                                    </div>
+                                    <div className='flex flex-col'>
+                                        <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
+                                        <div className='border-[1px] rounded-xl flex justify-between'>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
+                                            </div>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>LB</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
+                                            </div>
+                                        </div>
+                                        <div className='flex justify-end pt-2'>
+                                            <NavLink to={ 'detail?t=dtv_inspection' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                                <span>Details</span>
+                                                <HiOutlineChevronRight />
+                                            </NavLink>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </Card>
+                            </Card>
+                        </div>
+                        <div className='w-[265px] h-[329px]'>
+                            <Card title='Shipmode' subTitle='2%'>
+                                <div className='flex flex-col justify-between flex-1'>
+                                    <div className='flex gap-[14px] items-center'>
+                                        <ChartLine datas={data.datas} labels={data.labels} height={'175px'} />
+                                    </div>
+                                    <div className='flex flex-col'>
+                                        <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
+                                        <div className='border-[1px] rounded-xl flex justify-between'>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>M-A01</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
+                                            </div>
+                                            <div className='flex flex-col justify-center items-center py-2 flex-1'>
+                                                <span className='text-xs font-bold text-[#12B76A]'>LB</span>
+                                                <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
+                                            </div>
+                                        </div>
+                                        <div className='flex justify-end pt-2'>
+                                            <NavLink to={ 'detail?t=shipmode' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                                <span>Details</span>
+                                                <HiOutlineChevronRight />
+                                            </NavLink>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Card>
+                        </div>
                     </div>
                 </div>
             </div>

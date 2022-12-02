@@ -19,11 +19,11 @@ export const AdminLayout = () => {
     if (isLoading || logoutIsLoading) return <Loader />;
     if (isError || !auth?.data) return <Navigate to={ `login` } />;
     return (
-        <div className="w-full bg-[#1B1A1A] flex">
+        <div className="w-full h-full bg-[#1B1A1A] flex">
             <SideBar />
             <div className='flex flex-1 flex-col'>
                 <Header />
-                <div className='flex-1'>
+                <div className='bg-white flex-1'>
                     <Outlet />
                 </div>
             </div>

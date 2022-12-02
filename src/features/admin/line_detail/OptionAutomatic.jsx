@@ -4,141 +4,121 @@ import { HomeIcon } from '../../../common/components/icons';
 import { Card } from '../../../common/components/Card';
 import { Switch } from 'tailgrids-react';
 import { HiOutlineDocumentAdd, HiOutlinePlusSm, HiOutlineChevronRight, HiOutlineDownload, HiOutlineCalendar, HiTrendingDown, HiX } from 'react-icons/hi'
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { ChartLine } from '../../../common/components/ChartLine';
 import { Alert } from '../../../common/components';
 import ng_image from '../../../assets/ng_image.png'
-import { Asis } from './Asis';
-import { OnePole } from './OnePole';
-import { Hipot } from './Hipot';
-import { OptionManual } from './OptionManual';
-import { OptionAutomatic } from './OptionAutomatic';
-import { WhiteBalance } from './WhiteBalance';
-import { DTVInspection } from './DTVInspection';
-import { Shipmode } from './Shipmode';
 
-export const LineDetail = ({children}) => {
-    const search = useLocation().search;
-    const title = new URLSearchParams(search).get("t");
-    // const CompExcel = () => {
-    //     return(
-    //         <div className='w-[432px] flex flex-col gap-2'>
-    //             <div className='flex gap-4 items-center'>
-    //                 <div className='w-12 h-12 flex items-center justify-center bg-[#B3E3F9] rounded-full'>
-    //                     <HiOutlineDownload className='text-xl text-[#229BD8]' />
-    //                 </div>
-    //                 <span className='font-medium text-[18px]'>Export Excel file</span>
-    //             </div>
-    //             <span className='font-medium text-[16px]'>Select Time </span>
-    //             <div className='flex justify-between'>
-    //                 <div className='h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]'>Hourly</div>
-    //                 <div className='h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]'>Daily</div>
-    //                 <div className='h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]'>Monthly</div>
-    //                 <div className='h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]'>Annual</div>
-    //             </div>
-    //             <div className='flex flex-col gap-2 '>
-    //                 <div className='flex gap-2'>
-    //                     <input type={'radio'} name='date' checked />
-    //                     <span className='text-xs'>Latest</span>
-    //                 </div>
-    //                 <div className='flex gap-2'>
-    //                     <input type={'radio'} name='date' />
-    //                     <span className='text-xs'>Custom</span>
-    //                 </div>
-    //             </div>
-    //             <div className='flex flex-col'>
-    //                 <input type={'date'} className='flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]' />
-    //                 {/* <span className='text-[#DADBDB] text-[15px] font-semibold'>Date</span>
-    //                 <div className='flex justify-between items-center border-[1px] p-2 rounded-sm'>
-    //                     <input type={'text'} placeholder='Enter a date' className='outline-none w-full placeholder:text-[#DADBDB]' />
-    //                     <HiOutlineCalendar className='text-[#DADBDB]' />
-    //                 </div> */}
-    //             </div>
-    //             <div className='flex gap-2'>
-    //                 <select name="time" className='flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]'>
-    //                     <option value="1">10:00PM</option>
-    //                 </select>
-    //                 <select name="time" className='flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]'>
-    //                     <option value="1">10:00AM</option>
-    //                     <option value="1">10:00AM</option>
-    //                 </select>
-    //             </div>
-    //             <div className='flex gap-2'>
-    //                 <div onClick={()=>setAlert(false)} className='h-[44px] cursor-pointer flex-1 text-[16px] font-medium border-[1px] flex items-center justify-center rounded-md'>Cancel</div>
-    //                 <div className='h-[44px] flex-1 text-[16px] font-medium text-white bg-[#229BD8] flex items-center justify-center rounded-md'>Export</div>
-    //             </div>
-    //         </div>
-    //     )
-    // }
+export const OptionAutomatic = () => {
+    const CompExcel = () => {
+        return(
+            <div className='w-[432px] flex flex-col gap-2'>
+                <div className='flex gap-4 items-center'>
+                    <div className='w-12 h-12 flex items-center justify-center bg-[#B3E3F9] rounded-full'>
+                        <HiOutlineDownload className='text-xl text-[#229BD8]' />
+                    </div>
+                    <span className='font-medium text-[18px]'>Export Excel file</span>
+                </div>
+                <span className='font-medium text-[16px]'>Select Time </span>
+                <div className='flex justify-between'>
+                    <div className='h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]'>Hourly</div>
+                    <div className='h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]'>Daily</div>
+                    <div className='h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]'>Monthly</div>
+                    <div className='h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]'>Annual</div>
+                </div>
+                <div className='flex flex-col gap-2 '>
+                    <div className='flex gap-2'>
+                        <input type={'radio'} name='date' checked />
+                        <span className='text-xs'>Latest</span>
+                    </div>
+                    <div className='flex gap-2'>
+                        <input type={'radio'} name='date' />
+                        <span className='text-xs'>Custom</span>
+                    </div>
+                </div>
+                <div className='flex flex-col'>
+                    <input type={'date'} className='flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]' />
+                    {/* <span className='text-[#DADBDB] text-[15px] font-semibold'>Date</span>
+                    <div className='flex justify-between items-center border-[1px] p-2 rounded-sm'>
+                        <input type={'text'} placeholder='Enter a date' className='outline-none w-full placeholder:text-[#DADBDB]' />
+                        <HiOutlineCalendar className='text-[#DADBDB]' />
+                    </div> */}
+                </div>
+                <div className='flex gap-2'>
+                    <select name="time" className='flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]'>
+                        <option value="1">10:00PM</option>
+                    </select>
+                    <select name="time" className='flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]'>
+                        <option value="1">10:00AM</option>
+                        <option value="1">10:00AM</option>
+                    </select>
+                </div>
+                <div className='flex gap-2'>
+                    <div onClick={()=>setAlert(false)} className='h-[44px] cursor-pointer flex-1 text-[16px] font-medium border-[1px] flex items-center justify-center rounded-md'>Cancel</div>
+                    <div className='h-[44px] flex-1 text-[16px] font-medium text-white bg-[#229BD8] flex items-center justify-center rounded-md'>Export</div>
+                </div>
+            </div>
+        )
+    }
 
-    // const CompAddData = () => {
-    //     return(
-    //         <div className='w-[432px] flex flex-col gap-2'>
-    //             <div className='flex gap-4 items-center'>
-    //                 <div className='w-12 h-12 flex items-center justify-center bg-[#B3E3F9] rounded-full'>
-    //                     <HiTrendingDown className='text-xl text-[#229BD8]' />
-    //                 </div>
-    //                 <span className='font-medium text-[18px]'>Update NG Cause</span>
-    //             </div>
-    //             <span className='font-medium text-[16px]'>Description</span>
-    //             <div className='flex flex-col'>
-    //                 <textarea className='outline-none border-[1px] h-[185px] p-2' defaultValue={'Lorem ipsum dolor sit amet consectetur. Habitasse enim aenean vestibulum Lorem ipsum dolor sit amet consectetur. Habitasse enim aenean vestibulum'} />
-    //                 <div className='flex justify-end'>
-    //                     <span className='text-[12px]'>121/500</span>
-    //                 </div>
-    //             </div>
-    //             <div className='flex gap-2'>
-    //                 <div onClick={()=>setAlert(false)} className='h-[44px] cursor-pointer flex-1 text-[16px] font-medium border-[1px] flex items-center justify-center rounded-md'>Cancel</div>
-    //                 <div className='h-[44px] flex-1 text-[16px] font-medium text-white bg-[#229BD8] flex items-center justify-center rounded-md'>Export</div>
-    //             </div>
-    //         </div>
-    //     )
-    // }
+    const CompAddData = () => {
+        return(
+            <div className='w-[432px] flex flex-col gap-2'>
+                <div className='flex gap-4 items-center'>
+                    <div className='w-12 h-12 flex items-center justify-center bg-[#B3E3F9] rounded-full'>
+                        <HiTrendingDown className='text-xl text-[#229BD8]' />
+                    </div>
+                    <span className='font-medium text-[18px]'>Update NG Cause</span>
+                </div>
+                <span className='font-medium text-[16px]'>Description</span>
+                <div className='flex flex-col'>
+                    <textarea className='outline-none border-[1px] h-[185px] p-2' defaultValue={'Lorem ipsum dolor sit amet consectetur. Habitasse enim aenean vestibulum Lorem ipsum dolor sit amet consectetur. Habitasse enim aenean vestibulum'} />
+                    <div className='flex justify-end'>
+                        <span className='text-[12px]'>121/500</span>
+                    </div>
+                </div>
+                <div className='flex gap-2'>
+                    <div onClick={()=>setAlert(false)} className='h-[44px] cursor-pointer flex-1 text-[16px] font-medium border-[1px] flex items-center justify-center rounded-md'>Cancel</div>
+                    <div className='h-[44px] flex-1 text-[16px] font-medium text-white bg-[#229BD8] flex items-center justify-center rounded-md'>Export</div>
+                </div>
+            </div>
+        )
+    }
 
-    // const CompImage = () => {
-    //     return(
-    //         <div className='w-[432px] flex flex-col gap-2 items-end'>
-    //             <HiX onClick={()=>setAlert(false)} className='cursor-pointer text-[24px]'/>
-    //             <img src={ng_image} alt='Ex' />
-    //         </div>
-    //     )
-    // }
+    const CompImage = () => {
+        return(
+            <div className='w-[432px] flex flex-col gap-2 items-end'>
+                <HiX onClick={()=>setAlert(false)} className='cursor-pointer text-[24px]'/>
+                <img src={ng_image} alt='Ex' />
+            </div>
+        )
+    }
 
-    // const OpenAlert = () => {
-    //     return(
-    //         <Alert action={alert.bool}>
-    //             {alert.comp === 'excel' && <CompExcel />}
-    //             {alert.comp === 'addData' && <CompAddData />}
-    //             {alert.comp === 'image' && <CompImage />}
-    //         </Alert>
-    //     )
-    // }
+    const OpenAlert = () => {
+        return(
+            <Alert action={alert.bool}>
+                {alert.comp === 'excel' && <CompExcel />}
+                {alert.comp === 'addData' && <CompAddData />}
+                {alert.comp === 'image' && <CompImage />}
+            </Alert>
+        )
+    }
 
-    // const data = {
-    //     labels: [
-    //         '00:00', '00:30', '01:00', '01:30', '02:00', '02:30', '03:00', '03:30', '04:00', '04:30',
-    //         '05:00', '05:30', '06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30',
-    //         '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
-    //     ],
-    //     datas: [
-    //         50, 75, 23, 10, 71, 44, 76, 50, 27, 70,
-    //         40, 36, 82, 85, 10, 66, 60, 20, 69, 64, 
-    //         19, 48, 72, 100,78, 70, 51, 30, 14, 83
-    //     ]
-    // }
+    const data = {
+        labels: [
+            '00:00', '00:30', '01:00', '01:30', '02:00', '02:30', '03:00', '03:30', '04:00', '04:30',
+            '05:00', '05:30', '06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30',
+            '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
+        ],
+        datas: [
+            50, 75, 23, 10, 71, 44, 76, 50, 27, 70,
+            40, 36, 82, 85, 10, 66, 60, 20, 69, 64, 
+            19, 48, 72, 100,78, 70, 51, 30, 14, 83
+        ]
+    }
     return (
         <>
-            
-            {title == 'asis' ? <Asis /> : null}
-            {title == 'onepole' ? <OnePole /> : null}
-            {title == 'hipot' ? <Hipot /> : null}
-            {title == 'option_manual' ? <OptionManual /> : null}
-            {title == 'option_automatic' ? <OptionAutomatic /> : null}
-            {title == 'white_balance' ? <WhiteBalance /> : null}
-            {title == 'dtv_inspection' ? <DTVInspection /> : null}
-            {title == 'shipmode' ? <Shipmode /> : null}
-            
-            {/* {alert && <OpenAlert />}
+            {alert && <OpenAlert />}
             <div className='relative h-full p-[2%] flex font-inter flex-col gap-2 bg-white'>
                 <div className="text-[#A9A8A8] flex items-center justify-between mb-3">
                     <div className='flex items-center gap-1'>
@@ -148,14 +128,14 @@ export const LineDetail = ({children}) => {
                         <span className='text-sm'>/</span>
                         <span className="font-semibold text-sm">Line 1</span>
                         <span className='text-sm'>/</span>
-                        <span className="font-semibold text-sm text-[#514E4E]">ASIS</span>
+                        <span className="font-semibold text-sm text-[#514E4E]">Option Automatic</span>
                     </div>
                 </div>
                 <div className='flex flex-col'>
                     <Card>
                         <div className='flex flex-col flex-1 gap-1'>
                             <div className="flex items-center justify-between">
-                                <span className='font-bold text-lg'>{title}</span>
+                                <span className='font-bold text-lg'>Option Automatic</span>
                                 <div className='flex items-center gap-2'>
                                     <div className='flex gap-1 items-center text-black border-[1px] w-[79px] h-[30px] justify-center rounded-sm'>
                                         <span className='text-[11px] font-semibold'>Hourly</span>
@@ -192,29 +172,16 @@ export const LineDetail = ({children}) => {
                     <div className='w-[608px] flex flex-col gap-2'>
                         <div className='h-[143px]'>
                             <div className='h-full flex gap-[15px]'>
-                                {children}
-                                <div className='w-[141px]'>
+                                <div className='flex-1'>
                                     <Card>
                                         <span className='bg-[#B6E9D1] h-[32px] rounded-[12px] flex items-center justify-center text-[#084D2D] text-sm'>Quantity OK</span>
-                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>342</span>
+                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>221</span>
                                     </Card>
                                 </div>
-                                <div className='w-[141px]'>
+                                <div className='flex-1'>
                                     <Card>
                                         <span className='bg-[#FAC5C1] h-[32px] rounded-[12px] flex items-center justify-center text-[#DE1B1B] text-sm'>Quantity NG</span>
-                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>127</span>
-                                    </Card>
-                                </div>
-                                <div className='w-[141px]'>
-                                    <Card>
-                                        <span className='bg-[#FEF4E6] h-[32px] rounded-[12px] flex items-center justify-center text-[#F59F00] text-sm'>Quantity NDF</span>
-                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>65</span>
-                                    </Card>
-                                </div>
-                                <div className='w-[141px]'>
-                                    <Card>
-                                        <span className='bg-[#E7F6FD] h-[32px] rounded-[12px] flex items-center justify-center text-[#229BD8] text-sm'>Quantity INT</span>
-                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>34</span>
+                                        <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>112</span>
                                     </Card>
                                 </div>
                             </div>
@@ -358,7 +325,7 @@ export const LineDetail = ({children}) => {
                         </Card>
                     </div>
                 </div>
-            </div> */}
+            </div>
         </>
     );
 }
