@@ -1,9 +1,14 @@
 
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useGetAuthenticatedUserQuery } from '../../../app/services/authService';
 import auth from '../../../assets/auth.png'
+import { Loader } from '../../../common/components/Loader';
 
 export const AuthLayout = () => {
+    const { data: auth, isLoading } = useGetAuthenticatedUserQuery();
+    if (isLoading) return <Loader />;
+    if (auth?.data) return <Navigate to="dashboard" replace={ true } />;
     return (
         <>
             <div className={`bg-[#FFFFFF] w-screen h-screen flex`}>

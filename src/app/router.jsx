@@ -1,4 +1,4 @@
-import { createBrowserRouter, Outlet, } from "react-router-dom";
+import { createBrowserRouter, Navigate, Outlet, } from "react-router-dom";
 import { Error404 } from "../common/components";
 import { config } from "../common/utils";
 import { AdminLayout } from "../features/admin/adminLayout";
@@ -27,6 +27,10 @@ export default createBrowserRouter([
         children: [
             {
                 path: '',
+                element: <Navigate to={ `login` } replace />
+            },
+            {
+                path: 'login',
                 element: <Login />
             },
         ]

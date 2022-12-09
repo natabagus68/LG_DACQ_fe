@@ -3,12 +3,9 @@ import lg_black from '../../../assets/lg_black.png'
 import { HiOutlineMail, HiOutlineKey, HiEyeOff } from "react-icons/hi";
 import { useGetAuthenticatedUserQuery, useLoginMutation } from "../../../app/services/authService";
 import { useNavigate } from 'react-router-dom';
-import { Loader } from '../../../common/components';
 
 export const Login = () => {
-    const navigate = useNavigate();
     const [authenticate, { error: authenticateError, isLoading: authenticateLoading }] = useLoginMutation();
-    const { data: auth, isLoading, isError } = useGetAuthenticatedUserQuery();
 
     const onLogin = (e) => {
         e.preventDefault();
