@@ -3,8 +3,12 @@ import { HomeIcon, PlusIcon, DownloadIcon, EyeIcon, EditIcon, SearchIcon, TrashI
 import { Switch } from 'tailgrids-react';
 import { NavLink } from 'react-router-dom';
 import { HiOutlineArrowCircleDown } from 'react-icons/hi'
+import { Table } from '../../../common/components/table/Table';
+import { useGetLogDataQuery } from '../line_detail/lineDetailSlice';
 
 export const LineLog = () => {
+    const { data: log, isLoading, isError } = useGetLogDataQuery();
+    
     return(
         <>
             <div className="flex bg-white h-full p-[26px] flex-col font-inter">
@@ -48,131 +52,32 @@ export const LineLog = () => {
                         </div>
                         <div className="px-[24px] pb-[18px] flex-1 flex flex-col justify-between">
                             <div className="flex-1 flex">
-                                <table class="flex-1">
-                                    <thead class="bg-[#D0D3D9] border-b">
-                                        <tr>
-                                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                MODEL
-                                            </th>
-                                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                SERIAL NUMBER
-                                            </th>
-                                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                JUDGEMENT
-                                            </th>
-                                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                CAPTURE IMAGE
-                                            </th>
-                                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                TIMESTAMP
-                                            </th>
-                                        </tr>
-                                    </thead>
+                                <Table>
+                                    <Table.Thead>
+                                        <Table.Tr>
+                                            <Table.Th order={false}>MODEL</Table.Th>
+                                            <Table.Th order={false}>SERIAL NUMBER</Table.Th>
+                                            <Table.Th order={false}>JUDGEMENT</Table.Th>
+                                            <Table.Th order={false}>CAPTURE IMAGE</Table.Th>
+                                        </Table.Tr>
+                                    </Table.Thead>
                                     <tbody>
-                                        <tr class="bg-white border-b">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                M-A01
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                1234567890
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                <span className='bg-[#FAC5C1] px-4 py-2 rounded-full text-[#F04438] text-xs '>NO</span>
-                                            </td>
-                                            <td class="text-sm text-[#2064AD] font-light px-6 whitespace-nowrap underline">
-                                                view image
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                9/28/2022 2:23:15 PM
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white border-b">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                M-A01
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                1234567890
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                <span className='bg-[#FAC5C1] px-4 py-2 rounded-full text-[#F04438] text-xs '>NO</span>
-                                            </td>
-                                            <td class="text-sm text-[#2064AD] font-light px-6 whitespace-nowrap underline">
-                                                view image
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                9/28/2022 2:23:15 PM
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white border-b">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                M-A01
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                1234567890
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                <span className='bg-[#FAC5C1] px-4 py-2 rounded-full text-[#F04438] text-xs '>NO</span>
-                                            </td>
-                                            <td class="text-sm text-[#2064AD] font-light px-6 whitespace-nowrap underline">
-                                                view image
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                9/28/2022 2:23:15 PM
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white border-b">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                M-A01
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                1234567890
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                <span className='bg-[#FAC5C1] px-4 py-2 rounded-full text-[#F04438] text-xs '>NO</span>
-                                            </td>
-                                            <td class="text-sm text-[#2064AD] font-light px-6 whitespace-nowrap underline">
-                                                view image
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                9/28/2022 2:23:15 PM
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white border-b">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                M-A01
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                1234567890
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                <span className='bg-[#FAC5C1] px-4 py-2 rounded-full text-[#F04438] text-xs '>NO</span>
-                                            </td>
-                                            <td class="text-sm text-[#2064AD] font-light px-6 whitespace-nowrap underline">
-                                                view image
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                9/28/2022 2:23:15 PM
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white border-b">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                M-A01
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                1234567890
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                <span className='bg-[#B6E9D1] px-4 py-2 rounded-full text-[#12B76A] text-xs '>OK</span>
-                                            </td>
-                                            <td class="text-sm text-[#2064AD] font-light px-6 whitespace-nowrap underline">
-                                                view image
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                9/28/2022 2:23:15 PM
-                                            </td>
-                                        </tr>
+                                        {log?.data.map(item => {
+                                            return (
+                                                <Table.Tr>
+                                                    <Table.Td className="whitespace-nowrap">{ item.model }</Table.Td>
+                                                    <Table.Td className="whitespace-nowrap">{ item.sn }</Table.Td>
+                                                    <Table.Td className="whitespace-nowrap">
+                                                        <span className='bg-[#FAC5C1] px-2 py-1 rounded-full text-[#F04438] text-xs'>NO</span>
+                                                    </Table.Td>
+                                                    <Table.Td className="whitespace-nowrap">
+                                                        <span className='cursor-pointer underline' onClick={() => setAlert({ bool: true, comp: 'image' })}>view image</span>
+                                                    </Table.Td>
+                                                </Table.Tr>
+                                            )
+                                        })}
                                     </tbody>
-                                </table>
+                                </Table>
                             </div>
                             <div className="flex justify-between items-center pt-4">
                                 <span className="text-[#646566] text-base">Showing 1 to 10 of 57 entries</span>

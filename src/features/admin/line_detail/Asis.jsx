@@ -6,11 +6,17 @@ import { Switch } from 'tailgrids-react';
 import { HiOutlineDocumentAdd, HiOutlinePlusSm, HiOutlineChevronRight, HiOutlineDownload, HiOutlineCalendar, HiTrendingDown, HiX } from 'react-icons/hi'
 import { NavLink } from 'react-router-dom';
 import { ChartLine } from '../../../common/components/ChartLine';
-import { Alert } from '../../../common/components';
+import { Alert } from '../../../common/components/Alert';
 import ng_image from '../../../assets/ng_image.png'
 import { Table } from '../../../common/components/table/Table';
+import { useGetLogDataQuery } from './lineDetailSlice';
+import { useState } from 'react';
 
 export const Asis = () => {
+    const { data: log, isLoading, isError } = useGetLogDataQuery();
+    const [alert, setAlert] = useState();
+    // console.log(log);
+
     const CompExcel = () => {
         return (
             <div className='w-[432px] flex flex-col gap-2'>
@@ -39,11 +45,6 @@ export const Asis = () => {
                 </div>
                 <div className='flex flex-col'>
                     <input type={'date'} className='flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]' />
-                    {/* <span className='text-[#DADBDB] text-[15px] font-semibold'>Date</span>
-                    <div className='flex justify-between items-center border-[1px] p-2 rounded-sm'>
-                        <input type={'text'} placeholder='Enter a date' className='outline-none w-full placeholder:text-[#DADBDB]' />
-                        <HiOutlineCalendar className='text-[#DADBDB]' />
-                    </div> */}
                 </div>
                 <div className='flex gap-2'>
                     <select name="time" className='flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]'>
@@ -213,7 +214,7 @@ export const Asis = () => {
                                                 <span className='bg-[#FAC5C1] px-4 py-2 rounded-full text-[#F04438] text-xs'>NO</span>
                                             </Table.Td>
                                             <Table.Td className="whitespace-nowrap">
-                                                <span className='cursor-pointer' onClick={() => setAlert({ bool: true, comp: 'image' })}>view image</span>
+                                                <span className='cursor-pointer underline' onClick={() => setAlert({ bool: true, comp: 'image' })}>view image</span>
                                             </Table.Td>
                                         </Table.Tr>
                                     </tbody>
