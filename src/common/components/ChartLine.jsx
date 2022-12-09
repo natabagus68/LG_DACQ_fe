@@ -4,7 +4,7 @@ import { Chart as ChaerJS, Title, Tooltip, LineElement, Legend, CategoryScale, L
 import React from 'react';
 ChaerJS.register( Title, Tooltip, LineElement, Legend, CategoryScale, LinearScale, PointElement, Filler );
 
-export const ChartLine = ({ datas, labels, height }) => {
+export const ChartLine = ({ datas, labels, height, width }) => {
     const data = {
         labels: labels,
         datasets: [
@@ -38,7 +38,7 @@ export const ChartLine = ({ datas, labels, height }) => {
 
     return(
         <>
-            <Line data={data} options={options} height={height} />
+            <Line data={data} options={options} height={height} width={width} />
         </>
     )
 }

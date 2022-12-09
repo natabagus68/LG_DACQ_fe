@@ -1,19 +1,13 @@
 import React, { useEffect } from 'react';
-import machine from '../../../assets/machine.png'
+import { useGetAuthenticatedUserQuery } from '../../../app/services/authService';
+import { Loader } from '../../../common/components';
 import { HomeIcon } from '../../../common/components/icons';
-import { Card } from '../../../common/components/Card';
-import push_unit from '../../../assets/push_unit.png';
-import button from '../../../assets/button.png';
-import button2 from '../../../assets/button2.png';
-import motor from '../../../assets/motor.png';
-import tilting from '../../../assets/tilting.png';
-import damper from '../../../assets/damper.png';
-import { Alert } from '../../../common/components';
-import { NavLink } from 'react-router-dom';
-import { HiTrendingDown } from 'react-icons/hi'
 import { Line } from './Line';
 
 export const Dashboard = () => {
+    const { data: auth, isLoading, isError } = useGetAuthenticatedUserQuery();
+    if (isLoading) return <Loader />;
+
     return (
         <>
             <div className='relative h-full p-[2%] flex font-inter flex-col gap-5 bg-white'>

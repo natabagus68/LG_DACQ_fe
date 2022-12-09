@@ -9,8 +9,8 @@ import { ShowFilter } from './ShowFilter';
 export const Table = ({ children, ...props }) => {
     return (
         <>
-            <div className="max-w-full overflow-x-auto">
-                <table className="border-l border-t border-sky-base w-full">
+            <div className="w-full overflow-x-auto">
+                <table className="border-l border-t h-full border-sky-base w-full">
                     { children }
                 </table>
             </div>
