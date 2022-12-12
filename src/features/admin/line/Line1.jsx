@@ -6,12 +6,15 @@ import { Switch } from 'tailgrids-react';
 import { HiOutlineChevronRight } from 'react-icons/hi';
 import { NavLink } from 'react-router-dom';
 import { ChartLine } from '../../../common/components/ChartLine';
+import { useGetLine1NgRatioQuery } from '../../../app/services/asisService';
 
-export const Lines = () => {
+export const Line1 = () => {
     const data = {
         labels: ['jan', 'feb', 'mar', 'apr', 'mei', 'jun'],
-        datas: [10, 2, 6, 8, 1, 7]
-    }
+        datas: [10, 10, 10, 10, 10, 10]
+    };
+
+    const { data: asisNgRatio, isLoading: asisNgRateLoading } = useGetLine1NgRatioQuery();
 
     return (
         <>
@@ -30,13 +33,15 @@ export const Lines = () => {
                         <span>PPM</span>
                     </div>
                 </div>
-                <div className='flex flex-col flex-1 gap-6'>
+                <div className='grid grid-rows-2 gap-6'>
                     <div className='flex-1 flex justify-between gap-6'>
                         <div className='flex-1'>
-                            <Card title='ASIS' subTitle='2%'>
+                            <Card title='ASIS' subTitle={ asisNgRateLoading ? <>
+                                <div className="w-3 h-3 bg-gray-500 animate-pulse rounded"></div>
+                            </> : `${asisNgRatio}%` }>
                                 <div className='flex flex-col justify-between flex-1'>
                                     <div className='flex gap-[14px] items-center flex-1'>
-                                        <ChartLine datas={data.datas} labels={data.labels} width={'100%'} height={'100%'} />
+                                        <ChartLine datas={ data.datas } labels={ data.labels } width={ '100%' } height={ '100%' } />
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
@@ -51,7 +56,7 @@ export const Lines = () => {
                                             </div>
                                         </div>
                                         <div className='flex justify-end pt-2'>
-                                            <NavLink to={'detail?t=asis'} className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                            <NavLink to={ 'detail?t=asis' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
                                                 <span>Details</span>
                                                 <HiOutlineChevronRight />
                                             </NavLink>
@@ -64,7 +69,7 @@ export const Lines = () => {
                             <Card title='OnePole-TwoPole' subTitle='10%'>
                                 <div className='flex flex-col justify-between flex-1'>
                                     <div className='flex gap-[14px] items-center flex-1'>
-                                        <ChartLine datas={data.datas} labels={data.labels} width={'100%'} height={'100%'} />
+                                        <ChartLine datas={ data.datas } labels={ data.labels } width={ '100%' } height={ '100%' } />
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
@@ -79,7 +84,7 @@ export const Lines = () => {
                                             </div>
                                         </div>
                                         <div className='flex justify-end pt-2'>
-                                            <NavLink to={'detail?t=asis'} className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                            <NavLink to={ 'detail?t=asis' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
                                                 <span>Details</span>
                                                 <HiOutlineChevronRight />
                                             </NavLink>
@@ -89,10 +94,10 @@ export const Lines = () => {
                             </Card>
                         </div>
                         <div className='flex-1'>
-                            <Card title='Hipot' subTitle='2%'>
+                            <Card title='Hipot' subTitle={ `2%` }>
                                 <div className='flex flex-col justify-between flex-1'>
                                     <div className='flex gap-[14px] items-center flex-1'>
-                                        <ChartLine datas={data.datas} labels={data.labels} width={'100%'} height={'100%'} />
+                                        <ChartLine datas={ data.datas } labels={ data.labels } width={ '100%' } height={ '100%' } />
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
@@ -107,7 +112,7 @@ export const Lines = () => {
                                             </div>
                                         </div>
                                         <div className='flex justify-end pt-2'>
-                                            <NavLink to={'detail?t=asis'} className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                            <NavLink to={ 'detail?t=asis' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
                                                 <span>Details</span>
                                                 <HiOutlineChevronRight />
                                             </NavLink>
@@ -120,7 +125,7 @@ export const Lines = () => {
                             <Card title='Option Manual' subTitle='19%'>
                                 <div className='flex flex-col justify-between flex-1'>
                                     <div className='flex gap-[14px] items-center flex-1'>
-                                        <ChartLine datas={data.datas} labels={data.labels} width={'100%'} height={'100%'} />
+                                        <ChartLine datas={ data.datas } labels={ data.labels } width={ '100%' } height={ '100%' } />
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
@@ -135,7 +140,7 @@ export const Lines = () => {
                                             </div>
                                         </div>
                                         <div className='flex justify-end pt-2'>
-                                            <NavLink to={'detail?t=asis'} className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                            <NavLink to={ 'detail?t=asis' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
                                                 <span>Details</span>
                                                 <HiOutlineChevronRight />
                                             </NavLink>
@@ -150,7 +155,7 @@ export const Lines = () => {
                             <Card title='Option Automatic' subTitle='6%'>
                                 <div className='flex flex-col justify-between flex-1'>
                                     <div className='flex gap-[14px] items-center flex-1'>
-                                        <ChartLine datas={data.datas} labels={data.labels} width={'100%'} height={'100%'} />
+                                        <ChartLine datas={ data.datas } labels={ data.labels } width={ '100%' } height={ '100%' } />
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
@@ -165,7 +170,7 @@ export const Lines = () => {
                                             </div>
                                         </div>
                                         <div className='flex justify-end pt-2'>
-                                            <NavLink to={'detail?t=asis'} className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                            <NavLink to={ 'detail?t=asis' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
                                                 <span>Details</span>
                                                 <HiOutlineChevronRight />
                                             </NavLink>
@@ -178,7 +183,7 @@ export const Lines = () => {
                             <Card title='White Balance' subTitle='0%'>
                                 <div className='flex flex-col justify-between flex-1'>
                                     <div className='flex gap-[14px] items-center flex-1'>
-                                        <ChartLine datas={data.datas} labels={data.labels} width={'100%'} height={'100%'} />
+                                        <ChartLine datas={ data.datas } labels={ data.labels } width={ '100%' } height={ '100%' } />
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
@@ -193,7 +198,7 @@ export const Lines = () => {
                                             </div>
                                         </div>
                                         <div className='flex justify-end pt-2'>
-                                            <NavLink to={'detail?t=asis'} className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                            <NavLink to={ 'detail?t=asis' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
                                                 <span>Details</span>
                                                 <HiOutlineChevronRight />
                                             </NavLink>
@@ -206,7 +211,7 @@ export const Lines = () => {
                             <Card title='DTV Inspection' subTitle='6%'>
                                 <div className='flex flex-col justify-between flex-1'>
                                     <div className='flex gap-[14px] items-center flex-1'>
-                                        <ChartLine datas={data.datas} labels={data.labels} width={'100%'} height={'100%'} />
+                                        <ChartLine datas={ data.datas } labels={ data.labels } width={ '100%' } height={ '100%' } />
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
@@ -221,7 +226,7 @@ export const Lines = () => {
                                             </div>
                                         </div>
                                         <div className='flex justify-end pt-2'>
-                                            <NavLink to={'detail?t=asis'} className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                            <NavLink to={ 'detail?t=asis' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
                                                 <span>Details</span>
                                                 <HiOutlineChevronRight />
                                             </NavLink>
@@ -234,7 +239,7 @@ export const Lines = () => {
                             <Card title='Shipmode' subTitle='2%'>
                                 <div className='flex flex-col justify-between flex-1'>
                                     <div className='flex gap-[14px] items-center flex-1'>
-                                        <ChartLine datas={data.datas} labels={data.labels} width={'100%'} height={'100%'} />
+                                        <ChartLine datas={ data.datas } labels={ data.labels } width={ '100%' } height={ '100%' } />
                                     </div>
                                     <div className='flex flex-col'>
                                         <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
@@ -249,7 +254,7 @@ export const Lines = () => {
                                             </div>
                                         </div>
                                         <div className='flex justify-end pt-2'>
-                                            <NavLink to={'detail?t=asis'} className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
+                                            <NavLink to={ 'detail?t=asis' } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
                                                 <span>Details</span>
                                                 <HiOutlineChevronRight />
                                             </NavLink>
@@ -263,4 +268,4 @@ export const Lines = () => {
             </div>
         </>
     );
-}
+};

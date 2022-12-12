@@ -10,7 +10,7 @@ import { Account } from "../features/admin/account/Account";
 import { Access } from "../features/admin/access/Access";
 import { Mapping } from "../features/admin/access/Mapping";
 import { AddData } from "../features/admin/access/AddData";
-import { Lines } from "../features/admin/line";
+import { Line1 } from "../features/admin/line";
 import { LineDetail } from "../features/admin/line_detail/LineDetail";
 import { LineLog } from "../features/admin/line_log/LineLog";
 
@@ -41,8 +41,16 @@ export default createBrowserRouter([
         errorElemepnt: <Error404 />,
         children: [
             {
+                path: '',
+                element: <Navigate to={ `dashboard` } replace />
+            },
+            {
                 path: 'dashboard',
                 element: <Dashboard />
+            },
+            {
+                path: 'lines/line-1',
+                element: <Line1 />,
             },
             {
                 path: 'dashboard/motor',
@@ -71,11 +79,6 @@ export default createBrowserRouter([
             {
                 path: 'access/add_data',
                 element: <AddData />,
-            },
-            
-            {
-                path: 'dashboard/lines/',
-                element: <Lines />,
             },
             {
                 path: 'dashboard/lines/detail',

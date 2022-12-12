@@ -2,7 +2,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useGetAuthenticatedUserQuery } from '../../../app/services/authService';
-import auth from '../../../assets/auth.png'
+import bgLogin from '../../../assets/bg-login.png';
 import { Loader } from '../../../common/components/Loader';
 
 export const AuthLayout = () => {
@@ -13,7 +13,7 @@ export const AuthLayout = () => {
         <>
             <div className={`bg-[#FFFFFF] w-screen h-screen flex`}>
                 <div className='bg-[#1E1E1E] flex-1 flex items-center justify-center'>
-                    <img src={auth} alt='Auth' />
+                    <img src={ bgLogin } alt='Auth' />
                 </div>
                 <div className='flex-1 flex items-center justify-center'>
                     <Outlet />

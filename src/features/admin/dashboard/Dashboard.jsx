@@ -18,9 +18,9 @@ export const Dashboard = () => {
                 </div>
                 <div className='flex justify-between'>
                     <div className='w-[265px] h-[162px]'>
-                        <Line title='Line 1' value={18} />
+                        <Line title='Line 1' value={ undefined } detailPath={ `/lines/line-1` } />
                     </div>
-                    <div className='w-[265px] h-[162px]'>
+                    {/* <div className='w-[265px] h-[162px]'>
                         <Line title='Line 2' value={38} />
                     </div>
                     <div className='w-[265px] h-[162px]'>
@@ -28,9 +28,9 @@ export const Dashboard = () => {
                     </div>
                     <div className='w-[265px] h-[162px]'>
                         <Line title='Line 4' value={22} />
-                    </div>
+                    </div> */}
                 </div>
-                <div className='flex justify-between'>
+                {/* <div className='flex justify-between'>
                     <div className='w-[265px] h-[162px]'>
                         <Line title='Line 5' value={32} />
                     </div>
@@ -57,7 +57,7 @@ export const Dashboard = () => {
                     <div className='w-[265px] h-[162px]'>
                         <Line title='Line 12' value={12} />
                     </div>
-                </div>
+                </div> */}
             </div>
         </>
     );

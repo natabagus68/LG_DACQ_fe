@@ -12,6 +12,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
+            transformErrorResponse: async res => res?.data?.message,
             async onQueryStarted(payload, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;

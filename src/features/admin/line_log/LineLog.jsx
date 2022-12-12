@@ -68,7 +68,7 @@ export const LineLog = () => {
                                                     <Table.Td className="whitespace-nowrap">{ item.model }</Table.Td>
                                                     <Table.Td className="whitespace-nowrap">{ item.sn }</Table.Td>
                                                     <Table.Td className="whitespace-nowrap">
-                                                        <span className='bg-[#FAC5C1] px-2 py-1 rounded-full text-[#F04438] text-xs'>NO</span>
+                                                        <span className={ `px-2 py-1 rounded-full ${item.ok ? 'text-[#12B76A] bg-[#B6E9D1]' : 'text-[#F04438] bg-[#FAC5C1]'} text-xs` }>{ item.ok ? 'OK' : 'NG' }</span>
                                                     </Table.Td>
                                                     <Table.Td className="whitespace-nowrap">
                                                         <span className='cursor-pointer underline' onClick={() => setAlert({ bool: true, comp: 'image' })}>view image</span>
