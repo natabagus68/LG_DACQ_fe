@@ -5,6 +5,7 @@ import lg_electronics from '../../../assets/lg_electronics.png';
 import { HiOutlineDesktopComputer, HiOutlineDocumentText, HiOutlineUsers, HiOutlineViewGrid, HiX } from "react-icons/hi";
 import { TbActivity } from "react-icons/tb";
 import { toggle } from './adminLayoutSlice';
+import { SettingsIcon } from '../../../common/components/icons';
 
 
 export const SideBar = () => {
@@ -43,20 +44,10 @@ export const SideBar = () => {
                             <NavItem label={`Dashboard`} to={`dashboard`} isActive={bar.dashboard} icon={<HiOutlineViewGrid className='text-2xl' />}>
                             </NavItem>
                         </div>
-                        <div onClick={() => setActive('monitor')}>
-                            <NavItem label={`Monitor`} isActive={bar.monitor} icon={<HiOutlineDesktopComputer className='text-2xl' />}>
-                                <NavItem to={`monitor/tilting`} label={`Tilting`} child={true} />
-                                <NavItem to={`monitor/lifter`} label={`Lifter`} child={true} />
-                            </NavItem>
-                        </div>
                         <div onClick={() => setActive('report')}>
                             <NavItem label={`Report`} isActive={bar.report} icon={<HiOutlineDocumentText className='text-2xl' />}>
-                                <NavItem to={`report`} label={`Production`} child={true} />
-                                <NavItem to={``} label={`Servo Motor`} child={true} />
-                            </NavItem>
-                        </div>
-                        <div onClick={() => setActive('log')}>
-                            <NavItem label={`Log`} to={`log`} isActive={bar.log} icon={<TbActivity className='text-2xl' />}>
+                                {/* <NavItem to={`report`} label={`Production`} child={true} />
+                                <NavItem to={``} label={`Servo Motor`} child={true} /> */}
                             </NavItem>
                         </div>
                         <div onClick={() => setActive('user')}>
@@ -64,6 +55,9 @@ export const SideBar = () => {
                                 <NavItem to={`account`} label={`Account`} child={true} />
                                 <NavItem to={`access`} label={`Access`} child={true} />
                             </NavItem>
+                        </div>
+                        <div onClick={ () => setActive('setting') }>
+                            <NavItem label={ `Settings` } isActive={ bar.setting } icon={ <SettingsIcon /> } />
                         </div>
                     </div>
                 </div>

@@ -3,7 +3,6 @@ import { Error404 } from "../common/components";
 import { config } from "../common/utils";
 import { AdminLayout } from "../features/admin/adminLayout";
 import { Dashboard } from "../features/admin/dashboard";
-import { Motor } from "../features/admin/motor";
 import { Report } from "../features/admin/report";
 import { Log } from "../features/admin/log";
 import { Account } from "../features/admin/account/Account";
@@ -11,11 +10,11 @@ import { Access } from "../features/admin/access/Access";
 import { Mapping } from "../features/admin/access/Mapping";
 import { AddData } from "../features/admin/access/AddData";
 import { Line1 } from "../features/admin/line";
-import { LineDetail } from "../features/admin/line_detail/LineDetail";
 import { LineLog } from "../features/admin/line_log/LineLog";
 
 import { AuthLayout } from "../features/auth/authLayout";
 import { Login } from "../features/auth/login";
+import { Asis } from "../features/admin/line_detail/Asis";
 
 const Root = () => { return <Outlet />; };
 
@@ -53,8 +52,8 @@ export default createBrowserRouter([
                 element: <Line1 />,
             },
             {
-                path: 'dashboard/motor',
-                element: <Motor />
+                path: 'lines/line-1/asis',
+                element: <Asis />,
             },
             {
                 path: 'report',
@@ -79,10 +78,6 @@ export default createBrowserRouter([
             {
                 path: 'access/add_data',
                 element: <AddData />,
-            },
-            {
-                path: 'dashboard/lines/detail',
-                element: <LineDetail />,
             },
             {
                 path: 'dashboard/lines/detail/log',

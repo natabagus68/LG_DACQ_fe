@@ -1,13 +1,6 @@
 
-import React, { Children, useEffect } from 'react';
-import { HomeIcon } from '../../../common/components/icons';
-import { Card } from '../../../common/components/Card';
-import { Switch } from 'tailgrids-react';
-import { HiOutlineDocumentAdd, HiOutlinePlusSm, HiOutlineChevronRight, HiOutlineDownload, HiOutlineCalendar, HiTrendingDown, HiX } from 'react-icons/hi'
-import { NavLink, useLocation } from 'react-router-dom';
-import { ChartLine } from '../../../common/components/ChartLine';
-import { Alert } from '../../../common/components';
-import ng_image from '../../../assets/ng_image.png'
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { Asis } from './Asis';
 import { OnePole } from './OnePole';
 import { Hipot } from './Hipot';

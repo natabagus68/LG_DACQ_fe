@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const CaretIcon = ({ width = '0.8vw', height = '0.8vw', ...props }) => {
+export const CaretIcon = ({ width = '18px', height = '18px', ...props }) => {
     return (
         <>
             <svg width={ width } height={ height } { ...props } viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -7,6 +7,8 @@ export default defineConfig({
     plugins: [
         react(),
         VitePWA({
+            disable: true,
+            injectRegister: 'auto',
             registerType: 'autoUpdate',
             devOptions: {
                 enabled: false
