@@ -26,3 +26,5 @@ export * from './FilterIcon';
 export * from './CalendarIcon';
 export * from './OptionsIcon';
 export * from './EditIcon';
+export * from './NgCauseIcon';
+export * from './ManualNgIcon';

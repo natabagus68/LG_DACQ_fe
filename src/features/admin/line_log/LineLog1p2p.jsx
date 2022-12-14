@@ -3,18 +3,17 @@ import { HomeIcon, SearchIcon } from '../../../common/components/icons';
 import { NavLink } from 'react-router-dom';
 import { HiOutlineArrowCircleDown } from 'react-icons/hi';
 import { Table } from '../../../common/components/table/Table';
-import { useLine1AsisLogsQuery } from '../../../app/services/asisService';
-import { OpenAlert } from '../line_detail/Asis';
+import { useLine1OnepoleTwopoleLogsQuery } from '../../../app/services/onepoleTwopoleService';
+import { OpenAlert } from '../line_detail/OnepoleTwopole';
 import { useDispatch } from 'react-redux';
-import { line1AsisSetSelectedLogImage } from '../line_detail/line1AsisSlice';
 
-export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert: _alert }) => {
+export const Line1OnepoleTwopoleLogTable = ({ perPage: _perPage, q: _q, page: _page, alert: _alert }) => {
     const [perPage, setPerpage] = _perPage;
     const [page, setPage] = _page;
     const [q, setQ] = _q;
     const [alert, setAlert] = _alert;
     const dispatch = useDispatch();
-    const { data: line1AsisLogs, isLoading: line1AsisLogsLoading } = useLine1AsisLogsQuery({
+    const { data: line1OnepoleTwopoleLogs, isLoading: line1OnepoleTwopoleLogsLoading } = useLine1OnepoleTwopoleLogsQuery({
         page: page || 1,
         q: q || '',
         per_page: perPage || 10,
@@ -22,7 +21,6 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
 
     const viewImage = (e, image) => {
         e.preventDefault();
-        dispatch(line1AsisSetSelectedLogImage(image));
         setAlert({ comp: 'image', bool: true });
     };
     return (
@@ -55,11 +53,10 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>MODEL</Table.Th>
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>SERIAL NUMBER</Table.Th>
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>JUDGEMENT</Table.Th>
-                            <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>CAPTURE IMAGE</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <tbody>
-                        { line1AsisLogs?.map(item => {
+                        { line1OnepoleTwopoleLogs?.map(item => {
                             return (
                                 <Table.Tr className={ `even:bg-[#F8F7FF]` }>
                                     <Table.Td className="whitespace-nowrap py-4 ">{ item?.model || '-' }</Table.Td>
@@ -67,17 +64,14 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         <span className={ `px-2 py-1 rounded-full ${item?.ok ? 'text-[#12B76A] bg-[#B6E9D1]' : 'text-[#F04438] bg-[#FAC5C1]'} text-xs` }>{ item?.ok ? 'OK' : 'NG' }</span>
                                     </Table.Td>
-                                    <Table.Td className="whitespace-nowrap py-4 ">
-                                        <span className='cursor-pointer underline' onClick={ (e) => viewImage(e, item.image_local_path) }>view image</span>
-                                    </Table.Td>
                                 </Table.Tr>
                             );
                         }) }
                     </tbody>
                 </Table>
                 <div className="flex justify-between items-center pt-4">
-                    <span className="text-[#646566] text-base">Showing 1 to 10 of 57 entries</span>
-                    <div className="flex">
+                    {/* <span className="text-[#646566] text-base">Showing 1 to 10 of 57 entries</span> */ }
+                    <div className="flex ml-auto">
                         <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-l-[5px] flex items-center cursor-pointer" onClick={ e => setPage(page => page > 1 ? page - 1 : 1) }>Previous</div>
                         <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center bg-[#617E8C] text-white">{ page }</div>
                         {/* <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">2</div>
@@ -85,7 +79,7 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
                         <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">4</div>
                         <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">...</div>
                         <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">8</div> */}
-                        <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-r-[5px] flex items-center cursor-pointer" onClick={ e => setPage(page => line1AsisLogs.length == perPage ? page + 1 : page) }>Next</div>
+                        <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-r-[5px] flex items-center cursor-pointer" onClick={ e => setPage(page => line1OnepoleTwopoleLogs.length == perPage ? page + 1 : page) }>Next</div>
                     </div>
                 </div>
             </div>
@@ -93,7 +87,7 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
     );
 };
 
-export const LineLog = () => {
+export const LineLog1p2p = () => {
     const page = useState(1);
     const q = useState('');
     const perPage = useState(10);
@@ -125,7 +119,7 @@ export const LineLog = () => {
                                 <span>Download</span>
                             </button>
                         </div>
-                        <Line1AsisLogTable page={ page } perPage={ perPage } q={ q } alert={ _alert } />
+                        <Line1OnepoleTwopoleLogTable page={ page } perPage={ perPage } q={ q } alert={ _alert } />
                     </div>
                 </div>
             </div>

@@ -1,9 +1,9 @@
 import React from 'react';
 
-export const Tr = ({children}) => {
+export const Tr = ({ children, ...props }) => {
     return (
         <>
-            <tr>
+            <tr { ...props }>
                 {children}
             </tr>
         </>

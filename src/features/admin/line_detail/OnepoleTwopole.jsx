@@ -6,25 +6,23 @@ import { HiOutlineDocumentAdd, HiOutlinePlusSm, HiOutlineChevronRight, HiOutline
 import { Link } from 'react-router-dom';
 import { ChartLine } from '../../../common/components/ChartLine';
 import { Alert } from '../../../common/components/Alert';
-import ng_image from '../../../assets/ng_image.png';
 import { Table } from '../../../common/components/table/Table';
 import { useState } from 'react';
-import { useGetLine1AsisNgCountQuery, useGetLine1AsisOkCountQuery, useGetLine1AsisProcessChartQuery, useGetLine1AsisTopTenLogsQuery, useGetLine1Top5NgCauseQuery, useLine1AsisTopManualNgQuery, useLine1AsisUpdateManualNgMutation } from '../../../app/services/asisService';
+import { useGetLine1OnepoleTwopoleNgCountQuery, useGetLine1OnepoleTwopoleOkCountQuery, useGetLine1OnepoleTwopoleProcessChartQuery, useGetLine1OnepoleTwopoleTopTenLogsQuery, useGetLine1Top5NgCauseQuery, useLine1OnepoleTwopoleTopManualNgQuery, useLine1OnepoleTwopoleUpdateManualNgMutation } from '../../../app/services/onepoleTwopoleService';
 import { Switch } from '@headlessui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { line1AsisSetSelectedLogImage } from './line1AsisSlice';
 import { config } from '../../../common/utils';
 
-const AsisChart = ({ frequent, ppmOn }) => {
-    const { data: line1AsisProcessChart = [], isLoading: line1AsisProcessChartLoading } = useGetLine1AsisProcessChartQuery(frequent, {
+const OnepoleTwopoleChart = ({ frequent, ppmOn }) => {
+    const { data: line1OnepoleTwopoleProcessChart = [], isLoading: line1OnepoleTwopoleProcessChartLoading } = useGetLine1OnepoleTwopoleProcessChartQuery(frequent, {
         pollingInterval: 10000,
     });
     const data = useMemo(() => {
         return {
-            labels: line1AsisProcessChart.map(item => item?.x || '-'),
-            datas: line1AsisProcessChart.map(item => (item?.y || 0) * (ppmOn ? 10000 : 1))
+            labels: line1OnepoleTwopoleProcessChart.map(item => item?.x || '-'),
+            datas: line1OnepoleTwopoleProcessChart.map(item => (item?.y || 0) * (ppmOn ? 10000 : 1))
         };
-    }, [line1AsisProcessChart, ppmOn]);
+    }, [line1OnepoleTwopoleProcessChart, ppmOn]);
     return <ChartLine datas={ data.datas } labels={ data.labels } height='100%' width='100%' />;
 };
 
@@ -80,13 +78,13 @@ const CompAddData = ({ setAlert }) => {
         if (payload.length > 500) return;
         return _setDescription(payload);
     };
-    const [line1AsisUpdateManualNg, { error: line1AsisUpdateManualNgError, isLoading: line1AsisUpdateManualNgLoading }] = useLine1AsisUpdateManualNgMutation();
-    const line1AsisSubmitManualNg = e => {
+    const [line1OnepoleTwopoleUpdateManualNg, { error: line1OnepoleTwopoleUpdateManualNgError, isLoading: line1OnepoleTwopoleUpdateManualNgLoading }] = useLine1OnepoleTwopoleUpdateManualNgMutation();
+    const line1OnepoleTwopoleSubmitManualNg = e => {
         e.preventDefault();
-        line1AsisUpdateManualNg(description);
+        line1OnepoleTwopoleUpdateManualNg(description);
     };
     return (
-        <form onSubmit={ line1AsisSubmitManualNg }>
+        <form onSubmit={ line1OnepoleTwopoleSubmitManualNg }>
             <div className='w-[432px] flex flex-col gap-2'>
                 <div className='flex gap-4 items-center'>
                     <NgCauseIcon />
@@ -109,7 +107,7 @@ const CompAddData = ({ setAlert }) => {
 };
 
 export const CompImage = ({ setAlert }) => {
-    const selectedLogImage = useSelector(state => state.line1Asis.selectedLogImage);
+    const selectedLogImage = useSelector(state => state.line1OnepoleTwopole.selectedLogImage);
     useEffect(() => {
         console.log(`${config.assetUrl}${selectedLogImage}`);
     }, [selectedLogImage]);
@@ -132,7 +130,7 @@ export const OpenAlert = ({ alert, setAlert }) => {
 };
 
 const TopAutoNgTable = () => {
-    const { data: line1AsisTop5NgCause = [], isLoading: line1AsisTop5NgCauseLoading } = useGetLine1Top5NgCauseQuery(null, {
+    const { data: line1OnepoleTwopoleTop5NgCause = [], isLoading: line1OnepoleTwopoleTop5NgCauseLoading } = useGetLine1Top5NgCauseQuery(null, {
         pollingInterval: 10000,
     });
     return (
@@ -145,10 +143,10 @@ const TopAutoNgTable = () => {
                 </Table.Tr>
             </Table.Thead>
             <tbody>
-                { line1AsisTop5NgCauseLoading && <>
+                { line1OnepoleTwopoleTop5NgCauseLoading && <>
                     <div className="flex flex-1 bg-red-300"></div>
                 </> }
-                { line1AsisTop5NgCause.map((item, i) => (
+                { line1OnepoleTwopoleTop5NgCause.map((item, i) => (
                     <Table.Tr key={ i }>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">{ item.model || '-' }</Table.Td>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">{ item.ng_cause || '-' }</Table.Td>
@@ -161,7 +159,7 @@ const TopAutoNgTable = () => {
 };
 
 const TopManualNgTable = () => {
-    const { data: topManualNg, isLoading: topManualNgLoading } = useLine1AsisTopManualNgQuery();
+    const { data: topManualNg, isLoading: topManualNgLoading } = useLine1OnepoleTwopoleTopManualNgQuery();
     if (topManualNgLoading) {
         return <>
             <div className="">....</div>
@@ -181,24 +179,24 @@ const TopManualNgTable = () => {
     );
 };
 
-export const Asis = () => {
+export const OnepoleTwopole = () => {
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
     const [manualNgOn, setManualNgOn] = useState(false);
-    const { data: line1AsisOkCount, isLoading: line1AsisOkCountLoading } = useGetLine1AsisOkCountQuery(null, {
+    const { data: line1OnepoleTwopoleOkCount, isLoading: line1OnepoleTwopoleOkCountLoading } = useGetLine1OnepoleTwopoleOkCountQuery(null, {
         pollingInterval: 10000,
     });
-    const { data: line1AsisNgCount, isLoading: line1AsisNgCountLoading } = useGetLine1AsisNgCountQuery(null, {
+    const { data: line1OnepoleTwopoleNgCount, isLoading: line1OnepoleTwopoleNgCountLoading } = useGetLine1OnepoleTwopoleNgCountQuery(null, {
         pollingInterval: 10000,
     });
-    const { data: line1AsisTopTenLogs = [], isLoading: line1AsisTopTenLogsLoading } = useGetLine1AsisTopTenLogsQuery(null, {
+    const { data: line1OnepoleTwopoleTopTenLogs = [], isLoading: line1OnepoleTwopoleTopTenLogsLoading } = useGetLine1OnepoleTwopoleTopTenLogsQuery(null, {
         pollingInterval: 10000,
     });
     const [frequent, setFrequent] = useState('hourly');
     const [alert, setAlert] = useState();
     const viewImage = (e, image) => {
         e.preventDefault();
-        dispatch(line1AsisSetSelectedLogImage(image));
+        // dispatch(line1OnepoleTwopoleSetSelectedLogImage(image));
         setAlert({ comp: 'image', bool: true });
     };
 
@@ -214,14 +212,14 @@ export const Asis = () => {
                         <span className='text-sm'>/</span>
                         <span className="font-semibold text-sm">Line 1</span>
                         <span className='text-sm'>/</span>
-                        <span className="font-semibold text-sm text-[#514E4E]">ASIS</span>
+                        <span className="font-semibold text-sm text-[#514E4E]">One Pole Two Pole</span>
                     </div>
                 </div>
                 <div className='flex flex-col flex-1'>
                     <Card>
                         <div className='flex flex-col flex-1 gap-1'>
                             <div className="flex items-center justify-between">
-                                <span className='font-bold text-lg'>Asis</span>
+                                <span className='font-bold text-lg'>OnepoleTwopole</span>
                                 <div className='flex items-center gap-2'>
                                     <div onClick={ () => setFrequent('hourly') } className={ `flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${frequent == 'hourly' ? 'text-black border-[1px]' : 'text-[#858383]'}` }>
                                         <span className='text-[11px] font-semibold'>Hourly</span>
@@ -261,7 +259,7 @@ export const Asis = () => {
                                 </div>
                             </div>
                             <div className='w-full h-full'>
-                                <AsisChart frequent={ frequent } ppmOn={ ppmOn } />
+                                <OnepoleTwopoleChart frequent={ frequent } ppmOn={ ppmOn } />
                             </div>
                         </div>
                     </Card>
@@ -271,11 +269,11 @@ export const Asis = () => {
                         <div className='grid grid-cols-4 gap-4'>
                             <Card className={ `py-[21px] px-[10px]` }>
                                 <span className='bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm'>Quantity OK</span>
-                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>{ line1AsisOkCount }</span>
+                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>{ line1OnepoleTwopoleOkCount }</span>
                             </Card>
                             <Card className={ `py-[21px] px-[10px]` }>
                                 <span className='bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm'>Quantity NG</span>
-                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>{ line1AsisNgCount }</span>
+                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>{ line1OnepoleTwopoleNgCount }</span>
                             </Card>
                             {/* <Card>
                                 <span className='bg-[#FEF4E6] h-[32px] rounded-xl flex items-center justify-center text-[#F59F00] text-sm'>Quantity NDF</span>
@@ -304,7 +302,7 @@ export const Asis = () => {
                                     </Table.Tr>
                                 </Table.Thead>
                                 <tbody>
-                                    { line1AsisTopTenLogs.map((item, i) => (
+                                    { line1OnepoleTwopoleTopTenLogs.map((item, i) => (
                                         <Table.Tr key={ i } className={ `even:bg-[#F0F1F3]` }>
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">{ item.model || '-' }</Table.Td>
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">{ item.sn || '-' }</Table.Td>
@@ -324,32 +322,14 @@ export const Asis = () => {
                         <div className='flex justify-between items-center pb-1'>
                             <span className='font-bold text-lg'>Manual NG Cause</span>
                             <div className='flex gap-4'>
-                                <div className='flex items-center gap-2 text-[#2E3032] text-sm'>
-                                    <Switch
-                                        as={ `div` }
-                                        checked={ manualNgOn }
-                                        onChange={ setManualNgOn }
-                                        className={ `${manualNgOn ? 'bg-blue-600' : 'bg-gray-200'
-                                            } cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full` }
-                                    >
-                                        <span className="sr-only">Enable notifications</span>
-                                        <span
-                                            className={ `${manualNgOn ? 'translate-x-6' : 'translate-x-1'
-                                                } inline-block h-4 w-4 transform rounded-full bg-white transition` }
-                                        />
-                                    </Switch>
-                                    <span>Inactive</span>
-                                </div>
-                                <button disabled={ !manualNgOn } onClick={ () => setAlert({ bool: true, comp: 'addData' }) } className='flex gap-1 cursor-pointer items-center px-3 py-2 bg-[#229BD8] text-white rounded-lg disabled:bg-gray-200 disabled:cursor-not-allowed'>
+                                <button onClick={ () => setAlert({ bool: true, comp: 'addData' }) } className='flex gap-1 cursor-pointer items-center px-3 py-2 bg-[#229BD8] text-white rounded-lg disabled:bg-gray-200 disabled:cursor-not-allowed'>
                                     <HiOutlinePlusSm />
                                     <span className='text-[11px] font-semibold'>Add Data</span>
                                 </button>
                             </div>
                         </div>
                         <div className='flex'>
-                            { manualNgOn ?
-                                <TopManualNgTable /> :
-                                <TopAutoNgTable /> }
+                            <TopManualNgTable />
                         </div>
                     </div>
                 </div>

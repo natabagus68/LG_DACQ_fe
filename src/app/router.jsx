@@ -15,6 +15,8 @@ import { LineLog } from "../features/admin/line_log/LineLog";
 import { AuthLayout } from "../features/auth/authLayout";
 import { Login } from "../features/auth/login";
 import { Asis } from "../features/admin/line_detail/Asis";
+import { OnepoleTwopole } from "../features/admin/line_detail/OnepoleTwopole";
+import { LineLog1p2p } from "../features/admin/line_log/LineLog1p2p";
 
 const Root = () => { return <Outlet />; };
 
@@ -37,7 +39,7 @@ export default createBrowserRouter([
     {
         path: config.pathPrefix,
         element: <AdminLayout />,
-        errorElemepnt: <Error404 />,
+        errorElement: <Error404 />,
         children: [
             {
                 path: '',
@@ -56,12 +58,20 @@ export default createBrowserRouter([
                 element: <Asis />,
             },
             {
-                path: 'report',
-                element: <Report />
+                path: 'lines/line-1/asis/log',
+                element: <LineLog />,
             },
             {
-                path: 'log',
-                element: <Log />
+                path: 'lines/line-1/onepole-twopole',
+                element: <OnepoleTwopole />,
+            },
+            {
+                path: 'lines/line-1/onepole-twopole/log',
+                element: <LineLog1p2p />,
+            },
+            {
+                path: 'report',
+                element: <Report />
             },
             {
                 path: 'account',

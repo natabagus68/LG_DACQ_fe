@@ -44,13 +44,13 @@ export const SideBar = () => {
                             <NavItem label={`Dashboard`} to={`dashboard`} isActive={bar.dashboard} icon={<HiOutlineViewGrid className='text-2xl' />}>
                             </NavItem>
                         </div>
-                        <div onClick={() => setActive('report')}>
+                        {/* <div onClick={() => setActive('report')}>
                             <NavItem label={`Report`} isActive={bar.report} icon={<HiOutlineDocumentText className='text-2xl' />}>
-                                {/* <NavItem to={`report`} label={`Production`} child={true} />
-                                <NavItem to={``} label={`Servo Motor`} child={true} /> */}
+                                <NavItem to={`report`} label={`Production`} child={true} />
+                                <NavItem to={``} label={`Servo Motor`} child={true} />
                             </NavItem>
-                        </div>
-                        <div onClick={() => setActive('user')}>
+                        </div> */}
+                        {/* <div onClick={() => setActive('user')}>
                             <NavItem label={`User`} isActive={bar.user} icon={<HiOutlineUsers className='text-2xl' />}>
                                 <NavItem to={`account`} label={`Account`} child={true} />
                                 <NavItem to={`access`} label={`Access`} child={true} />
@@ -58,7 +58,7 @@ export const SideBar = () => {
                         </div>
                         <div onClick={ () => setActive('setting') }>
                             <NavItem label={ `Settings` } isActive={ bar.setting } icon={ <SettingsIcon /> } />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className='bg-[#000] bg-opacity-50 flex-1 cursor-pointer' onClick={() => dispatch(toggle())} />
