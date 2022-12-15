@@ -108,7 +108,7 @@ export const LineLog1p2p = () => {
                         <span className='text-sm'>/</span>
                         <span className="font-semibold text-sm">Line 1</span>
                         <span className='text-sm'>/</span>
-                        <span className="font-semibold text-sm">ASIS</span>
+                        <span className="font-semibold text-sm">One Pole Two Pole</span>
                         <span className='text-sm'>/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">Log</span>
                     </div>

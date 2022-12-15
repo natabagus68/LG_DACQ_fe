@@ -121,7 +121,7 @@ export const Line1 = () => {
                                     <div className='flex flex-col mt-5'>
                                         <div className='border-[1px] rounded-xl flex flex-col justify-between p-2'>
                                             <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
-                                            <span className='text-[10px] text-[#858383] font-medium'>{ line1OnepoleTwopoleTopManualNg?.[(line1OnepoleTwopoleTopManualNg?.length || 0) - 1]?.description || '-' }</span>
+                                            <span className='text-[10px] text-[#858383] font-medium'>{ line1OnepoleTwopoleTopManualNg?.[0]?.description || '-' }</span>
                                         </div>
                                         <div className='flex justify-end pt-2'>
                                             <NavLink to={ `onepole-twopole` } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>
