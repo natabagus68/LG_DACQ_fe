@@ -8,17 +8,30 @@ import { ChartLine } from '../../../common/components/ChartLine';
 import { config } from '../../../common/utils';
 import { useMemo } from 'react';
 import { useGetLine1AsisChartLastWeekQuery, useGetLine1AsisTopNgCauseQuery, useGetLine1NgRatioQuery } from '../../../app/services/asisService';
+import { useGetLine1OnepoleTwopoleChartLastWeekQuery, useGetLine1OnepoleTwopoleTopNgCauseQuery, useGetLine1NgRatioOnepoleTwopoleQuery, useLine1OnepoleTwopoleTopManualNgQuery } from '../../../app/services/onepoleTwopoleService';
 
 export const Line1 = () => {
     const [ppmOn, setPpmOn] = useState(false);
     const { data: line1AsisChartLastWeek = [] } = useGetLine1AsisChartLastWeekQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     const { data: line1AsisTopNgCause } = useGetLine1AsisTopNgCauseQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     const { data: line1AsisNgRatio, isLoading: line1AsisNgRatioLoading } = useGetLine1NgRatioQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
+    });
+    const { data: line1OnepoleTwopoleChartLastWeek = [] } = useGetLine1OnepoleTwopoleChartLastWeekQuery(null, {
+        pollingInterval: 1000,
+    });
+    const { data: line1OnepoleTwopoleTopNgCause } = useGetLine1OnepoleTwopoleTopNgCauseQuery(null, {
+        pollingInterval: 1000,
+    });
+    const { data: line1OnepoleTwopoleNgRatio, isLoading: line1OnepoleTwopoleNgRatioLoading } = useGetLine1NgRatioOnepoleTwopoleQuery(null, {
+        pollingInterval: 1000,
+    });
+    const { data: line1OnepoleTwopoleTopManualNg, isLoading: line1OnepoleTwopoleTopManualNgLoading } = useLine1OnepoleTwopoleTopManualNgQuery(null, {
+        pollingInterval: 1000,
     });
 
     const asisChartData = useMemo(() => {
@@ -27,6 +40,13 @@ export const Line1 = () => {
             datas: line1AsisChartLastWeek.map(item => (item?.y || 0) * (ppmOn ? 10000 : 1))
         };
     }, [line1AsisChartLastWeek, ppmOn]);
+
+    const onepoleTwopoleChartData = useMemo(() => {
+        return {
+            labels: line1OnepoleTwopoleChartLastWeek.map(item => item?.x || '-'),
+            datas: line1OnepoleTwopoleChartLastWeek.map(item => (item?.y || 0) * (ppmOn ? 10000 : 1))
+        };
+    }, [line1OnepoleTwopoleChartLastWeek, ppmOn]);
 
     return (
         <>
@@ -91,24 +111,17 @@ export const Line1 = () => {
                             </Card>
                         </div>
                         <div className='flex-1'>
-                            <Card title='OnePole-TwoPole' subTitle={ line1AsisNgRatioLoading ? <>
+                            <Card title='OnePole-TwoPole' subTitle={ line1OnepoleTwopoleNgRatioLoading ? <>
                                 <div className="w-6 h-6 bg-gray-300 animate-pulse"></div>
-                            </> : `${line1AsisNgRatio.toFixed(1)}%` }>
+                            </> : `${(line1OnepoleTwopoleNgRatio || 0).toFixed(1)}%` }>
                                 <div className='flex flex-col justify-between flex-1'>
                                     <div className='flex gap-[14px] items-center flex-1'>
-                                        <ChartLine datas={ asisChartData.datas } labels={ asisChartData.labels } width={ '100%' } height={ '100%' } />
+                                        <ChartLine datas={ onepoleTwopoleChartData.datas } labels={ onepoleTwopoleChartData.labels } width={ '100%' } height={ '100%' } />
                                     </div>
                                     <div className='flex flex-col mt-5'>
-                                        <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
-                                        <div className='border-[1px] rounded-xl flex justify-between'>
-                                            <div className='flex flex-col justify-center items-center py-2 flex-1 border-r'>
-                                                <span className='text-xs font-bold text-[#12B76A]'>{ line1AsisTopNgCause?.model || '-' }</span>
-                                                <span className='text-[10px] text-[#858383] font-medium'>Model Name</span>
-                                            </div>
-                                            <div className='flex flex-col justify-center items-center py-2 flex-1'>
-                                                <span className='text-xs font-bold text-[#12B76A]'>{ line1AsisTopNgCause?.ng_cause || '-' }</span>
-                                                <span className='text-[10px] text-[#858383] font-medium'>NG Summary</span>
-                                            </div>
+                                        <div className='border-[1px] rounded-xl flex flex-col justify-between p-2'>
+                                            <span className='text-[10px] text-[#514E4E] font-medium'>NG Cause</span>
+                                            <span className='text-[10px] text-[#858383] font-medium'>{ line1OnepoleTwopoleTopManualNg?.[(line1OnepoleTwopoleTopManualNg?.length || 0) - 1]?.description || '-' }</span>
                                         </div>
                                         <div className='flex justify-end pt-2'>
                                             <NavLink to={ `onepole-twopole` } className='flex items-center gap-1 text-[#4E5BA6] text-xs font-medium'>

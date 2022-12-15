@@ -15,7 +15,7 @@ import { config } from '../../../common/utils';
 
 const OnepoleTwopoleChart = ({ frequent, ppmOn }) => {
     const { data: line1OnepoleTwopoleProcessChart = [], isLoading: line1OnepoleTwopoleProcessChartLoading } = useGetLine1OnepoleTwopoleProcessChartQuery(frequent, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     const data = useMemo(() => {
         return {
@@ -131,7 +131,7 @@ export const OpenAlert = ({ alert, setAlert }) => {
 
 const TopAutoNgTable = () => {
     const { data: line1OnepoleTwopoleTop5NgCause = [], isLoading: line1OnepoleTwopoleTop5NgCauseLoading } = useGetLine1Top5NgCauseQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     return (
         <Table>
@@ -184,13 +184,13 @@ export const OnepoleTwopole = () => {
     const [ppmOn, setPpmOn] = useState(false);
     const [manualNgOn, setManualNgOn] = useState(false);
     const { data: line1OnepoleTwopoleOkCount, isLoading: line1OnepoleTwopoleOkCountLoading } = useGetLine1OnepoleTwopoleOkCountQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     const { data: line1OnepoleTwopoleNgCount, isLoading: line1OnepoleTwopoleNgCountLoading } = useGetLine1OnepoleTwopoleNgCountQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     const { data: line1OnepoleTwopoleTopTenLogs = [], isLoading: line1OnepoleTwopoleTopTenLogsLoading } = useGetLine1OnepoleTwopoleTopTenLogsQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     const [frequent, setFrequent] = useState('hourly');
     const [alert, setAlert] = useState();

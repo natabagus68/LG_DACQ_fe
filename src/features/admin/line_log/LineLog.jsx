@@ -7,6 +7,7 @@ import { useLine1AsisLogsQuery } from '../../../app/services/asisService';
 import { OpenAlert } from '../line_detail/Asis';
 import { useDispatch } from 'react-redux';
 import { line1AsisSetSelectedLogImage } from '../line_detail/line1AsisSlice';
+import moment from 'moment/moment';
 
 export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert: _alert }) => {
     const [perPage, setPerpage] = _perPage;
@@ -56,6 +57,7 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>SERIAL NUMBER</Table.Th>
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>JUDGEMENT</Table.Th>
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>CAPTURE IMAGE</Table.Th>
+                            <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>TIMESTAMP</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <tbody>
@@ -70,6 +72,7 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         <span className='cursor-pointer underline' onClick={ (e) => viewImage(e, item.image_local_path) }>view image</span>
                                     </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">{ item?.image_updated_at ? moment(item?.image_updated_at).format('DD MMMM YYYY HH:mm:ss') : '-' }</Table.Td>
                                 </Table.Tr>
                             );
                         }) }

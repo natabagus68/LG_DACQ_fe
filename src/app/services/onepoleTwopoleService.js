@@ -2,8 +2,8 @@ import { apiSlice } from "../../features/api/apiSlice";
 
 export const onepoleTwopoleService = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getLine1NgRatio: builder.query({
-            query: () => ({ url: "/process/line-1/onepole-twopole/ng-ratio" }),
+        getLine1NgRatioOnepoleTwopole: builder.query({
+            query: () => ({ url: "process/line-1/onepole-twopole/ng-ratio" }),
             providesTags: ["process/line-1/onepole-twopole/ng-ratio"],
             transformResponse: (response, meta, arg) => response?.data?.ngRatio
         }),
@@ -74,7 +74,7 @@ export const onepoleTwopoleService = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetLine1NgRatioQuery,
+    useGetLine1NgRatioOnepoleTwopoleQuery,
     useGetLine1OnepoleTwopoleProcessChartQuery,
     useGetLine1OnepoleTwopoleChartLastWeekQuery,
     useGetLine1OnepoleTwopoleTopNgCauseQuery,

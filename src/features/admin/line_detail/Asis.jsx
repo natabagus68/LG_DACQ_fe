@@ -17,7 +17,7 @@ import { config } from '../../../common/utils';
 
 const AsisChart = ({ frequent, ppmOn }) => {
     const { data: line1AsisProcessChart = [], isLoading: line1AsisProcessChartLoading } = useGetLine1AsisProcessChartQuery(frequent, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     const data = useMemo(() => {
         return {
@@ -133,7 +133,7 @@ export const OpenAlert = ({ alert, setAlert }) => {
 
 const TopAutoNgTable = () => {
     const { data: line1AsisTop5NgCause = [], isLoading: line1AsisTop5NgCauseLoading } = useGetLine1Top5NgCauseQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     return (
         <Table>
@@ -186,13 +186,13 @@ export const Asis = () => {
     const [ppmOn, setPpmOn] = useState(false);
     const [manualNgOn, setManualNgOn] = useState(false);
     const { data: line1AsisOkCount, isLoading: line1AsisOkCountLoading } = useGetLine1AsisOkCountQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     const { data: line1AsisNgCount, isLoading: line1AsisNgCountLoading } = useGetLine1AsisNgCountQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     const { data: line1AsisTopTenLogs = [], isLoading: line1AsisTopTenLogsLoading } = useGetLine1AsisTopTenLogsQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 1000,
     });
     const [frequent, setFrequent] = useState('hourly');
     const [alert, setAlert] = useState();

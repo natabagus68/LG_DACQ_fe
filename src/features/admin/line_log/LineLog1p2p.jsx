@@ -6,6 +6,7 @@ import { Table } from '../../../common/components/table/Table';
 import { useLine1OnepoleTwopoleLogsQuery } from '../../../app/services/onepoleTwopoleService';
 import { OpenAlert } from '../line_detail/OnepoleTwopole';
 import { useDispatch } from 'react-redux';
+import moment from 'moment';
 
 export const Line1OnepoleTwopoleLogTable = ({ perPage: _perPage, q: _q, page: _page, alert: _alert }) => {
     const [perPage, setPerpage] = _perPage;
@@ -53,6 +54,7 @@ export const Line1OnepoleTwopoleLogTable = ({ perPage: _perPage, q: _q, page: _p
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>MODEL</Table.Th>
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>SERIAL NUMBER</Table.Th>
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>JUDGEMENT</Table.Th>
+                            <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>TIMESTAMP</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <tbody>
@@ -64,6 +66,7 @@ export const Line1OnepoleTwopoleLogTable = ({ perPage: _perPage, q: _q, page: _p
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         <span className={ `px-2 py-1 rounded-full ${item?.ok ? 'text-[#12B76A] bg-[#B6E9D1]' : 'text-[#F04438] bg-[#FAC5C1]'} text-xs` }>{ item?.ok ? 'OK' : 'NG' }</span>
                                     </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">{ item?.logged_at ? moment(item?.logged_at).format('DD MMMM YYYY HH:mm:ss') : '-' }</Table.Td>
                                 </Table.Tr>
                             );
                         }) }
