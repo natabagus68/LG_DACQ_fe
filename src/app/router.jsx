@@ -17,6 +17,8 @@ import { Login } from "../features/auth/login";
 import { Asis } from "../features/admin/line_detail/Asis";
 import { OnepoleTwopole } from "../features/admin/line_detail/OnepoleTwopole";
 import { LineLog1p2p } from "../features/admin/line_log/LineLog1p2p";
+import { Hipot } from "../features/admin/line_detail/Hipot";
+import { LineLogHipot } from "../features/admin/line_log/LineLogHipot";
 
 const Root = () => { return <Outlet />; };
 
@@ -68,6 +70,14 @@ export default createBrowserRouter([
             {
                 path: 'lines/line-1/onepole-twopole/log',
                 element: <LineLog1p2p />,
+            },
+            {
+                path: 'lines/line-1/hipot',
+                element: <Hipot />,
+            },
+            {
+                path: 'lines/line-1/hipot/log',
+                element: <LineLogHipot />,
             },
             {
                 path: 'report',

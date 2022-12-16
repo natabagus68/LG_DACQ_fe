@@ -2,7 +2,7 @@ import { apiSlice } from "../../features/api/apiSlice";
 
 export const asisService = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getLine1NgRatio: builder.query({
+        getLine1AsisNgRatio: builder.query({
             query: () => ({ url: "/process/line-1/asis/ng-ratio" }),
             providesTags: ["process/line-1/asis/ng-ratio"],
             transformResponse: (response, meta, arg) => response?.data?.ngRatio
@@ -49,7 +49,7 @@ export const asisService = apiSlice.injectEndpoints({
             }),
             transformResponse: res => res?.data
         }),
-        line1AsisUpdateManualNg: builder.mutation({
+        getLine1AsisUpdateManualNg: builder.mutation({
             query: (description) => ({
                 url: 'process/line-1/asis/manual-ng-cause',
                 method: 'POST',
@@ -57,24 +57,31 @@ export const asisService = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Manual Ng Cause']
         }),
-        line1AsisTopManualNg: builder.query({
+        getLine1AsisTopManualNg: builder.query({
             query: () => ({
                 url: 'process/line-1/asis/manual-ng-causes'
             }),
             providesTags: ['Manual Ng Cause'],
             transformResponse: res => res?.data
         }),
-        line1AsisLogs: builder.query({
+        getLine1AsisLogs: builder.query({
             query: (data = []) => ({
                 url: `process/line-1/asis/auto-ng-causes?${Object.keys(data).map((item, i) => `${item}=${data[item]}`).join('&')}`,
             }),
             transformResponse: res => res?.data
-        })
+        }),
+        getLine1AsisTopManualNg: builder.query({
+            query: () => ({
+                url: 'process/line-1/asis/manual-ng-causes'
+            }),
+            providesTags: ['Line 1 Asis Manual Ng Cause'],
+            transformResponse: res => res?.data
+        }),
     }),
 });
 
 export const {
-    useGetLine1NgRatioQuery,
+    useGetLine1AsisNgRatioQuery,
     useGetLine1AsisProcessChartQuery,
     useGetLine1AsisChartLastWeekQuery,
     useGetLine1AsisTopNgCauseQuery,
@@ -82,7 +89,7 @@ export const {
     useGetLine1AsisOkCountQuery,
     useGetLine1AsisTopTenLogsQuery,
     useGetLine1Top5NgCauseQuery,
-    useLine1AsisUpdateManualNgMutation,
-    useLine1AsisTopManualNgQuery,
-    useLine1AsisLogsQuery,
+    useGetLine1AsisUpdateManualNgMutation,
+    useGetLine1AsisTopManualNgQuery,
+    useGetLine1AsisLogsQuery
 } = asisService;

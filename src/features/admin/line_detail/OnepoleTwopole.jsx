@@ -12,6 +12,7 @@ import { useGetLine1OnepoleTwopoleNgCountQuery, useGetLine1OnepoleTwopoleOkCount
 import { Switch } from '@headlessui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { config } from '../../../common/utils';
+import moment from 'moment/moment';
 
 const OnepoleTwopoleChart = ({ frequent, ppmOn }) => {
     const { data: line1OnepoleTwopoleProcessChart = [], isLoading: line1OnepoleTwopoleProcessChartLoading } = useGetLine1OnepoleTwopoleProcessChartQuery(frequent, {
@@ -150,7 +151,7 @@ const TopAutoNgTable = () => {
                     <Table.Tr key={ i }>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">{ item.model || '-' }</Table.Td>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">{ item.ng_cause || '-' }</Table.Td>
-                        <Table.Td className="whitespace-nowrap py-2 text-sm">{ item.image_updated_at || '-' }</Table.Td>
+                        <Table.Td className="whitespace-nowrap py-2 text-sm">{ item.logged_at || '-' }</Table.Td>
                     </Table.Tr>
                 )) }
             </tbody>
@@ -298,7 +299,7 @@ export const OnepoleTwopole = () => {
                                         <Table.Th className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs" order={ false }>Model</Table.Th>
                                         <Table.Th className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs" order={ false }>Serial Number</Table.Th>
                                         <Table.Th className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs" order={ false }>Judgement</Table.Th>
-                                        <Table.Th className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs" order={ false }>Capture Image</Table.Th>
+                                        <Table.Th className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs" order={ false }>Timestamp</Table.Th>
                                     </Table.Tr>
                                 </Table.Thead>
                                 <tbody>
@@ -309,9 +310,7 @@ export const OnepoleTwopole = () => {
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
                                                 <span className={ `px-3 py-1 rounded-full text-xs ${item.ok ? 'bg-[#B6E9D1] text-[#084D2D]' : 'bg-[#FAC5C1] text-[#F04438]'}` }>{ item.ok ? 'OK' : 'NO' }</span>
                                             </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1">
-                                                <span className='cursor-pointer underline text-[#2064AD]' onClick={ (e) => viewImage(e, item.image_local_path) }>view image</span>
-                                            </Table.Td>
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">{ moment(item.logged_at || new Date()).format('DD MMMM YYYY HH:mm:ss') || '-' }</Table.Td>
                                         </Table.Tr>
                                     )) }
                                 </tbody>

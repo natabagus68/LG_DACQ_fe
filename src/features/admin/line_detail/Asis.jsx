@@ -9,10 +9,10 @@ import { Alert } from '../../../common/components/Alert';
 import ng_image from '../../../assets/ng_image.png';
 import { Table } from '../../../common/components/table/Table';
 import { useState } from 'react';
-import { useGetLine1AsisNgCountQuery, useGetLine1AsisOkCountQuery, useGetLine1AsisProcessChartQuery, useGetLine1AsisTopTenLogsQuery, useGetLine1Top5NgCauseQuery, useLine1AsisTopManualNgQuery, useLine1AsisUpdateManualNgMutation } from '../../../app/services/asisService';
+import { useGetLine1AsisNgCountQuery, useGetLine1AsisOkCountQuery, useGetLine1AsisProcessChartQuery, useGetLine1AsisTopTenLogsQuery, useGetLine1Top5NgCauseQuery, useGetLine1AsisTopManualNgQuery, useGetLine1AsisUpdateManualNgMutation } from '../../../app/services/asisService';
 import { Switch } from '@headlessui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { line1AsisSetSelectedLogImage } from './line1AsisSlice';
+import { line1AsisSetManualNg, line1AsisSetSelectedLogImage } from './line1AsisSlice';
 import { config } from '../../../common/utils';
 
 const AsisChart = ({ frequent, ppmOn }) => {
@@ -80,7 +80,7 @@ const CompAddData = ({ setAlert }) => {
         if (payload.length > 500) return;
         return _setDescription(payload);
     };
-    const [line1AsisUpdateManualNg, { error: line1AsisUpdateManualNgError, isLoading: line1AsisUpdateManualNgLoading }] = useLine1AsisUpdateManualNgMutation();
+    const [line1AsisUpdateManualNg, { error: line1AsisUpdateManualNgError, isLoading: line1AsisUpdateManualNgLoading }] = useGetLine1AsisUpdateManualNgMutation();
     const line1AsisSubmitManualNg = e => {
         e.preventDefault();
         line1AsisUpdateManualNg(description);
@@ -161,7 +161,7 @@ const TopAutoNgTable = () => {
 };
 
 const TopManualNgTable = () => {
-    const { data: topManualNg, isLoading: topManualNgLoading } = useLine1AsisTopManualNgQuery();
+    const { data: topManualNg, isLoading: topManualNgLoading } = useGetLine1AsisTopManualNgQuery();
     if (topManualNgLoading) {
         return <>
             <div className="">....</div>
@@ -184,7 +184,11 @@ const TopManualNgTable = () => {
 export const Asis = () => {
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
-    const [manualNgOn, setManualNgOn] = useState(false);
+    // const [manualNgOn, setManualNgOn] = useState(false);
+    const manualNgOn = useSelector(state => state.line1Asis.manualNgOn);
+    const setManualNgOn = e => {
+        dispatch(line1AsisSetManualNg(!manualNgOn));
+    };
     const { data: line1AsisOkCount, isLoading: line1AsisOkCountLoading } = useGetLine1AsisOkCountQuery(null, {
         pollingInterval: 1000,
     });

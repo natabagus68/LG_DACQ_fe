@@ -19,12 +19,6 @@ export const onepoleTwopoleService = apiSlice.injectEndpoints({
             }),
             transformResponse: res => res.data
         }),
-        getLine1OnepoleTwopoleTopNgCause: builder.query({
-            query: () => ({
-                url: 'process/line-1/onepole-twopole/top-ng-cause',
-            }),
-            transformResponse: res => res?.data?.[0] || {}
-        }),
         getLine1OnepoleTwopoleNgCount: builder.query({
             query: () => ({
                 url: 'process/line-1/onepole-twopole/auto-ng-causes/quantity-ng'
@@ -77,7 +71,6 @@ export const {
     useGetLine1NgRatioOnepoleTwopoleQuery,
     useGetLine1OnepoleTwopoleProcessChartQuery,
     useGetLine1OnepoleTwopoleChartLastWeekQuery,
-    useGetLine1OnepoleTwopoleTopNgCauseQuery,
     useGetLine1OnepoleTwopoleNgCountQuery,
     useGetLine1OnepoleTwopoleOkCountQuery,
     useGetLine1OnepoleTwopoleTopTenLogsQuery,

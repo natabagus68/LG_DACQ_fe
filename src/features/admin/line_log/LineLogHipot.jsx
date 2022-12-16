@@ -3,19 +3,18 @@ import { HomeIcon, SearchIcon } from '../../../common/components/icons';
 import { NavLink } from 'react-router-dom';
 import { HiOutlineArrowCircleDown } from 'react-icons/hi';
 import { Table } from '../../../common/components/table/Table';
-import { useGetLine1AsisLogsQuery } from '../../../app/services/asisService';
-import { OpenAlert } from '../line_detail/Asis';
+import { useLine1HipotLogsQuery } from '../../../app/services/hipotService';
+import { OpenAlert } from '../line_detail/Hipot';
 import { useDispatch } from 'react-redux';
-import { line1AsisSetSelectedLogImage } from '../line_detail/line1AsisSlice';
-import moment from 'moment/moment';
+import moment from 'moment';
 
-export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert: _alert }) => {
+export const Line1HipotLogTable = ({ perPage: _perPage, q: _q, page: _page, alert: _alert }) => {
     const [perPage, setPerpage] = _perPage;
     const [page, setPage] = _page;
     const [q, setQ] = _q;
     const [alert, setAlert] = _alert;
     const dispatch = useDispatch();
-    const { data: line1AsisLogs, isLoading: line1AsisLogsLoading } = useGetLine1AsisLogsQuery({
+    const { data: line1HipotLogs, isLoading: line1HipotLogsLoading } = useLine1HipotLogsQuery({
         page: page || 1,
         q: q || '',
         per_page: perPage || 10,
@@ -23,7 +22,6 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
 
     const viewImage = (e, image) => {
         e.preventDefault();
-        dispatch(line1AsisSetSelectedLogImage(image));
         setAlert({ comp: 'image', bool: true });
     };
     return (
@@ -56,12 +54,11 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>MODEL</Table.Th>
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>SERIAL NUMBER</Table.Th>
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>JUDGEMENT</Table.Th>
-                            <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>CAPTURE IMAGE</Table.Th>
                             <Table.Th className="py-4 bg-[#E2F1FF]" order={ false }>TIMESTAMP</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <tbody>
-                        { line1AsisLogs?.map(item => {
+                        { line1HipotLogs?.map(item => {
                             return (
                                 <Table.Tr className={ `even:bg-[#F8F7FF]` }>
                                     <Table.Td className="whitespace-nowrap py-4 ">{ item?.model || '-' }</Table.Td>
@@ -69,18 +66,15 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         <span className={ `px-2 py-1 rounded-full ${item?.ok ? 'text-[#12B76A] bg-[#B6E9D1]' : 'text-[#F04438] bg-[#FAC5C1]'} text-xs` }>{ item?.ok ? 'OK' : 'NG' }</span>
                                     </Table.Td>
-                                    <Table.Td className="whitespace-nowrap py-4 ">
-                                        <span className='cursor-pointer underline' onClick={ (e) => viewImage(e, item.image_local_path) }>view image</span>
-                                    </Table.Td>
-                                    <Table.Td className="whitespace-nowrap py-4 ">{ item?.image_updated_at ? moment(item?.image_updated_at).format('DD MMMM YYYY HH:mm:ss') : '-' }</Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">{ item?.logged_at ? moment(item?.logged_at).format('DD MMMM YYYY HH:mm:ss') : '-' }</Table.Td>
                                 </Table.Tr>
                             );
                         }) }
                     </tbody>
                 </Table>
                 <div className="flex justify-between items-center pt-4">
-                    <span className="text-[#646566] text-base">Showing 1 to 10 of 57 entries</span>
-                    <div className="flex">
+                    {/* <span className="text-[#646566] text-base">Showing 1 to 10 of 57 entries</span> */ }
+                    <div className="flex ml-auto">
                         <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-l-[5px] flex items-center cursor-pointer" onClick={ e => setPage(page => page > 1 ? page - 1 : 1) }>Previous</div>
                         <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center bg-[#617E8C] text-white">{ page }</div>
                         {/* <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">2</div>
@@ -88,7 +82,7 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
                         <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">4</div>
                         <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">...</div>
                         <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">8</div> */}
-                        <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-r-[5px] flex items-center cursor-pointer" onClick={ e => setPage(page => line1AsisLogs.length == perPage ? page + 1 : page) }>Next</div>
+                        <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-r-[5px] flex items-center cursor-pointer" onClick={ e => setPage(page => line1HipotLogs.length == perPage ? page + 1 : page) }>Next</div>
                     </div>
                 </div>
             </div>
@@ -96,7 +90,7 @@ export const Line1AsisLogTable = ({ perPage: _perPage, q: _q, page: _page, alert
     );
 };
 
-export const LineLog = () => {
+export const LineLogHipot = () => {
     const page = useState(1);
     const q = useState('');
     const perPage = useState(10);
@@ -114,7 +108,7 @@ export const LineLog = () => {
                         <span className='text-sm'>/</span>
                         <span className="font-semibold text-sm">Line 1</span>
                         <span className='text-sm'>/</span>
-                        <span className="font-semibold text-sm">ASIS</span>
+                        <span className="font-semibold text-sm">Hipot</span>
                         <span className='text-sm'>/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">Log</span>
                     </div>
@@ -128,7 +122,7 @@ export const LineLog = () => {
                                 <span>Download</span>
                             </button>
                         </div>
-                        <Line1AsisLogTable page={ page } perPage={ perPage } q={ q } alert={ _alert } />
+                        <Line1HipotLogTable page={ page } perPage={ perPage } q={ q } alert={ _alert } />
                     </div>
                 </div>
             </div>
