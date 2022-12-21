@@ -13,7 +13,7 @@ export const apiSlice = createApi({
                 Authorization: localStorage.getItem('token')
             }
         }),
-    tagTypes: ["Auth", "LineLog", "Manual Ng Cause"],
+    tagTypes: ["Auth", "LineLog", "Manual Ng Cause", "Line 1 Asis Manual Ng Cause", "Line 1 Hipot Manual Ng Cause"],
     endpoints: (builder) => ({}),
 });
 

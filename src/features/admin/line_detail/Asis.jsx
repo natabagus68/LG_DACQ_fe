@@ -189,16 +189,27 @@ export const Asis = () => {
     const setManualNgOn = e => {
         dispatch(line1AsisSetManualNg(!manualNgOn));
     };
-    const { data: line1AsisOkCount, isLoading: line1AsisOkCountLoading } = useGetLine1AsisOkCountQuery(null, {
+    const [frequent, setFrequent] = useState("hourly");
+    const { data: line1AsisOkCount, isLoading: line1AsisOkCountLoading } =
+        useGetLine1AsisOkCountQuery(
+            { frequent },
+            {
+                pollingInterval: 1000,
+            }
+        );
+    const { data: line1AsisNgCount, isLoading: line1AsisNgCountLoading } =
+        useGetLine1AsisNgCountQuery(
+            { frequent },
+            {
+                pollingInterval: 1000,
+            }
+        );
+    const {
+        data: line1AsisTopTenLogs = [],
+        isLoading: line1AsisTopTenLogsLoading,
+    } = useGetLine1AsisTopTenLogsQuery(null, {
         pollingInterval: 1000,
     });
-    const { data: line1AsisNgCount, isLoading: line1AsisNgCountLoading } = useGetLine1AsisNgCountQuery(null, {
-        pollingInterval: 1000,
-    });
-    const { data: line1AsisTopTenLogs = [], isLoading: line1AsisTopTenLogsLoading } = useGetLine1AsisTopTenLogsQuery(null, {
-        pollingInterval: 1000,
-    });
-    const [frequent, setFrequent] = useState('hourly');
     const [alert, setAlert] = useState();
     const viewImage = (e, image) => {
         e.preventDefault();

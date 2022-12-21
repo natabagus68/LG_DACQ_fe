@@ -184,16 +184,31 @@ export const OnepoleTwopole = () => {
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
     const [manualNgOn, setManualNgOn] = useState(false);
-    const { data: line1OnepoleTwopoleOkCount, isLoading: line1OnepoleTwopoleOkCountLoading } = useGetLine1OnepoleTwopoleOkCountQuery(null, {
+    const [frequent, setFrequent] = useState("hourly");
+    const {
+        data: line1OnepoleTwopoleOkCount,
+        isLoading: line1OnepoleTwopoleOkCountLoading,
+    } = useGetLine1OnepoleTwopoleOkCountQuery(
+        { frequent },
+        {
+            pollingInterval: 1000,
+        }
+    );
+    const {
+        data: line1OnepoleTwopoleNgCount,
+        isLoading: line1OnepoleTwopoleNgCountLoading,
+    } = useGetLine1OnepoleTwopoleNgCountQuery(
+        { frequent },
+        {
+            pollingInterval: 1000,
+        }
+    );
+    const {
+        data: line1OnepoleTwopoleTopTenLogs = [],
+        isLoading: line1OnepoleTwopoleTopTenLogsLoading,
+    } = useGetLine1OnepoleTwopoleTopTenLogsQuery(null, {
         pollingInterval: 1000,
     });
-    const { data: line1OnepoleTwopoleNgCount, isLoading: line1OnepoleTwopoleNgCountLoading } = useGetLine1OnepoleTwopoleNgCountQuery(null, {
-        pollingInterval: 1000,
-    });
-    const { data: line1OnepoleTwopoleTopTenLogs = [], isLoading: line1OnepoleTwopoleTopTenLogsLoading } = useGetLine1OnepoleTwopoleTopTenLogsQuery(null, {
-        pollingInterval: 1000,
-    });
-    const [frequent, setFrequent] = useState('hourly');
     const [alert, setAlert] = useState();
     const viewImage = (e, image) => {
         e.preventDefault();

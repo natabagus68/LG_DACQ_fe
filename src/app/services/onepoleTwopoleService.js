@@ -5,65 +5,77 @@ export const onepoleTwopoleService = apiSlice.injectEndpoints({
         getLine1NgRatioOnepoleTwopole: builder.query({
             query: () => ({ url: "process/line-1/onepole-twopole/ng-ratio" }),
             providesTags: ["process/line-1/onepole-twopole/ng-ratio"],
-            transformResponse: (response, meta, arg) => response?.data?.ngRatio
+            transformResponse: (response, meta, arg) => response?.data?.ngRatio,
         }),
         getLine1OnepoleTwopoleProcessChart: builder.query({
             query: (frequent) => ({
                 url: `process/line-1/onepole-twopole/chart?frequent=${frequent}`,
             }),
-            transformResponse: res => res?.data
+            transformResponse: (res) => res?.data,
         }),
         getLine1OnepoleTwopoleChartLastWeek: builder.query({
             query: () => ({
-                url: 'process/line-1/onepole-twopole/chart?frequent=weekly'
+                url: "process/line-1/onepole-twopole/chart?frequent=weekly",
             }),
-            transformResponse: res => res.data
+            transformResponse: (res) => res.data,
         }),
         getLine1OnepoleTwopoleNgCount: builder.query({
-            query: () => ({
-                url: 'process/line-1/onepole-twopole/auto-ng-causes/quantity-ng'
+            query: (query) => ({
+                url: `process/line-1/onepole-twopole/auto-ng-causes/quantity-ng?${Object.keys(
+                    query
+                )
+                    .map((item) => `${item}=${query[item]}`)
+                    .join("&")}`,
             }),
-            transformResponse: res => res?.data?.qtyNg
+            transformResponse: (res) => res?.data?.qtyNg,
         }),
         getLine1OnepoleTwopoleOkCount: builder.query({
-            query: () => ({
-                url: 'process/line-1/onepole-twopole/auto-ng-causes/quantity-ok'
+            query: (query) => ({
+                url: `process/line-1/onepole-twopole/auto-ng-causes/quantity-ok?${Object.keys(
+                    query
+                )
+                    .map((item) => `${item}=${query[item]}`)
+                    .join("&")}`,
             }),
-            transformResponse: res => res?.data?.qtyOk
+            transformResponse: (res) => res?.data?.qtyOk,
         }),
         getLine1OnepoleTwopoleTopTenLogs: builder.query({
             query: () => ({
-                url: 'process/line-1/onepole-twopole/logs'
+                url: "process/line-1/onepole-twopole/logs",
             }),
-            transformResponse: res => res?.data
+            transformResponse: (res) => res?.data,
         }),
         getLine1Top5NgCause: builder.query({
             query: () => ({
-                url: 'process/line-1/onepole-twopole/auto-ng-causes/top5'
+                url: "process/line-1/onepole-twopole/auto-ng-causes/top5",
             }),
-            transformResponse: res => res?.data
+            transformResponse: (res) => res?.data,
         }),
         line1OnepoleTwopoleUpdateManualNg: builder.mutation({
             query: (description) => ({
-                url: 'process/line-1/onepole-twopole/manual-ng-cause',
-                method: 'POST',
+                url: "process/line-1/onepole-twopole/manual-ng-cause",
+                method: "POST",
                 body: { description },
             }),
-            invalidatesTags: ['Manual Ng Cause']
+            invalidatesTags: ["Manual Ng Cause"],
         }),
         line1OnepoleTwopoleTopManualNg: builder.query({
             query: () => ({
-                url: 'process/line-1/onepole-twopole/manual-ng-causes'
+                url: "process/line-1/onepole-twopole/manual-ng-causes",
             }),
-            providesTags: ['Manual Ng Cause'],
-            transformResponse: res => res?.data
+            providesTags: ["Manual Ng Cause"],
+            transformResponse: (res) => res?.data,
         }),
         line1OnepoleTwopoleLogs: builder.query({
             query: (data = []) => ({
-                url: `process/line-1/onepole-twopole/auto-ng-causes?${Object.keys(data).map((item, i) => `${item}=${data[item]}`).join('&')}`,
+                url: `process/line-1/onepole-twopole/auto-ng-causes?${Object.keys(
+                    data
+                )
+                    .map((item, i) => `${item}=${data[item]}`)
+                    .join("&")}`,
             }),
-            transformResponse: res => res?.data
-        })
+            transformResponse: (res) => res?.data,
+        }),
     }),
 });
 
