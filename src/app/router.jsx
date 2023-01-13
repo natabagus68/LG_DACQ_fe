@@ -19,8 +19,18 @@ import { OnepoleTwopole } from "../features/admin/line_detail/OnepoleTwopole";
 import { LineLog1p2p } from "../features/admin/line_log/LineLog1p2p";
 import { Hipot } from "../features/admin/line_detail/Hipot";
 import { LineLogHipot } from "../features/admin/line_log/LineLogHipot";
+import { OptionAuto } from "../features/admin/line_detail/OptionAuto";
+import { LineLogOptionAuto } from "../features/admin/line_log/LineLogOptionAuto";
+import { OptionManual } from "../features/admin/line_detail/OptionManual";
+import { LineLogOptionManual } from "../features/admin/line_log/LineLogOptionManual";
+import { WhiteBalance } from "../features/admin/line_detail/WhiteBalance";
+import { LineLogWhiteBalance } from "../features/admin/line_log/LineLogWhiteBalance";
+import { Shipmode } from "../features/admin/line_detail/Shipmode";
+import { LineLogShipmode } from "../features/admin/line_log/LineLogShipmode";
 
-const Root = () => { return <Outlet />; };
+const Root = () => {
+    return <Outlet />;
+};
 
 export default createBrowserRouter([
     {
@@ -29,14 +39,14 @@ export default createBrowserRouter([
         errorElement: <Error404 />,
         children: [
             {
-                path: '',
-                element: <Navigate to={ `login` } replace />
+                path: "",
+                element: <Navigate to={`login`} replace />,
             },
             {
-                path: 'login',
-                element: <Login />
+                path: "login",
+                element: <Login />,
             },
-        ]
+        ],
     },
     {
         path: config.pathPrefix,
@@ -44,65 +54,97 @@ export default createBrowserRouter([
         errorElement: <Error404 />,
         children: [
             {
-                path: '',
-                element: <Navigate to={ `dashboard` } replace />
+                path: "",
+                element: <Navigate to={`dashboard`} replace />,
             },
             {
-                path: 'dashboard',
-                element: <Dashboard />
+                path: "dashboard",
+                element: <Dashboard />,
             },
             {
-                path: 'lines/line-1',
+                path: "lines/line-1",
                 element: <Line1 />,
             },
             {
-                path: 'lines/line-1/asis',
+                path: "lines/line-1/asis",
                 element: <Asis />,
             },
             {
-                path: 'lines/line-1/asis/log',
+                path: "lines/line-1/asis/log",
                 element: <LineLog />,
             },
             {
-                path: 'lines/line-1/onepole-twopole',
+                path: "lines/line-1/onepole-twopole",
                 element: <OnepoleTwopole />,
             },
             {
-                path: 'lines/line-1/onepole-twopole/log',
+                path: "lines/line-1/onepole-twopole/log",
                 element: <LineLog1p2p />,
             },
             {
-                path: 'lines/line-1/hipot',
+                path: "lines/line-1/hipot",
                 element: <Hipot />,
             },
             {
-                path: 'lines/line-1/hipot/log',
+                path: "lines/line-1/hipot/log",
                 element: <LineLogHipot />,
             },
             {
-                path: 'report',
-                element: <Report />
+                path: "lines/line-1/option-auto",
+                element: <OptionAuto />,
             },
             {
-                path: 'account',
-                element: <Account />
+                path: "lines/line-1/option-auto/log",
+                element: <LineLogOptionAuto />,
             },
             {
-                path: 'access',
+                path: "lines/line-1/shipmode",
+                element: <Shipmode />,
+            },
+            {
+                path: "lines/line-1/shipmode/log",
+                element: <LineLogShipmode />,
+            },
+            {
+                path: "lines/line-1/option-manual",
+                element: <OptionManual />,
+            },
+            {
+                path: "lines/line-1/option-manual/log",
+                element: <LineLogOptionManual />,
+            },
+            {
+                path: "lines/line-1/white-balance",
+                element: <WhiteBalance />,
+            },
+            {
+                path: "lines/line-1/white-balance/log",
+                element: <LineLogWhiteBalance />,
+            },
+            {
+                path: "report",
+                element: <Report />,
+            },
+            {
+                path: "account",
+                element: <Account />,
+            },
+            {
+                path: "access",
                 element: <Access />,
             },
             {
-                path: 'access/mapping',
+                path: "access/mapping",
                 element: <Mapping />,
             },
             {
-                path: 'access/add_data',
+                path: "access/add_data",
                 element: <AddData />,
             },
             {
-                path: 'dashboard/lines/detail/log',
+                path: "dashboard/lines/detail/log",
                 element: <LineLog />,
-            }
-        ]
+            },
+        ],
     },
 ]);

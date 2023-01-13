@@ -20,29 +20,47 @@ export const SideBar = () => {
     })
 
     const setActive = (e) => {
-        let bars = {
+        setBar({
             dashboard: false,
             monitor: false,
             report: false,
             log: false,
-            user: false
-        }
-        bars[e] = true
-        setBar(bars)
-    }
+            user: false,
+            [e]: true,
+        });
+    };
 
     return (
         <>
-            <div className={`${navOpen ? 'block' : 'hidden'} flex absolute w-screen h-screen z-50`}>
-                <div className={`left-0 bottom-0 z-50 flex flex-col bg-[#1B1A1A] w-[24vw] border-r-[1px] border-[#514E4E] h-full`}>
-                    <div className='h-[5.5vw] w-full pl-[2vw] p-[1vw] flex items-center justify-between'>
-                        <img src={lg_electronics} alt="LG" className='w-[12vw]' />
-                        <HiX className='text-2xl cursor-pointer text-white hover:bg-[#343232] rounded-sm' onClick={() => dispatch(toggle())} />
+            <div
+                className={`${
+                    navOpen ? "block" : "hidden"
+                } flex absolute w-screen h-screen z-50`}
+            >
+                <div
+                    className={`left-0 bottom-0 z-50 flex flex-col bg-[#1B1A1A] w-[24vw] border-r-[1px] border-[#514E4E] h-full`}
+                >
+                    <div className="h-[5.5vw] w-full pl-[2vw] p-[1vw] flex items-center justify-between">
+                        <img
+                            src={lg_electronics}
+                            alt="LG"
+                            className="w-[12vw]"
+                        />
+                        <HiX
+                            className="text-2xl cursor-pointer text-white hover:bg-[#343232] rounded-sm"
+                            onClick={() => dispatch(toggle())}
+                        />
                     </div>
-                    <div className='flex-1 pl-[2vw] p-[1vw] flex flex-col gap-4'>
-                        <div onClick={() => setActive('/')}>
-                            <NavItem label={`Dashboard`} to={`dashboard`} isActive={bar.dashboard} icon={<HiOutlineViewGrid className='text-2xl' />}>
-                            </NavItem>
+                    <div className="flex-1 pl-[2vw] p-[1vw] flex flex-col gap-4">
+                        <div onClick={() => setActive("/")}>
+                            <NavItem
+                                label={`Dashboard`}
+                                to={`dashboard`}
+                                isActive={bar.dashboard}
+                                icon={
+                                    <HiOutlineViewGrid className="text-2xl" />
+                                }
+                            ></NavItem>
                         </div>
                         {/* <div onClick={() => setActive('report')}>
                             <NavItem label={`Report`} isActive={bar.report} icon={<HiOutlineDocumentText className='text-2xl' />}>
@@ -50,18 +68,37 @@ export const SideBar = () => {
                                 <NavItem to={``} label={`Servo Motor`} child={true} />
                             </NavItem>
                         </div> */}
-                        {/* <div onClick={() => setActive('user')}>
-                            <NavItem label={`User`} isActive={bar.user} icon={<HiOutlineUsers className='text-2xl' />}>
-                                <NavItem to={`account`} label={`Account`} child={true} />
-                                <NavItem to={`access`} label={`Access`} child={true} />
+                        {/* <div onClick={() => setActive("user")}>
+                            <NavItem
+                                label={`User`}
+                                isActive={bar.user}
+                                icon={<HiOutlineUsers className="text-2xl" />}
+                            >
+                                <NavItem
+                                    to={`account`}
+                                    label={`Account`}
+                                    child={true}
+                                />
+                                <NavItem
+                                    to={`access`}
+                                    label={`Access`}
+                                    child={true}
+                                />
                             </NavItem>
                         </div>
-                        <div onClick={ () => setActive('setting') }>
-                            <NavItem label={ `Settings` } isActive={ bar.setting } icon={ <SettingsIcon /> } />
+                        <div onClick={() => setActive("setting")}>
+                            <NavItem
+                                label={`Settings`}
+                                isActive={bar.setting}
+                                icon={<SettingsIcon />}
+                            />
                         </div> */}
                     </div>
                 </div>
-                <div className='bg-[#000] bg-opacity-50 flex-1 cursor-pointer' onClick={() => dispatch(toggle())} />
+                <div
+                    className="bg-[#000] bg-opacity-50 flex-1 cursor-pointer"
+                    onClick={() => dispatch(toggle())}
+                />
             </div>
         </>
     );

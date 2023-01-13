@@ -1,28 +1,34 @@
-import React, { useState } from 'react';
-import { HomeIcon, SearchIcon } from '../../../common/components/icons';
-import { NavLink } from 'react-router-dom';
-import { HiOutlineArrowCircleDown } from 'react-icons/hi';
-import { Table } from '../../../common/components/table/Table';
-import { useLine1HipotLogsQuery } from '../../../app/services/hipotService';
-import { OpenAlert } from '../line_detail/Hipot';
-import { useDispatch } from 'react-redux';
-import moment from 'moment';
+import React, { useState } from "react";
+import { HomeIcon, SearchIcon } from "../../../common/components/icons";
+import { NavLink, useSearchParams } from "react-router-dom";
+import { HiOutlineArrowCircleDown } from "react-icons/hi";
+import { Table } from "../../../common/components/table/Table";
+import { useLine1OptionAutoLogsQuery } from "../../../app/services/optionAutoService";
+import { OpenAlert } from "../line_detail/OptionAuto";
+import { useDispatch } from "react-redux";
+import moment from "moment";
 
-export const Line1HipotLogTable = ({ perPage: _perPage, q: _q, page: _page, alert: _alert }) => {
+export const Line1OptionAutoLogTable = ({
+    perPage: _perPage,
+    q: _q,
+    page: _page,
+    alert: _alert,
+}) => {
     const [perPage, setPerpage] = _perPage;
     const [page, setPage] = _page;
     const [q, setQ] = _q;
     const [alert, setAlert] = _alert;
     const dispatch = useDispatch();
-    const { data: line1HipotLogs, isLoading: line1HipotLogsLoading } = useLine1HipotLogsQuery({
-        page: page || 1,
-        q: q || '',
-        per_page: perPage || 10,
-    });
+    const { data: line1OptionAutoLogs, isLoading: line1OptionAutoLogsLoading } =
+        useLine1OptionAutoLogsQuery({
+            page: page || 1,
+            q: q || "",
+            per_page: perPage || 10,
+        });
 
     const viewImage = (e, image) => {
         e.preventDefault();
-        setAlert({ comp: 'image', bool: true });
+        setAlert({ comp: "image", bool: true });
     };
     return (
         <>
@@ -94,32 +100,37 @@ export const Line1HipotLogTable = ({ perPage: _perPage, q: _q, page: _page, aler
                         </Table.Tr>
                     </Table.Thead>
                     <tbody>
-                        {line1HipotLogs?.map((item) => {
+                        {line1OptionAutoLogs?.map((item) => {
                             return (
                                 <Table.Tr className={`even:bg-[#F8F7FF]`}>
                                     <Table.Td className="whitespace-nowrap py-4 ">
-                                        {item?.model || "-"}
+                                        {item?.model_suffix?.split(".")?.[0] ||
+                                            "-"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
-                                        {item?.sn || "-"}
+                                        {item?.set_id || "-"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         <span
                                             className={`px-2 py-1 rounded-full ${
-                                                item?.ok
+                                                item?.result == "OK"
                                                     ? "text-[#12B76A] bg-[#B6E9D1]"
                                                     : "text-[#F04438] bg-[#FAC5C1]"
                                             } text-xs`}
                                         >
-                                            {item?.ok ? "OK" : "NG"}
+                                            {item?.result == "OK" ? "OK" : "NG"}
                                         </span>
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
-                                        {item?.ng_cause || "-"}
+                                        {item?.assy_mode == "NG"
+                                            ? `ASSY_MODE`
+                                            : item?.results
+                                                  ?.map((item) => item.name)
+                                                  ?.join(" ") || "-"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
-                                        {item?.logged_at
-                                            ? moment(item?.logged_at).format(
+                                        {item?.time
+                                            ? moment(item?.time).format(
                                                   "DD MMMM YYYY HH:mm:ss"
                                               )
                                             : "-"}
@@ -152,7 +163,7 @@ export const Line1HipotLogTable = ({ perPage: _perPage, q: _q, page: _page, aler
                             className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-r-[5px] flex items-center cursor-pointer"
                             onClick={(e) =>
                                 setPage((page) =>
-                                    line1HipotLogs.length == perPage
+                                    line1OptionAutoLogs.length == perPage
                                         ? page + 1
                                         : page
                                 )
@@ -167,39 +178,54 @@ export const Line1HipotLogTable = ({ perPage: _perPage, q: _q, page: _page, aler
     );
 };
 
-export const LineLogHipot = () => {
+export const LineLogOptionAuto = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
     const page = useState(1);
-    const q = useState('');
+    const q = useState("");
     const perPage = useState(10);
     const _alert = useState();
     const [alert, setAlert] = _alert;
     return (
         <>
-            { alert && <OpenAlert alert={ alert } setAlert={ setAlert } /> }
+            {alert && <OpenAlert alert={alert} setAlert={setAlert} />}
             <div className="flex bg-white h-full p-[26px] flex-col font-inter">
                 <div className="text-[#A9A8A8] flex items-center justify-between mb-3">
-                    <div className='flex items-center gap-1'>
-                        <HomeIcon width='12px' height='13px' />
-                        <span className='text-sm'>/</span>
+                    <div className="flex items-center gap-1">
+                        <HomeIcon width="12px" height="13px" />
+                        <span className="text-sm">/</span>
                         <span className="font-semibold text-sm">Dashboard</span>
-                        <span className='text-sm'>/</span>
+                        <span className="text-sm">/</span>
                         <span className="font-semibold text-sm">Line 1</span>
-                        <span className='text-sm'>/</span>
-                        <span className="font-semibold text-sm">Hipot</span>
-                        <span className='text-sm'>/</span>
-                        <span className="font-semibold text-sm text-[#514E4E]">Log</span>
+                        <span className="text-sm">/</span>
+                        <span className="font-semibold text-sm">
+                            OptionAuto
+                        </span>
+                        <span className="text-sm">/</span>
+                        <span className="font-semibold text-sm text-[#514E4E]">
+                            Log
+                        </span>
                     </div>
                 </div>
-                <div className='flex-1'>
+                <div className="flex-1">
                     <div className="w-full h-full flex-col flex border-[1px] border-[#EAEAEA] rounded-lg">
                         <div className="flex items-center justify-between py-[8px] px-[24px] bg-[#F7F9FA] border-b-[1px] border-[#E3E5E6]">
-                            <span className="text-[20px] font-semibold text-[#383E49]">Log</span>
-                            <button disabled className="flex gap-1 text-white items-center px-[14px] py-[6px] bg-[#229BD8] h-[32px] rounded-md">
+                            <span className="text-[20px] font-semibold text-[#383E49]">
+                                Log
+                            </span>
+                            <button
+                                disabled
+                                className="flex gap-1 text-white items-center px-[14px] py-[6px] bg-[#229BD8] h-[32px] rounded-md"
+                            >
                                 <HiOutlineArrowCircleDown />
                                 <span>Download</span>
                             </button>
                         </div>
-                        <Line1HipotLogTable page={ page } perPage={ perPage } q={ q } alert={ _alert } />
+                        <Line1OptionAutoLogTable
+                            page={page}
+                            perPage={perPage}
+                            q={q}
+                            alert={_alert}
+                        />
                     </div>
                 </div>
             </div>

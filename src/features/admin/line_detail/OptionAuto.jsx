@@ -21,37 +21,37 @@ import ng_image from "../../../assets/ng_image.png";
 import { Table } from "../../../common/components/table/Table";
 import { useState } from "react";
 import {
-    useGetLine1AsisNgCountQuery,
-    useGetLine1AsisOkCountQuery,
-    useGetLine1AsisProcessChartQuery,
-    useGetLine1AsisTopTenLogsQuery,
-    useGetLine1Top5NgCauseQuery,
-    useGetLine1AsisTopManualNgQuery,
-    useGetLine1AsisUpdateManualNgMutation,
-} from "../../../app/services/asisService";
+    useGetLine1OptionAutoNgCountQuery,
+    useGetLine1OptionAutoOkCountQuery,
+    useGetLine1OptionAutoProcessChartQuery,
+    useGetLine1OptionAutoTopTenLogsQuery,
+    useGetLine1OptionAutoTop5NgCauseQuery,
+    useLine1OptionAutoTopManualNgQuery,
+    useLine1OptionAutoUpdateManualNgMutation,
+    useLine1OptionAutoSyncMutation,
+} from "../../../app/services/optionAutoService";
 import { Switch } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    line1AsisSetManualNg,
-    line1AsisSetSelectedLogImage,
-} from "./line1AsisSlice";
+import { line1OptionAutoSetManualNg } from "./line1OptionAutoSlice";
 import { config } from "../../../common/utils";
+import { Input } from "../../../common/components/input/Input";
+import SyncIcon from "../../../common/components/icons/SyncIcon";
 
-const AsisChart = ({ frequent, ppmOn }) => {
+const OptionAutoChart = ({ frequent, ppmOn }) => {
     const {
-        data: line1AsisProcessChart = [],
-        isLoading: line1AsisProcessChartLoading,
-    } = useGetLine1AsisProcessChartQuery(frequent, {
-        // pollingInterval: 10000,
+        data: line1OptionAutoProcessChart = [],
+        isLoading: line1OptionAutoProcessChartLoading,
+    } = useGetLine1OptionAutoProcessChartQuery(frequent, {
+        pollingInterval: 10000,
     });
     const data = useMemo(() => {
         return {
-            labels: line1AsisProcessChart.map((item) => item?.x || "-"),
-            datas: line1AsisProcessChart.map(
+            labels: line1OptionAutoProcessChart.map((item) => item?.x || "-"),
+            datas: line1OptionAutoProcessChart.map(
                 (item) => (item?.y || 0) * (ppmOn ? 10000 : 1)
             ),
         };
-    }, [line1AsisProcessChart, ppmOn]);
+    }, [line1OptionAutoProcessChart, ppmOn]);
     return (
         <ChartLine
             datas={data.datas}
@@ -63,13 +63,6 @@ const AsisChart = ({ frequent, ppmOn }) => {
 };
 
 const CompExcel = ({ setAlert }) => {
-    const [params, setParams] = useState({
-        frequent: "hourly",
-        date: null,
-        start_time: null,
-        end_time: null,
-        isCustom: false,
-    });
     return (
         <div className="w-[432px] flex flex-col gap-2">
             <div className="flex gap-4 items-center">
@@ -82,142 +75,49 @@ const CompExcel = ({ setAlert }) => {
             </div>
             <span className="font-medium text-[16px]">Select Time </span>
             <div className="flex justify-between">
-                <div
-                    onClick={(e) =>
-                        setParams((param) => ({ ...param, frequent: "hourly" }))
-                    }
-                    className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
-                        params.frequent == "hourly"
-                            ? "border border-blue-500"
-                            : ""
-                    }`}
-                >
+                <div className="h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]">
                     Hourly
                 </div>
-                <div
-                    onClick={(e) =>
-                        setParams((param) => ({ ...param, frequent: "daily" }))
-                    }
-                    className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
-                        params.frequent == "daily"
-                            ? "border border-blue-500"
-                            : ""
-                    }`}
-                >
+                <div className="h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]">
                     Daily
                 </div>
-                <div
-                    onClick={(e) =>
-                        setParams((param) => ({
-                            ...param,
-                            frequent: "monthly",
-                        }))
-                    }
-                    className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
-                        params.frequent == "monthly"
-                            ? "border border-blue-500"
-                            : ""
-                    }`}
-                >
+                <div className="h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]">
                     Monthly
                 </div>
-                <div
-                    onClick={(e) =>
-                        setParams((param) => ({ ...param, frequent: "annual" }))
-                    }
-                    className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
-                        params.frequent == "annual"
-                            ? "border border-blue-500"
-                            : ""
-                    }`}
-                >
+                <div className="h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]">
                     Annual
                 </div>
             </div>
             <div className="flex flex-col gap-2 ">
                 <div className="flex gap-2">
-                    <input
-                        type={"radio"}
-                        id="input_is_latest"
-                        name="is_custom"
-                        value={false}
-                        checked={!params.isCustom}
-                        onChange={(e) =>
-                            e.target.checked
-                                ? setParams((param) => ({
-                                      ...param,
-                                      start_time: null,
-                                      end_time: null,
-                                      date: null,
-                                      isCustom: false,
-                                  }))
-                                : true
-                        }
-                    />
-                    <label htmlFor="input_is_latest" className="text-xs">
-                        Latest
-                    </label>
+                    <input type={"radio"} name="date" checked />
+                    <span className="text-xs">Latest</span>
                 </div>
                 <div className="flex gap-2">
-                    <input
-                        type={"radio"}
-                        id="input_is_custom"
-                        name="is_custom"
-                        value={true}
-                        checked={params.isCustom}
-                        onChange={(e) =>
-                            e.target.checked
-                                ? setParams((param) => ({
-                                      ...param,
-                                      isCustom: true,
-                                  }))
-                                : true
-                        }
-                    />
-                    <label htmlFor="input_is_custom" className="text-xs">
-                        Custom
-                    </label>
+                    <input type={"radio"} name="date" />
+                    <span className="text-xs">Custom</span>
                 </div>
             </div>
             <div className="flex flex-col">
                 <input
                     type={"date"}
-                    disabled={!params.isCustom}
-                    value={params.date}
-                    onChange={(e) =>
-                        setParams((param) => ({
-                            ...param,
-                            date: e.target.value,
-                        }))
-                    }
-                    className="flex-1 border-[1px] p-2 rounded-sm outline-none disabled:text-[#DADBDB]"
+                    className="flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]"
                 />
             </div>
             <div className="flex gap-2">
-                <input
-                    type="time"
-                    disabled={!params.isCustom}
-                    value={params.start_time}
-                    onChange={(e) =>
-                        setParams((param) => ({
-                            ...param,
-                            start_time: e.target.value,
-                        }))
-                    }
-                    className="flex-1 border-[1px] p-2 rounded-sm outline-none disabled:text-[#DADBDB]"
-                />
-                <input
-                    type="time"
-                    disabled={!params.isCustom}
-                    value={params.end_time}
-                    onChange={(e) =>
-                        setParams((param) => ({
-                            ...param,
-                            end_time: e.target.value,
-                        }))
-                    }
-                    className="flex-1 border-[1px] p-2 rounded-sm outline-none disabled:text-[#DADBDB]"
-                />
+                <select
+                    name="time"
+                    className="flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]"
+                >
+                    <option value="1">10:00PM</option>
+                </select>
+                <select
+                    name="time"
+                    className="flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]"
+                >
+                    <option value="1">10:00AM</option>
+                    <option value="1">10:00AM</option>
+                </select>
             </div>
             <div className="flex gap-2">
                 <div
@@ -241,18 +141,18 @@ const CompAddData = ({ setAlert }) => {
         return _setDescription(payload);
     };
     const [
-        line1AsisUpdateManualNg,
+        line1OptionAutoUpdateManualNg,
         {
-            error: line1AsisUpdateManualNgError,
-            isLoading: line1AsisUpdateManualNgLoading,
+            error: line1OptionAutoUpdateManualNgError,
+            isLoading: line1OptionAutoUpdateManualNgLoading,
         },
-    ] = useGetLine1AsisUpdateManualNgMutation();
-    const line1AsisSubmitManualNg = (e) => {
+    ] = useLine1OptionAutoUpdateManualNgMutation();
+    const line1OptionAutoSubmitManualNg = (e) => {
         e.preventDefault();
-        line1AsisUpdateManualNg(description);
+        line1OptionAutoUpdateManualNg(description);
     };
     return (
-        <form onSubmit={line1AsisSubmitManualNg}>
+        <form onSubmit={line1OptionAutoSubmitManualNg}>
             <div className="w-[432px] flex flex-col gap-2">
                 <div className="flex gap-4 items-center">
                     <NgCauseIcon />
@@ -296,7 +196,7 @@ const CompAddData = ({ setAlert }) => {
 
 export const CompImage = ({ setAlert }) => {
     const selectedLogImage = useSelector(
-        (state) => state.line1Asis.selectedLogImage
+        (state) => state.line1OptionAuto.selectedLogImage
     );
     useEffect(() => {
         console.log(`${config.assetUrl}${selectedLogImage}`);
@@ -324,10 +224,10 @@ export const OpenAlert = ({ alert, setAlert }) => {
 
 const TopAutoNgTable = () => {
     const {
-        data: line1AsisTop5NgCause = [],
-        isLoading: line1AsisTop5NgCauseLoading,
-    } = useGetLine1Top5NgCauseQuery(null, {
-        // pollingInterval: 10000,
+        data: line1OptionAutoTop5NgCause = [],
+        isLoading: line1OptionAutoTop5NgCauseLoading,
+    } = useGetLine1OptionAutoTop5NgCauseQuery(null, {
+        pollingInterval: 10000,
     });
     return (
         <Table>
@@ -354,21 +254,27 @@ const TopAutoNgTable = () => {
                 </Table.Tr>
             </Table.Thead>
             <tbody>
-                {line1AsisTop5NgCauseLoading && (
+                {line1OptionAutoTop5NgCauseLoading && (
                     <>
                         <div className="flex flex-1 bg-red-300"></div>
                     </>
                 )}
-                {line1AsisTop5NgCause.map((item, i) => (
+                {line1OptionAutoTop5NgCause.map((item, i) => (
                     <Table.Tr key={i}>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">
-                            {item.model || "-"}
+                            {`${
+                                (item.model_suffix || "").split(".")?.[0] || "-"
+                            }`}
                         </Table.Td>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">
-                            {item.ng_cause || "-"}
+                            {item.assy_mode == "NG"
+                                ? "ASSY MODE"
+                                : item.results
+                                      ?.map((item) => item?.name)
+                                      .join(", ") || "-"}
                         </Table.Td>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">
-                            {item.image_updated_at || "-"}
+                            {item.time || "-"}
                         </Table.Td>
                     </Table.Tr>
                 ))}
@@ -379,7 +285,7 @@ const TopAutoNgTable = () => {
 
 const TopManualNgTable = () => {
     const { data: topManualNg, isLoading: topManualNgLoading } =
-        useGetLine1AsisTopManualNgQuery();
+        useLine1OptionAutoTopManualNgQuery();
     if (topManualNgLoading) {
         return (
             <>
@@ -401,42 +307,53 @@ const TopManualNgTable = () => {
     );
 };
 
-export const Asis = () => {
+export const OptionAuto = () => {
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
-    // const [manualNgOn, setManualNgOn] = useState(false);
-    const manualNgOn = useSelector((state) => state.line1Asis.manualNgOn);
+    const manualNgOn = useSelector((state) => state.line1OptionAuto.manualNgOn);
     const setManualNgOn = (e) => {
-        dispatch(line1AsisSetManualNg(!manualNgOn));
+        dispatch(line1OptionAutoSetManualNg(!manualNgOn));
     };
     const [frequent, setFrequent] = useState("hourly");
-    const { data: line1AsisOkCount, isLoading: line1AsisOkCountLoading } =
-        useGetLine1AsisOkCountQuery(
-            { frequent },
-            {
-                // pollingInterval: 10000,
-            }
-        );
-    const { data: line1AsisNgCount, isLoading: line1AsisNgCountLoading } =
-        useGetLine1AsisNgCountQuery(
-            { frequent },
-            {
-                // pollingInterval: 10000,
-            }
-        );
     const {
-        data: line1AsisTopTenLogs = [],
-        isLoading: line1AsisTopTenLogsLoading,
-    } = useGetLine1AsisTopTenLogsQuery(null, {
-        // pollingInterval: 10000,
+        data: line1OptionAutoOkCount,
+        isLoading: line1OptionAutoOkCountLoading,
+    } = useGetLine1OptionAutoOkCountQuery(
+        { frequent },
+        {
+            pollingInterval: 10000,
+        }
+    );
+    const {
+        data: line1OptionAutoNgCount,
+        isLoading: line1OptionAutoNgCountLoading,
+    } = useGetLine1OptionAutoNgCountQuery(
+        { frequent },
+        {
+            pollingInterval: 10000,
+        }
+    );
+    const {
+        data: line1OptionAutoTopTenLogs = [],
+        isLoading: line1OptionAutoTopTenLogsLoading,
+    } = useGetLine1OptionAutoTopTenLogsQuery(null, {
+        pollingInterval: 10000,
     });
+    const [syncMutation, { isLoading: syncMutationLoading }] =
+        useLine1OptionAutoSyncMutation();
     const [alert, setAlert] = useState();
     const viewImage = (e, image) => {
         e.preventDefault();
-        dispatch(line1AsisSetSelectedLogImage(image));
+        dispatch(line1OptionAutoSetSelectedLogImage(image));
         setAlert({ comp: "image", bool: true });
     };
-
+    const [syncForm, setSyncForm] = useState({
+        base_path: "",
+    });
+    const submitSync = (e) => {
+        e.preventDefault();
+        syncMutation(syncForm);
+    };
     return (
         <>
             {alert && <OpenAlert alert={alert} setAlert={setAlert} />}
@@ -445,20 +362,57 @@ export const Asis = () => {
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
-                        <Link to={`${config.pathPrefix}dashboard`} className="font-semibold text-sm">Dashboard</Link>
+                        <Link
+                            to={`${config.pathPrefix}dashboard`}
+                            className="font-semibold text-sm"
+                        >
+                            Dashboard
+                        </Link>
                         <span className="text-sm">/</span>
-                        <Link to={`${config.pathPrefix}lines/line-1`} className="font-semibold text-sm">Line 1</Link>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1`}
+                            className="font-semibold text-sm"
+                        >
+                            Line 1
+                        </Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
-                            ASIS
+                            OPTION AUTO
                         </span>
                     </div>
                 </div>
                 <div className="flex flex-col flex-1">
+                    <div className="flex gap-2 mb-3">
+                        <form
+                            className="flex gap-2 flex-1"
+                            onSubmit={submitSync}
+                        >
+                            {/* <Input type="date" /> */}
+                            <Input
+                                type="text"
+                                placeholder="OptionAuto file directory"
+                                required
+                                value={syncForm.path}
+                                className={`w-full`}
+                                onChange={(e) =>
+                                    setSyncForm((old) => ({
+                                        ...old,
+                                        base_path: e.target.value,
+                                    }))
+                                }
+                            />
+                            <button className="flex items-center text-white gap-3 rounded-lg bg-info px-4 py-3">
+                                <SyncIcon />
+                                Sync
+                            </button>
+                        </form>
+                    </div>
                     <Card>
                         <div className="flex flex-col flex-1 gap-1">
                             <div className="flex items-center justify-between">
-                                <span className="font-bold text-lg">Asis</span>
+                                <span className="font-bold text-lg">
+                                    OptionAuto
+                                </span>
                                 <div className="flex items-center gap-2">
                                     <div
                                         onClick={() => setFrequent("hourly")}
@@ -553,7 +507,10 @@ export const Asis = () => {
                                 </div>
                             </div>
                             <div className="w-full h-full">
-                                <AsisChart frequent={frequent} ppmOn={ppmOn} />
+                                <OptionAutoChart
+                                    frequent={frequent}
+                                    ppmOn={ppmOn}
+                                />
                             </div>
                         </div>
                     </Card>
@@ -561,38 +518,34 @@ export const Asis = () => {
                 <div className="grid grid-cols-5 gap-4">
                     <div className="col-span-3 flex gap-4 flex-col">
                         <div className="grid grid-cols-4 gap-4">
-                            <Link to={`log?judgement=ok`}>
+                            <Link to={`log?result=OK`}>
                                 <Card
-                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
+                                    className={`py-[21px] px-[10px] cursor-pointer hover:shadow-lg hover:scale-[1.05] transition`}
                                 >
                                     <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
                                         Quantity OK
                                     </span>
                                     <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1AsisOkCount || 0}
+                                        {line1OptionAutoOkCount || 0}
                                     </span>
                                 </Card>
                             </Link>
-                            <Link to={`log?judgement=ng`}>
-                                <Card
-                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
-                                >
-                                    <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
-                                        Quantity NG
-                                    </span>
-                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1AsisNgCount || 0}
-                                    </span>
-                                </Card>
-                            </Link>
-                            <Card>
+                            <Card className={`py-[21px] px-[10px]`}>
+                                <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
+                                    Quantity NG
+                                </span>
+                                <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                    {line1OptionAutoNgCount || 0}
+                                </span>
+                            </Card>
+                            {/* <Card>
                                 <span className='bg-[#FEF4E6] h-[32px] rounded-xl flex items-center justify-center text-[#F59F00] text-sm'>Quantity NDF</span>
-                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>~</span>
+                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>65</span>
                             </Card>
                             <Card>
                                 <span className='bg-[#E7F6FD] h-[32px] rounded-xl flex items-center justify-center text-[#229BD8] text-sm'>Quantity INT</span>
-                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>~</span>
-                            </Card>
+                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>34</span>
+                            </Card> */}
                         </div>
                         <div className="flex gap-3 flex-col border rounded-xl py-[19px] px-[24px]">
                             <div className="flex justify-between pb-1 items-center">
@@ -634,55 +587,46 @@ export const Asis = () => {
                                         >
                                             NG Cause
                                         </Table.Th>
-                                        <Table.Th
-                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
-                                        >
-                                            Capture Image
-                                        </Table.Th>
                                     </Table.Tr>
                                 </Table.Thead>
                                 <tbody>
-                                    {line1AsisTopTenLogs.map((item, i) => (
-                                        <Table.Tr
-                                            key={i}
-                                            className={`even:bg-[#F0F1F3]`}
-                                        >
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.model || "-"}
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.sn || "-"}
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                <span
-                                                    className={`px-3 py-1 rounded-full text-xs ${
-                                                        item.ok
-                                                            ? "bg-[#B6E9D1] text-[#084D2D]"
-                                                            : "bg-[#FAC5C1] text-[#F04438]"
-                                                    }`}
-                                                >
-                                                    {item.ok ? "OK" : "NO"}
-                                                </span>
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.ng_cause || "-"}
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1">
-                                                <span
-                                                    className="cursor-pointer underline text-[#2064AD]"
-                                                    onClick={(e) =>
-                                                        viewImage(
-                                                            e,
-                                                            item.image_local_path
+                                    {line1OptionAutoTopTenLogs.map(
+                                        (item, i) => (
+                                            <Table.Tr
+                                                key={i}
+                                                className={`even:bg-[#F0F1F3]`}
+                                            >
+                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                    {item.model_suffix.split(
+                                                        "."
+                                                    )?.[0] || "-"}
+                                                </Table.Td>
+                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                    {item.set_id || "-"}
+                                                </Table.Td>
+                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                    <span
+                                                        className={`px-3 py-1 rounded-full text-xs ${
+                                                            item.result == "OK"
+                                                                ? "bg-[#B6E9D1] text-[#084D2D]"
+                                                                : "bg-[#FAC5C1] text-[#F04438]"
+                                                        }`}
+                                                    >
+                                                        {item.result == "OK"
+                                                            ? "OK"
+                                                            : "NO"}
+                                                    </span>
+                                                </Table.Td>
+                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                    {item.results
+                                                        ?.map(
+                                                            (item) => item.name
                                                         )
-                                                    }
-                                                >
-                                                    view image
-                                                </span>
-                                            </Table.Td>
-                                        </Table.Tr>
-                                    ))}
+                                                        ?.join(", ") || "-"}
+                                                </Table.Td>
+                                            </Table.Tr>
+                                        )
+                                    )}
                                 </tbody>
                             </Table>
                         </div>
@@ -744,6 +688,18 @@ export const Asis = () => {
                     </div>
                 </div>
             </div>
+            {syncMutationLoading && (
+                <>
+                    <div className="flex justify-center items-center w-screen h-screen fixed top-0 left-0 bg-white/50 z-50">
+                        <SyncIcon
+                            width={120}
+                            height={120}
+                            fill="black"
+                            className={`animate-spin`}
+                        />
+                    </div>
+                </>
+            )}
         </>
     );
 };

@@ -3,14 +3,13 @@ import { HomeIcon, SearchIcon } from "../../../common/components/icons";
 import { useSearchParams } from "react-router-dom";
 import { HiOutlineArrowCircleDown } from "react-icons/hi";
 import { Table } from "../../../common/components/table/Table";
-import { useGetLine1AsisLogsQuery } from "../../../app/services/asisService";
-import { OpenAlert } from "../line_detail/Asis";
+import { useLine1ShipmodeLogsQuery } from "../../../app/services/shipmodeService";
+import { OpenAlert } from "../line_detail/Shipmode";
 import { useDispatch } from "react-redux";
-import { line1AsisSetSelectedLogImage } from "../line_detail/line1AsisSlice";
 import moment from "moment/moment";
 import { useEffect } from "react";
 
-export const Line1AsisLogTable = ({ alert: _alert }) => {
+export const Line1ShipmodeLogTable = ({ alert: _alert }) => {
     const [alert, setAlert] = _alert;
     const dispatch = useDispatch();
     const [queryParam, setQueryParam] = useSearchParams();
@@ -22,8 +21,8 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
         start_date: queryParam.get("start_date") || "",
         end_date: queryParam.get("end_date") || "",
     });
-    const { data: line1AsisLogs, isLoading: line1AsisLogsLoading } =
-        useGetLine1AsisLogsQuery({
+    const { data: line1ShipmodeLogs, isLoading: line1ShipmodeLogsLoading } =
+        useLine1ShipmodeLogsQuery({
             page: qParams.page,
             q: qParams.q,
             per_page: qParams.per_page,
@@ -36,7 +35,7 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
     }, [qParams]);
     const viewImage = (e, image) => {
         e.preventDefault();
-        dispatch(line1AsisSetSelectedLogImage(image));
+        dispatch(image);
         setAlert({ comp: "image", bool: true });
     };
     return (
@@ -145,6 +144,12 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
                                 className="py-4 bg-[#E2F1FF]"
                                 order={false}
                             >
+                                PROCESS
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
                                 JUDGEMENT
                             </Table.Th>
                             <Table.Th
@@ -168,7 +173,7 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
                         </Table.Tr>
                     </Table.Thead>
                     <tbody>
-                        {line1AsisLogs?.map((item, i) => {
+                        {line1ShipmodeLogs?.map((item, i) => {
                             return (
                                 <Table.Tr
                                     className={`even:bg-[#F8F7FF]`}
@@ -179,6 +184,9 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         {item?.sn || "-"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.process_type || "-"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         <span
@@ -252,7 +260,8 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
                                 setQParams((queryParam) => ({
                                     ...queryParam,
                                     page:
-                                        line1AsisLogs.length == qParams.per_page
+                                        line1ShipmodeLogs.length ==
+                                        qParams.per_page
                                             ? parseInt(qParams.page || 1) + 1
                                             : parseInt(qParams.page || 1),
                                 }));
@@ -267,7 +276,7 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
     );
 };
 
-export const LineLog = () => {
+export const LineLogShipmode = () => {
     const _alert = useState();
     const [alert, setAlert] = _alert;
     return (
@@ -305,7 +314,7 @@ export const LineLog = () => {
                                 <span>Download</span>
                             </button>
                         </div>
-                        <Line1AsisLogTable alert={_alert} />
+                        <Line1ShipmodeLogTable alert={_alert} />
                     </div>
                 </div>
             </div>

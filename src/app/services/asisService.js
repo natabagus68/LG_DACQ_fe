@@ -5,19 +5,20 @@ export const asisService = apiSlice.injectEndpoints({
         getLine1AsisNgRatio: builder.query({
             query: () => ({ url: "/process/line-1/asis/ng-ratio" }),
             providesTags: ["process/line-1/asis/ng-ratio"],
-            transformResponse: (response, meta, arg) => response?.data?.ngRatio,
+            transformResponse: (response, meta, arg) =>
+                response?.data?.ngRatio || 0,
         }),
         getLine1AsisProcessChart: builder.query({
             query: (frequent) => ({
                 url: `process/line-1/asis/chart?frequent=${frequent}`,
             }),
-            transformResponse: (res) => res?.data,
+            transformResponse: (res) => res?.data || [],
         }),
         getLine1AsisChartLastWeek: builder.query({
             query: () => ({
                 url: "process/line-1/asis/chart?frequent=weekly",
             }),
-            transformResponse: (res) => res.data,
+            transformResponse: (res) => res?.data || [],
         }),
         getLine1AsisTopNgCause: builder.query({
             query: () => ({
@@ -33,7 +34,7 @@ export const asisService = apiSlice.injectEndpoints({
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyNg,
+            transformResponse: (res) => res?.data?.qtyNg || 0,
         }),
         getLine1AsisOkCount: builder.query({
             query: (query) => ({
@@ -43,19 +44,19 @@ export const asisService = apiSlice.injectEndpoints({
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyOk,
+            transformResponse: (res) => res?.data?.qtyOk || 0,
         }),
         getLine1AsisTopTenLogs: builder.query({
             query: () => ({
                 url: "process/line-1/asis/logs",
             }),
-            transformResponse: (res) => res?.data,
+            transformResponse: (res) => res?.data || [],
         }),
         getLine1Top5NgCause: builder.query({
             query: () => ({
                 url: "process/line-1/asis/auto-ng-causes/top5",
             }),
-            transformResponse: (res) => res?.data,
+            transformResponse: (res) => res?.data || [],
         }),
         getLine1AsisUpdateManualNg: builder.mutation({
             query: (description) => ({
@@ -70,7 +71,7 @@ export const asisService = apiSlice.injectEndpoints({
                 url: "process/line-1/asis/manual-ng-causes",
             }),
             providesTags: ["Line 1 Asis Manual Ng Cause"],
-            transformResponse: (res) => res?.data,
+            transformResponse: (res) => res?.data || [],
         }),
         getLine1AsisLogs: builder.query({
             query: (data = []) => ({
@@ -78,7 +79,7 @@ export const asisService = apiSlice.injectEndpoints({
                     .map((item, i) => `${item}=${data[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data,
+            transformResponse: (res) => res?.data || [],
         }),
     }),
 });

@@ -9,9 +9,6 @@ export default defineConfig({
         VitePWA({
             injectRegister: null, //'auto'
             // registerType: 'autoUpdate',
-            devOptions: {
-                enabled: false
-            }
         }),
     ],
 });

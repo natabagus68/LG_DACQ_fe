@@ -28,18 +28,21 @@ import {
     useGetLine1HipotTop5NgCauseQuery,
     useLine1HipotTopManualNgQuery,
     useLine1HipotUpdateManualNgMutation,
+    useLine1HipotSyncMutation,
 } from "../../../app/services/hipotService";
 import { Switch } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { line1HipotSetManualNg } from "./line1HipotSlice";
 import { config } from "../../../common/utils";
+import { Input } from "../../../common/components/input/Input";
+import SyncIcon from "../../../common/components/icons/SyncIcon";
 
 const HipotChart = ({ frequent, ppmOn }) => {
     const {
         data: line1HipotProcessChart = [],
         isLoading: line1HipotProcessChartLoading,
     } = useGetLine1HipotProcessChartQuery(frequent, {
-        pollingInterval: 1000,
+        pollingInterval: 10000,
     });
     const data = useMemo(() => {
         return {
@@ -224,7 +227,7 @@ const TopAutoNgTable = () => {
         data: line1HipotTop5NgCause = [],
         isLoading: line1HipotTop5NgCauseLoading,
     } = useGetLine1HipotTop5NgCauseQuery(null, {
-        pollingInterval: 1000,
+        pollingInterval: 10000,
     });
     return (
         <Table>
@@ -301,7 +304,6 @@ const TopManualNgTable = () => {
 export const Hipot = () => {
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
-    // const [manualNgOn, setManualNgOn] = useState(false);
     const manualNgOn = useSelector((state) => state.line1Hipot.manualNgOn);
     const setManualNgOn = (e) => {
         dispatch(line1HipotSetManualNg(!manualNgOn));
@@ -311,29 +313,37 @@ export const Hipot = () => {
         useGetLine1HipotOkCountQuery(
             { frequent },
             {
-                pollingInterval: 1000,
+                pollingInterval: 10000,
             }
         );
     const { data: line1HipotNgCount, isLoading: line1HipotNgCountLoading } =
         useGetLine1HipotNgCountQuery(
             { frequent },
             {
-                pollingInterval: 1000,
+                pollingInterval: 10000,
             }
         );
     const {
         data: line1HipotTopTenLogs = [],
         isLoading: line1HipotTopTenLogsLoading,
     } = useGetLine1HipotTopTenLogsQuery(null, {
-        pollingInterval: 1000,
+        pollingInterval: 10000,
     });
+    const [syncMutation, { isLoading: syncMutationLoading }] =
+        useLine1HipotSyncMutation();
     const [alert, setAlert] = useState();
     const viewImage = (e, image) => {
         e.preventDefault();
         dispatch(line1HipotSetSelectedLogImage(image));
         setAlert({ comp: "image", bool: true });
     };
-
+    const [syncForm, setSyncForm] = useState({
+        base_path: "",
+    });
+    const submitSync = (e) => {
+        e.preventDefault();
+        syncMutation(syncForm);
+    };
     return (
         <>
             {alert && <OpenAlert alert={alert} setAlert={setAlert} />}
@@ -342,9 +352,19 @@ export const Hipot = () => {
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Dashboard</span>
+                        <Link
+                            to={`${config.pathPrefix}dashboard`}
+                            className="font-semibold text-sm"
+                        >
+                            Dashboard
+                        </Link>
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Line 1</span>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1`}
+                            className="font-semibold text-sm"
+                        >
+                            Line 1
+                        </Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
                             HIPOT
@@ -352,6 +372,31 @@ export const Hipot = () => {
                     </div>
                 </div>
                 <div className="flex flex-col flex-1">
+                    <div className="flex gap-2 mb-3">
+                        <form
+                            className="flex gap-2 flex-1"
+                            onSubmit={submitSync}
+                        >
+                            {/* <Input type="date" /> */}
+                            <Input
+                                type="text"
+                                placeholder="Hipot file directory"
+                                required
+                                value={syncForm.path}
+                                className={`w-full`}
+                                onChange={(e) =>
+                                    setSyncForm((old) => ({
+                                        ...old,
+                                        base_path: e.target.value,
+                                    }))
+                                }
+                            />
+                            <button className="flex items-center text-white gap-3 rounded-lg bg-info px-4 py-3">
+                                <SyncIcon />
+                                Sync
+                            </button>
+                        </form>
+                    </div>
                     <Card>
                         <div className="flex flex-col flex-1 gap-1">
                             <div className="flex items-center justify-between">
@@ -463,7 +508,7 @@ export const Hipot = () => {
                                     Quantity OK
                                 </span>
                                 <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                    {line1HipotOkCount}
+                                    {line1HipotOkCount || 0}
                                 </span>
                             </Card>
                             <Card className={`py-[21px] px-[10px]`}>
@@ -471,7 +516,7 @@ export const Hipot = () => {
                                     Quantity NG
                                 </span>
                                 <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                    {line1HipotNgCount}
+                                    {line1HipotNgCount || 0}
                                 </span>
                             </Card>
                             {/* <Card>
@@ -517,6 +562,12 @@ export const Hipot = () => {
                                         >
                                             Judgement
                                         </Table.Th>
+                                        <Table.Th
+                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
+                                            order={false}
+                                        >
+                                            NG Cause
+                                        </Table.Th>
                                     </Table.Tr>
                                 </Table.Thead>
                                 <tbody>
@@ -541,6 +592,9 @@ export const Hipot = () => {
                                                 >
                                                     {item.ok ? "OK" : "NO"}
                                                 </span>
+                                            </Table.Td>
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                {item.ng_cause || "-"}
                                             </Table.Td>
                                         </Table.Tr>
                                     ))}
@@ -605,6 +659,18 @@ export const Hipot = () => {
                     </div>
                 </div>
             </div>
+            {syncMutationLoading && (
+                <>
+                    <div className="flex justify-center items-center w-screen h-screen fixed top-0 left-0 bg-white/50 z-50">
+                        <SyncIcon
+                            width={120}
+                            height={120}
+                            fill="black"
+                            className={`animate-spin`}
+                        />
+                    </div>
+                </>
+            )}
         </>
     );
 };

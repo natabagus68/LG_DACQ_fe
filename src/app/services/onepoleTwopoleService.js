@@ -5,19 +5,20 @@ export const onepoleTwopoleService = apiSlice.injectEndpoints({
         getLine1NgRatioOnepoleTwopole: builder.query({
             query: () => ({ url: "process/line-1/onepole-twopole/ng-ratio" }),
             providesTags: ["process/line-1/onepole-twopole/ng-ratio"],
-            transformResponse: (response, meta, arg) => response?.data?.ngRatio,
+            transformResponse: (response, meta, arg) =>
+                response?.data?.ngRatio || 0,
         }),
         getLine1OnepoleTwopoleProcessChart: builder.query({
             query: (frequent) => ({
                 url: `process/line-1/onepole-twopole/chart?frequent=${frequent}`,
             }),
-            transformResponse: (res) => res?.data,
+            transformResponse: (res) => res?.data || [],
         }),
         getLine1OnepoleTwopoleChartLastWeek: builder.query({
             query: () => ({
                 url: "process/line-1/onepole-twopole/chart?frequent=weekly",
             }),
-            transformResponse: (res) => res.data,
+            transformResponse: (res) => res?.data || [],
         }),
         getLine1OnepoleTwopoleNgCount: builder.query({
             query: (query) => ({
@@ -27,7 +28,7 @@ export const onepoleTwopoleService = apiSlice.injectEndpoints({
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyNg,
+            transformResponse: (res) => res?.data?.qtyNg || 0,
         }),
         getLine1OnepoleTwopoleOkCount: builder.query({
             query: (query) => ({
@@ -37,19 +38,19 @@ export const onepoleTwopoleService = apiSlice.injectEndpoints({
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyOk,
+            transformResponse: (res) => res?.data?.qtyOk || 0,
         }),
         getLine1OnepoleTwopoleTopTenLogs: builder.query({
             query: () => ({
                 url: "process/line-1/onepole-twopole/logs",
             }),
-            transformResponse: (res) => res?.data,
+            transformResponse: (res) => res?.data || [],
         }),
         getLine1Top5NgCause: builder.query({
             query: () => ({
                 url: "process/line-1/onepole-twopole/auto-ng-causes/top5",
             }),
-            transformResponse: (res) => res?.data,
+            transformResponse: (res) => res?.data || [],
         }),
         line1OnepoleTwopoleUpdateManualNg: builder.mutation({
             query: (description) => ({
@@ -64,7 +65,7 @@ export const onepoleTwopoleService = apiSlice.injectEndpoints({
                 url: "process/line-1/onepole-twopole/manual-ng-causes",
             }),
             providesTags: ["Manual Ng Cause"],
-            transformResponse: (res) => res?.data,
+            transformResponse: (res) => res?.data || [],
         }),
         line1OnepoleTwopoleLogs: builder.query({
             query: (data = []) => ({
@@ -74,7 +75,7 @@ export const onepoleTwopoleService = apiSlice.injectEndpoints({
                     .map((item, i) => `${item}=${data[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data,
+            transformResponse: (res) => res?.data || [],
         }),
     }),
 });
