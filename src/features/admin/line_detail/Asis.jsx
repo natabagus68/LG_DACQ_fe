@@ -69,14 +69,14 @@ const AsisChart = ({ searchParams, setSearchParams, ppmOn }) => {
                     )
                         .add(-1, "hour")
                         .startOf("hour")
-                        .toDate();
+                        .utc();
                     let to_date = moment(
                         line1AsisProcessChart?.[lineEl.index]?.x,
                         "hh-mm"
                     )
                         .add(-1, "hour")
                         .endOf("hour")
-                        .toDate();
+                        .utc();
                     switch (searchParams.frequent) {
                         case "daily":
                             from_date = moment(
@@ -84,13 +84,13 @@ const AsisChart = ({ searchParams, setSearchParams, ppmOn }) => {
                                 "DD-MMM"
                             )
                                 .startOf("day")
-                                .toDate();
+                                .utc();
                             to_date = moment(
                                 line1AsisProcessChart?.[lineEl.index]?.x,
                                 "DD-MMM"
                             )
                                 .endOf("day")
-                                .toDate();
+                                .utc();
                             break;
                         case "monthly":
                             from_date = moment(
@@ -98,13 +98,13 @@ const AsisChart = ({ searchParams, setSearchParams, ppmOn }) => {
                                 "MMM"
                             )
                                 .startOf("month")
-                                .toDate();
+                                .utc();
                             to_date = moment(
                                 line1AsisProcessChart?.[lineEl.index]?.x,
                                 "MMM"
                             )
                                 .endOf("month")
-                                .toDate();
+                                .utc();
                             break;
                         case "annually":
                             from_date = moment(
@@ -112,13 +112,13 @@ const AsisChart = ({ searchParams, setSearchParams, ppmOn }) => {
                                 "YYYY"
                             )
                                 .startOf("year")
-                                .toDate();
+                                .utc();
                             to_date = moment(
                                 line1AsisProcessChart?.[lineEl.index]?.x,
                                 "YYYY"
                             )
                                 .endOf("year")
-                                .toDate();
+                                .utc();
                             break;
                         default:
                             break;
@@ -126,8 +126,8 @@ const AsisChart = ({ searchParams, setSearchParams, ppmOn }) => {
                     console.log({ from_date, to_date });
                     setSearchParams((searchParams) => ({
                         ...searchParams,
-                        from_date,
-                        to_date,
+                        from_date : from_date,
+                        to_date : to_date,
                     }));
                 }
             }}
@@ -657,7 +657,7 @@ export const Asis = () => {
                 <div className="grid grid-cols-5 gap-4">
                     <div className="col-span-3 flex gap-4 flex-col">
                         <div className="grid grid-cols-4 gap-4">
-                            <Link to={`log?judgement=ok`}>
+                            <Link to={`log?judgement=ok&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}>
                                 <Card
                                     className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
                                 >
@@ -669,7 +669,7 @@ export const Asis = () => {
                                     </span>
                                 </Card>
                             </Link>
-                            <Link to={`log?judgement=ng`}>
+                            <Link to={`log?judgement=ng&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}>
                                 <Card
                                     className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
                                 >
@@ -681,7 +681,7 @@ export const Asis = () => {
                                     </span>
                                 </Card>
                             </Link>
-                            <Link to={`log?judgement=ndf`}>
+                            <Link to={`log?judgement=ndf&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}>
                                 <Card
                                     className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
                                 >
@@ -693,7 +693,7 @@ export const Asis = () => {
                                     </span>
                                 </Card>
                             </Link>
-                            <Link to={`log?judgement=int`}>
+                            <Link to={`log?judgement=int&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}>
                                 <Card
                                     className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
                                 >
