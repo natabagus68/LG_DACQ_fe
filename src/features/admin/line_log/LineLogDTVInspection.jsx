@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { HomeIcon, SearchIcon } from "../../../common/components/icons";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { HiOutlineArrowCircleDown } from "react-icons/hi";
 import { Table } from "../../../common/components/table/Table";
-import { useGetLine1AsisLogsQuery } from "../../../app/services/asisService";
-import { OpenAlert } from "../line_detail/Asis";
+import { useGetLine1DTVInspectionLogsQuery } from "../../../app/services/dtvInspectionService";
+import { OpenAlert } from "../line_detail/DTVInspection";
 import { useDispatch } from "react-redux";
-import { line1AsisSetSelectedLogImage } from "../line_detail/line1AsisSlice";
+import { line1DTVInspectionSetSelectedLogImage } from "../line_detail/line1DTVInspectionSlice";
 import moment from "moment/moment";
 import { useEffect } from "react";
+import { config } from "../../../common/utils";
 
-export const Line1AsisLogTable = ({ alert: _alert }) => {
+export const Line1DTVInspectionLogTable = ({ alert: _alert }) => {
     const [alert, setAlert] = _alert;
     const dispatch = useDispatch();
     const [queryParam, setQueryParam] = useSearchParams();
@@ -22,8 +23,8 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
         start_date: queryParam.get("start_date") || "",
         end_date: queryParam.get("end_date") || "",
     });
-    const { data: line1AsisLogs, isLoading: line1AsisLogsLoading } =
-        useGetLine1AsisLogsQuery({
+    const { data: line1DTVInspectionLogs, isLoading: line1DTVInspectionLogsLoading } =
+        useGetLine1DTVInspectionLogsQuery({
             page: qParams.page,
             q: qParams.q,
             per_page: qParams.per_page,
@@ -36,7 +37,7 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
     }, [qParams]);
     const viewImage = (e, image) => {
         e.preventDefault();
-        dispatch(line1AsisSetSelectedLogImage(image));
+        dispatch(line1DTVInspectionSetSelectedLogImage(image));
         setAlert({ comp: "image", bool: true });
     };
     return (
@@ -174,7 +175,7 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
                         </Table.Tr>
                     </Table.Thead>
                     <tbody>
-                        {line1AsisLogs?.map((item, i) => {
+                        {line1DTVInspectionLogs?.map((item, i) => {
                             return (
                                 <Table.Tr
                                     className={`even:bg-[#F8F7FF]`}
@@ -201,7 +202,7 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
                                         {item?.ng_cause || "-"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
-                                        <span
+                                        {!item.ok && <span
                                             className="cursor-pointer underline"
                                             onClick={(e) =>
                                                 viewImage(
@@ -211,12 +212,12 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
                                             }
                                         >
                                             view image
-                                        </span>
+                                        </span> || '-'}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
-                                        {item?.image_updated_at
+                                        {item?.time
                                             ? moment(
-                                                  item?.image_updated_at
+                                                  item?.time
                                               ).format("DD MMMM YYYY HH:mm:ss")
                                             : "-"}
                                     </Table.Td>
@@ -263,7 +264,7 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
                                 setQParams((queryParam) => ({
                                     ...queryParam,
                                     page:
-                                        line1AsisLogs.length == qParams.per_page
+                                        line1DTVInspectionLogs.length == qParams.per_page
                                             ? parseInt(qParams.page || 1) + 1
                                             : parseInt(qParams.page || 1),
                                 }));
@@ -278,7 +279,7 @@ export const Line1AsisLogTable = ({ alert: _alert }) => {
     );
 };
 
-export const LineLog = () => {
+export const LineLogDTVInspection = () => {
     const _alert = useState();
     const [alert, setAlert] = _alert;
     return (
@@ -289,11 +290,11 @@ export const LineLog = () => {
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Dashboard</span>
+                        <Link to={`${config.pathPrefix}dashboard`} className="font-semibold text-sm">Dashboard</Link>
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Line 1</span>
+                        <Link to={`${config.pathPrefix}lines/line-1`} className="font-semibold text-sm">Line 1</Link>
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">ASIS</span>
+                        <Link to={`${config.pathPrefix}lines/line-1/dtv-inspection`} className="font-semibold text-sm">DTV Inspection</Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
                             Log
@@ -316,7 +317,7 @@ export const LineLog = () => {
                                 <span>Download</span>
                             </button>
                         </div>
-                        <Line1AsisLogTable alert={_alert} />
+                        <Line1DTVInspectionLogTable alert={_alert} />
                     </div>
                 </div>
             </div>

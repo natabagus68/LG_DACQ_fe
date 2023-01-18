@@ -39,7 +39,7 @@ const WhiteBalanceChart = ({ frequent, ppmOn }) => {
         data: line1WhiteBalanceProcessChart = [],
         isLoading: line1WhiteBalanceProcessChartLoading,
     } = useGetLine1WhiteBalanceProcessChartQuery(frequent, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const data = useMemo(() => {
         return {
@@ -224,7 +224,7 @@ const TopManualNgTable = () => {
         data: line1WhiteBalanceTop5NgCause = [],
         isLoading: line1WhiteBalanceTop5NgCauseLoading,
     } = useGetLine1WhiteBalanceTop5NgCauseQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     return (
         <Table>
@@ -314,7 +314,7 @@ export const WhiteBalance = () => {
     } = useGetLine1WhiteBalanceOkCountQuery(
         { frequent },
         {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         }
     );
     const {
@@ -323,14 +323,14 @@ export const WhiteBalance = () => {
     } = useGetLine1WhiteBalanceNgCountQuery(
         { frequent },
         {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         }
     );
     const {
         data: line1WhiteBalanceTopTenLogs = [],
         isLoading: line1WhiteBalanceTopTenLogsLoading,
     } = useGetLine1WhiteBalanceTopTenLogsQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const [syncMutation, { isLoading: syncMutationLoading }] =
         useLine1WhiteBalanceSyncMutation();
@@ -375,30 +375,82 @@ export const WhiteBalance = () => {
                     </div>
                 </div>
                 <div className="flex flex-col flex-1">
-                    <div className="flex gap-2 mb-3">
-                        <form
-                            className="flex gap-2 flex-1"
-                            onSubmit={submitSync}
-                        >
-                            {/* <Input type="date" /> */}
-                            <Input
-                                type="text"
-                                placeholder="WhiteBalance file directory"
-                                required
-                                value={syncForm.path}
-                                className={`w-full`}
-                                onChange={(e) =>
-                                    setSyncForm((old) => ({
-                                        ...old,
-                                        base_path: e.target.value,
-                                    }))
-                                }
-                            />
-                            <button className="flex items-center text-white gap-3 rounded-lg bg-info px-4 py-3">
-                                <SyncIcon />
-                                Sync
-                            </button>
-                        </form>
+                    <div className="flex-1 grid lg:grid-cols-3 gap-3 mb-3">
+                        <div className="rounded-lg border p-4">
+                            <div className="text-xl font-bold mb-2">WB 1</div>
+                            <form
+                                className="flex gap-2 flex-1"
+                                onSubmit={submitSync}
+                            >
+                                <Input
+                                    type="text"
+                                    placeholder="WB 1 file directory"
+                                    required
+                                    value={syncForm.path}
+                                    className={`w-full`}
+                                    onChange={(e) =>
+                                        setSyncForm((old) => ({
+                                            ...old,
+                                            base_path: e.target.value,
+                                        }))
+                                    }
+                                />
+                                <button className="flex items-center text-white gap-3 rounded-lg bg-info px-4 py-3">
+                                    <SyncIcon />
+                                    Sync
+                                </button>
+                            </form>
+                        </div>
+                        <div className="rounded-lg border p-4">
+                            <div className="text-xl font-bold mb-2">WB 2</div>
+                            <form
+                                className="flex gap-2 flex-1"
+                                onSubmit={submitSync}
+                            >
+                                <Input
+                                    type="text"
+                                    placeholder="WB 2 file directory"
+                                    required
+                                    value={syncForm.path}
+                                    className={`w-full`}
+                                    onChange={(e) =>
+                                        setSyncForm((old) => ({
+                                            ...old,
+                                            base_path: e.target.value,
+                                        }))
+                                    }
+                                />
+                                <button className="flex items-center text-white gap-3 rounded-lg bg-info px-4 py-3">
+                                    <SyncIcon />
+                                    Sync
+                                </button>
+                            </form>
+                        </div>
+                        <div className="rounded-lg border p-4">
+                            <div className="text-xl font-bold mb-2">WB 3</div>
+                            <form
+                                className="flex gap-2 flex-1"
+                                onSubmit={submitSync}
+                            >
+                                <Input
+                                    type="text"
+                                    placeholder="WB 3 file directory"
+                                    required
+                                    value={syncForm.path}
+                                    className={`w-full`}
+                                    onChange={(e) =>
+                                        setSyncForm((old) => ({
+                                            ...old,
+                                            base_path: e.target.value,
+                                        }))
+                                    }
+                                />
+                                <button className="flex items-center text-white gap-3 rounded-lg bg-info px-4 py-3">
+                                    <SyncIcon />
+                                    Sync
+                                </button>
+                            </form>
+                        </div>
                     </div>
                     <Card>
                         <div className="flex flex-col flex-1 gap-1">
@@ -510,31 +562,76 @@ export const WhiteBalance = () => {
                 </div>
                 <div className="grid grid-cols-5 gap-4">
                     <div className="col-span-3 flex gap-4 flex-col">
-                        <div className="grid grid-cols-4 gap-4">
-                            <Card className={`py-[21px] px-[10px]`}>
-                                <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
-                                    Quantity OK
-                                </span>
-                                <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                    {line1WhiteBalanceOkCount || 0}
-                                </span>
+                        <div className="grid grid-cols-3 gap-4">
+                            <Card className={`py-[21px] px-4`}>
+                                <div className="mx-auto text-lg font-bold">
+                                    WB 1
+                                </div>
+                                <div className="flex gap-2">
+                                    <div className="flex flex-1 flex-col justify-center">
+                                        <span className="bg-[#B6E9D1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
+                                            Quantity OK
+                                        </span>
+                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                            {line1WhiteBalanceOkCount || 0}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-1 flex-col justify-center">
+                                        <span className="bg-[#FAC5C1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
+                                            Quantity NG
+                                        </span>
+                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                            {line1WhiteBalanceNgCount || 0}
+                                        </span>
+                                    </div>
+                                </div>
                             </Card>
-                            <Card className={`py-[21px] px-[10px]`}>
-                                <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
-                                    Quantity NG
-                                </span>
-                                <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                    {line1WhiteBalanceNgCount || 0}
-                                </span>
+                            <Card className={`py-[21px] px-4`}>
+                                <div className="mx-auto text-lg font-bold">
+                                    WB 2
+                                </div>
+                                <div className="flex gap-2">
+                                    <div className="flex flex-1 flex-col justify-center">
+                                        <span className="bg-[#B6E9D1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
+                                            Quantity OK
+                                        </span>
+                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                            {line1WhiteBalanceOkCount || 0}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-1 flex-col justify-center">
+                                        <span className="bg-[#FAC5C1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
+                                            Quantity NG
+                                        </span>
+                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                            {line1WhiteBalanceNgCount || 0}
+                                        </span>
+                                    </div>
+                                </div>
                             </Card>
-                            {/* <Card>
-                                <span className='bg-[#FEF4E6] h-[32px] rounded-xl flex items-center justify-center text-[#F59F00] text-sm'>Quantity NDF</span>
-                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>65</span>
+                            <Card className={`py-[21px] px-4`}>
+                                <div className="mx-auto text-lg font-bold">
+                                    WB 3
+                                </div>
+                                <div className="flex gap-2">
+                                    <div className="flex flex-1 flex-col justify-center">
+                                        <span className="bg-[#B6E9D1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
+                                            Quantity OK
+                                        </span>
+                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                            {line1WhiteBalanceOkCount || 0}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-1 flex-col justify-center">
+                                        <span className="bg-[#FAC5C1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
+                                            Quantity NG
+                                        </span>
+                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                            {line1WhiteBalanceNgCount || 0}
+                                        </span>
+                                    </div>
+                                </div>
                             </Card>
-                            <Card>
-                                <span className='bg-[#E7F6FD] h-[32px] rounded-xl flex items-center justify-center text-[#229BD8] text-sm'>Quantity INT</span>
-                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>34</span>
-                            </Card> */}
                         </div>
                         <div className="flex gap-3 flex-col border rounded-xl py-[19px] px-[24px]">
                             <div className="flex justify-between pb-1 items-center">

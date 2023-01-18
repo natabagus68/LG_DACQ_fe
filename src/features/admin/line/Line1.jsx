@@ -50,14 +50,14 @@ export const Line1 = () => {
     const { data: line1AsisTopManualNg } = useGetLine1AsisTopManualNgQuery();
     const { data: line1AsisChartLastWeek = [] } =
         useGetLine1AsisChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         });
     const { data: line1AsisTopNgCause } = useGetLine1AsisTopNgCauseQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const { data: line1AsisNgRatio, isLoading: line1AsisNgRatioLoading } =
         useGetLine1AsisNgRatioQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         });
     const asisChartData = useMemo(() => {
         return {
@@ -69,19 +69,19 @@ export const Line1 = () => {
     }, [line1AsisChartLastWeek, ppmOn]);
     const { data: line1OnepoleTwopoleChartLastWeek = [] } =
         useGetLine1OnepoleTwopoleChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         });
     const {
         data: line1OnepoleTwopoleNgRatio,
         isLoading: line1OnepoleTwopoleNgRatioLoading,
     } = useGetLine1NgRatioOnepoleTwopoleQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const {
         data: line1OnepoleTwopoleTopManualNg,
         isLoading: line1OnepoleTwopoleTopManualNgLoading,
     } = useLine1OnepoleTwopoleTopManualNgQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const onepoleTwopoleChartData = useMemo(() => {
         return {
@@ -98,17 +98,17 @@ export const Line1 = () => {
     const { data: line1HipotTopManualNg } = useLine1HipotTopManualNgQuery();
     const { data: line1HipotChartLastWeek = [] } =
         useGetLine1HipotChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         });
     const { data: line1HipotTopNgCause } = useGetLine1HipotTopNgCauseQuery(
         null,
         {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         }
     );
     const { data: line1HipotNgRatio, isLoading: line1HipotNgRatioLoading } =
         useGetLine1HipotNgRatioQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         });
     const hipotChartData = useMemo(() => {
         return {
@@ -125,17 +125,17 @@ export const Line1 = () => {
         useLine1OptionAutoTopManualNgQuery();
     const { data: line1OptionAutoChartLastWeek = [] } =
         useGetLine1OptionAutoChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         });
     const { data: line1OptionAutoTopNgCause } =
         useGetLine1OptionAutoTopNgCauseQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         });
     const {
         data: line1OptionAutoNgRatio = null,
         isLoading: line1OptionAutoNgRatioLoading,
     } = useGetLine1OptionAutoNgRatioQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const optionAutoChartData = useMemo(() => {
         return {
@@ -152,17 +152,17 @@ export const Line1 = () => {
         useLine1OptionManualTopManualNgQuery();
     const { data: line1OptionManualChartLastWeek = [] } =
         useGetLine1OptionManualChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         });
     const { data: line1OptionManualTopNgCause } =
         useGetLine1OptionManualTopNgCauseQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         });
     const {
         data: line1OptionManualNgRatio = null,
         isLoading: line1OptionManualNgRatioLoading,
     } = useGetLine1OptionManualNgRatioQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const optionManualChartData = useMemo(() => {
         return {
@@ -181,17 +181,17 @@ export const Line1 = () => {
         useLine1ShipmodeTopManualNgQuery();
     const { data: line1ShipmodeChartLastWeek = [] } =
         useGetLine1ShipmodeChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         });
     const { data: line1ShipmodeTopNgCause } =
         useGetLine1ShipmodeTopNgCauseQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         });
     const {
         data: line1ShipmodeNgRatio = null,
         isLoading: line1ShipmodeNgRatioLoading,
     } = useGetLine1ShipmodeNgRatioQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const shipmodeChartData = useMemo(() => {
         return {
@@ -678,7 +678,7 @@ export const Line1 = () => {
                                         )}
                                         <div className="flex justify-end pt-2">
                                             <NavLink
-                                                to={``}
+                                                to={`dtv-inspection`}
                                                 className="flex items-center gap-1 text-[#4E5BA6] text-xs font-medium"
                                             >
                                                 <span>Details</span>

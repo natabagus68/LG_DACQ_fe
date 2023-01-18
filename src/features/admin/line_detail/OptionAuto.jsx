@@ -42,7 +42,7 @@ const OptionAutoChart = ({ frequent, ppmOn }) => {
         data: line1OptionAutoProcessChart = [],
         isLoading: line1OptionAutoProcessChartLoading,
     } = useGetLine1OptionAutoProcessChartQuery(frequent, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const data = useMemo(() => {
         return {
@@ -227,7 +227,7 @@ const TopAutoNgTable = () => {
         data: line1OptionAutoTop5NgCause = [],
         isLoading: line1OptionAutoTop5NgCauseLoading,
     } = useGetLine1OptionAutoTop5NgCauseQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     return (
         <Table>
@@ -321,7 +321,7 @@ export const OptionAuto = () => {
     } = useGetLine1OptionAutoOkCountQuery(
         { frequent },
         {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         }
     );
     const {
@@ -330,14 +330,14 @@ export const OptionAuto = () => {
     } = useGetLine1OptionAutoNgCountQuery(
         { frequent },
         {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         }
     );
     const {
         data: line1OptionAutoTopTenLogs = [],
         isLoading: line1OptionAutoTopTenLogsLoading,
     } = useGetLine1OptionAutoTopTenLogsQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const [syncMutation, { isLoading: syncMutationLoading }] =
         useLine1OptionAutoSyncMutation();

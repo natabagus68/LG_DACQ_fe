@@ -6,6 +6,7 @@ import line1OptionAutoReducer from "../features/admin/line_detail/line1OptionAut
 import line1OptionManualReducer from "../features/admin/line_detail/line1OptionManualSlice";
 import line1WhiteBalanceReducer from "../features/admin/line_detail/line1WhiteBalanceSlice";
 import line1ShipmodeReducer from "../features/admin/line_detail/line1ShipmodeSlice";
+import line1DTVInspectionReducer from "../features/admin/line_detail/line1DTVInspectionSlice";
 import { apiSlice } from "../features/api/apiSlice";
 
 export const store = configureStore({
@@ -17,6 +18,7 @@ export const store = configureStore({
         line1OptionManual: line1OptionManualReducer,
         line1WhiteBalance: line1WhiteBalanceReducer,
         line1Shipmode: line1ShipmodeReducer,
+        line1DTVInspection: line1DTVInspectionReducer,
         [apiSlice.reducerPath]: apiSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>

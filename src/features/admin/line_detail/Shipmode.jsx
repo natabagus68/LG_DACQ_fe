@@ -42,7 +42,7 @@ const ShipmodeChart = ({ frequent, ppmOn }) => {
         data: line1ShipmodeProcessChart = [],
         isLoading: line1ShipmodeProcessChartLoading,
     } = useGetLine1ShipmodeProcessChartQuery(frequent, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const data = useMemo(() => {
         return {
@@ -227,7 +227,7 @@ const TopAutoNgTable = () => {
         data: line1ShipmodeTop5NgCause = [],
         isLoading: line1ShipmodeTop5NgCauseLoading,
     } = useGetLine1ShipmodeTop5NgCauseQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     return (
         <Table>
@@ -315,7 +315,7 @@ export const Shipmode = () => {
     } = useGetLine1ShipmodeInstopCountQuery(
         { frequent },
         {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         }
     );
     const {
@@ -324,14 +324,14 @@ export const Shipmode = () => {
     } = useGetLine1ShipmodeInstartCountQuery(
         { frequent },
         {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         }
     );
     const {
         data: line1ShipmodeTopTenLogs = [],
         isLoading: line1ShipmodeTopTenLogsLoading,
     } = useGetLine1ShipmodeTopTenLogsQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const [syncMutation, { isLoading: syncMutationLoading }] =
         useLine1ShipmodeSyncMutation();
@@ -511,14 +511,14 @@ export const Shipmode = () => {
                 </div>
                 <div className="grid grid-cols-5 gap-4">
                     <div className="col-span-3 flex gap-4 flex-col">
-                        <div className="grid grid-cols-4 gap-4">
-                            <Card className={`py-[21px] px-[10px] flex gap-4`}>
+                        <div className="grid grid-cols-2 gap-4">
+                            <Card className={`flex gap-4`}>
                                 <div className="flex-1 text-center font-bold">
                                     Instart
                                 </div>
-                                <div className="flex gap-5">
-                                    <div className="">
-                                        <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
+                                <div className="flex px-7 gap-3">
+                                    <div className="flex-1 flex flex-col justify-center gap-3">
+                                        <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm px-4 py-1">
                                             Quantity OK
                                         </span>
                                         <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
@@ -526,8 +526,8 @@ export const Shipmode = () => {
                                                 0}
                                         </span>
                                     </div>
-                                    <div className="">
-                                        <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
+                                    <div className="flex-1 flex flex-col justify-center gap-3">
+                                        <span className="bg-red-100 text-danger h-[32px] rounded-xl flex items-center justify-center text-sm px-4 py-1">
                                             Quantity NG
                                         </span>
                                         <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
@@ -537,13 +537,13 @@ export const Shipmode = () => {
                                     </div>
                                 </div>
                             </Card>
-                            <Card className={`py-[21px] px-[10px] flex gap-4`}>
+                            <Card className={`flex gap-4`}>
                                 <div className="flex-1 text-center font-bold">
                                     Instop
                                 </div>
-                                <div className="flex gap-5">
-                                    <div className="">
-                                        <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
+                                <div className="flex px-7 gap-3">
+                                    <div className="flex-1 flex flex-col justify-center gap-3">
+                                        <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm px-4 py-1">
                                             Quantity OK
                                         </span>
                                         <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
@@ -551,8 +551,8 @@ export const Shipmode = () => {
                                                 0}
                                         </span>
                                     </div>
-                                    <div className="">
-                                        <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
+                                    <div className="flex-1 flex flex-col justify-center gap-3">
+                                        <span className="bg-red-100 text-danger h-[32px] rounded-xl flex items-center justify-center text-sm px-4 py-1">
                                             Quantity NG
                                         </span>
                                         <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
@@ -595,6 +595,12 @@ export const Shipmode = () => {
                                             className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
                                             order={false}
                                         >
+                                            Process
+                                        </Table.Th>
+                                        <Table.Th
+                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
+                                            order={false}
+                                        >
                                             Judgement
                                         </Table.Th>
                                         <Table.Th
@@ -602,6 +608,12 @@ export const Shipmode = () => {
                                             order={false}
                                         >
                                             NG Cause
+                                        </Table.Th>
+                                        <Table.Th
+                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
+                                            order={false}
+                                        >
+                                            Capture NG
                                         </Table.Th>
                                     </Table.Tr>
                                 </Table.Thead>
@@ -618,6 +630,9 @@ export const Shipmode = () => {
                                                 {item.sn || "-"}
                                             </Table.Td>
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                {item.process || "-"}
+                                            </Table.Td>
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
                                                 <span
                                                     className={`px-3 py-1 rounded-full text-xs ${
                                                         item.ok
@@ -630,6 +645,14 @@ export const Shipmode = () => {
                                             </Table.Td>
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
                                                 {item.ng_cause || "-"}
+                                            </Table.Td>
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                <button
+                                                    href=""
+                                                    className="underline text-blue-foundation-700"
+                                                >
+                                                    View Image
+                                                </button>
                                             </Table.Td>
                                         </Table.Tr>
                                     ))}

@@ -10,24 +10,21 @@ import {
     HiOutlinePlusSm,
     HiOutlineChevronRight,
     HiOutlineDownload,
-    HiOutlineCalendar,
-    HiTrendingDown,
     HiX,
 } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ChartLine } from "../../../common/components/ChartLine";
 import { Alert } from "../../../common/components/Alert";
-import ng_image from "../../../assets/ng_image.png";
 import { Table } from "../../../common/components/table/Table";
 import { useState } from "react";
 import {
-    useGetLine1AsisNgCountQuery,
-    useGetLine1AsisOkCountQuery,
+    useGetLine1AsisCounterQuery,
     useGetLine1AsisProcessChartQuery,
     useGetLine1AsisTopTenLogsQuery,
     useGetLine1Top5NgCauseQuery,
     useGetLine1AsisTopManualNgQuery,
     useGetLine1AsisUpdateManualNgMutation,
+    asisService,
 } from "../../../app/services/asisService";
 import { Switch } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,13 +33,16 @@ import {
     line1AsisSetSelectedLogImage,
 } from "./line1AsisSlice";
 import { config } from "../../../common/utils";
-
-const AsisChart = ({ frequent, ppmOn }) => {
+import { useRef } from "react";
+import { getElementAtEvent } from "react-chartjs-2";
+import moment from "moment/moment";
+const AsisChart = ({ searchParams, setSearchParams, ppmOn }) => {
+    const chartRef = useRef();
     const {
         data: line1AsisProcessChart = [],
         isLoading: line1AsisProcessChartLoading,
-    } = useGetLine1AsisProcessChartQuery(frequent, {
-        // pollingInterval: 10000,
+    } = useGetLine1AsisProcessChartQuery(searchParams.frequent, {
+        pollingInterval: 5000,
     });
     const data = useMemo(() => {
         return {
@@ -52,16 +52,88 @@ const AsisChart = ({ frequent, ppmOn }) => {
             ),
         };
     }, [line1AsisProcessChart, ppmOn]);
+    const dispatch = useDispatch();
     return (
         <ChartLine
             datas={data.datas}
             labels={data.labels}
             height="100%"
             width="100%"
+            ref={chartRef}
+            onClick={(event) => {
+                const [lineEl] = getElementAtEvent(chartRef.current, event);
+                if (lineEl) {
+                    let from_date = moment(
+                        line1AsisProcessChart?.[lineEl.index]?.x,
+                        "hh-mm"
+                    )
+                        .add(-1, "hour")
+                        .startOf("hour")
+                        .toDate();
+                    let to_date = moment(
+                        line1AsisProcessChart?.[lineEl.index]?.x,
+                        "hh-mm"
+                    )
+                        .add(-1, "hour")
+                        .endOf("hour")
+                        .toDate();
+                    switch (searchParams.frequent) {
+                        case "daily":
+                            from_date = moment(
+                                line1AsisProcessChart?.[lineEl.index]?.x,
+                                "DD-MMM"
+                            )
+                                .startOf("day")
+                                .toDate();
+                            to_date = moment(
+                                line1AsisProcessChart?.[lineEl.index]?.x,
+                                "DD-MMM"
+                            )
+                                .endOf("day")
+                                .toDate();
+                            break;
+                        case "monthly":
+                            from_date = moment(
+                                line1AsisProcessChart?.[lineEl.index]?.x,
+                                "MMM"
+                            )
+                                .startOf("month")
+                                .toDate();
+                            to_date = moment(
+                                line1AsisProcessChart?.[lineEl.index]?.x,
+                                "MMM"
+                            )
+                                .endOf("month")
+                                .toDate();
+                            break;
+                        case "annually":
+                            from_date = moment(
+                                line1AsisProcessChart?.[lineEl.index]?.x,
+                                "YYYY"
+                            )
+                                .startOf("year")
+                                .toDate();
+                            to_date = moment(
+                                line1AsisProcessChart?.[lineEl.index]?.x,
+                                "YYYY"
+                            )
+                                .endOf("year")
+                                .toDate();
+                            break;
+                        default:
+                            break;
+                    }
+                    console.log({ from_date, to_date });
+                    setSearchParams((searchParams) => ({
+                        ...searchParams,
+                        from_date,
+                        to_date,
+                    }));
+                }
+            }}
         />
     );
 };
-
 const CompExcel = ({ setAlert }) => {
     const [params, setParams] = useState({
         frequent: "hourly",
@@ -87,7 +159,7 @@ const CompExcel = ({ setAlert }) => {
                         setParams((param) => ({ ...param, frequent: "hourly" }))
                     }
                     className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
-                        params.frequent == "hourly"
+                        params.searchParams.frequent == "hourly"
                             ? "border border-blue-500"
                             : ""
                     }`}
@@ -99,7 +171,7 @@ const CompExcel = ({ setAlert }) => {
                         setParams((param) => ({ ...param, frequent: "daily" }))
                     }
                     className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
-                        params.frequent == "daily"
+                        params.searchParams.frequent == "daily"
                             ? "border border-blue-500"
                             : ""
                     }`}
@@ -114,7 +186,7 @@ const CompExcel = ({ setAlert }) => {
                         }))
                     }
                     className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
-                        params.frequent == "monthly"
+                        params.searchParams.frequent == "monthly"
                             ? "border border-blue-500"
                             : ""
                     }`}
@@ -126,7 +198,7 @@ const CompExcel = ({ setAlert }) => {
                         setParams((param) => ({ ...param, frequent: "annual" }))
                     }
                     className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
-                        params.frequent == "annual"
+                        params.searchParams.frequent == "annual"
                             ? "border border-blue-500"
                             : ""
                     }`}
@@ -327,7 +399,7 @@ const TopAutoNgTable = () => {
         data: line1AsisTop5NgCause = [],
         isLoading: line1AsisTop5NgCauseLoading,
     } = useGetLine1Top5NgCauseQuery(null, {
-        // pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     return (
         <Table>
@@ -354,11 +426,11 @@ const TopAutoNgTable = () => {
                 </Table.Tr>
             </Table.Thead>
             <tbody>
-                {line1AsisTop5NgCauseLoading && (
+                {/* {line1AsisTop5NgCauseLoading && (
                     <>
                         <div className="flex flex-1 bg-red-300"></div>
                     </>
-                )}
+                )} */}
                 {line1AsisTop5NgCause.map((item, i) => (
                     <Table.Tr key={i}>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">
@@ -404,31 +476,32 @@ const TopManualNgTable = () => {
 export const Asis = () => {
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
-    // const [manualNgOn, setManualNgOn] = useState(false);
     const manualNgOn = useSelector((state) => state.line1Asis.manualNgOn);
     const setManualNgOn = (e) => {
         dispatch(line1AsisSetManualNg(!manualNgOn));
     };
+    const [_searchParams, _setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useState({
+        ...(_searchParams.get("frequent")
+            ? { frequent: _searchParams.get("frequent") }
+            : { frequent: "hourly" }),
+        ...(_searchParams.get("from_date")
+            ? { from_date: _searchParams.get("from_date") }
+            : {}),
+        ...(_searchParams.get("to_date")
+            ? { to_date: _searchParams.get("to_date") }
+            : {}),
+    });
     const [frequent, setFrequent] = useState("hourly");
-    const { data: line1AsisOkCount, isLoading: line1AsisOkCountLoading } =
-        useGetLine1AsisOkCountQuery(
-            { frequent },
-            {
-                // pollingInterval: 10000,
-            }
-        );
-    const { data: line1AsisNgCount, isLoading: line1AsisNgCountLoading } =
-        useGetLine1AsisNgCountQuery(
-            { frequent },
-            {
-                // pollingInterval: 10000,
-            }
-        );
+    const { data: line1AsisCounter = {}, isLoading: line1AsisCounterLoading } =
+        useGetLine1AsisCounterQuery(searchParams, {
+            pollingInterval: 5000,
+        });
     const {
         data: line1AsisTopTenLogs = [],
         isLoading: line1AsisTopTenLogsLoading,
     } = useGetLine1AsisTopTenLogsQuery(null, {
-        // pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const [alert, setAlert] = useState();
     const viewImage = (e, image) => {
@@ -436,6 +509,9 @@ export const Asis = () => {
         dispatch(line1AsisSetSelectedLogImage(image));
         setAlert({ comp: "image", bool: true });
     };
+    useEffect(() => {
+        _setSearchParams(searchParams, { replace: true });
+    }, [searchParams]);
 
     return (
         <>
@@ -445,9 +521,19 @@ export const Asis = () => {
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
-                        <Link to={`${config.pathPrefix}dashboard`} className="font-semibold text-sm">Dashboard</Link>
+                        <Link
+                            to={`${config.pathPrefix}dashboard`}
+                            className="font-semibold text-sm"
+                        >
+                            Dashboard
+                        </Link>
                         <span className="text-sm">/</span>
-                        <Link to={`${config.pathPrefix}lines/line-1`} className="font-semibold text-sm">Line 1</Link>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1`}
+                            className="font-semibold text-sm"
+                        >
+                            Line 1
+                        </Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
                             ASIS
@@ -461,9 +547,13 @@ export const Asis = () => {
                                 <span className="font-bold text-lg">Asis</span>
                                 <div className="flex items-center gap-2">
                                     <div
-                                        onClick={() => setFrequent("hourly")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "hourly",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "hourly"
+                                            searchParams.frequent == "hourly"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -473,9 +563,13 @@ export const Asis = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("daily")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "daily",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "daily"
+                                            searchParams.frequent == "daily"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -485,9 +579,13 @@ export const Asis = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("monthly")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "monthly",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "monthly"
+                                            searchParams.frequent == "monthly"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -497,9 +595,13 @@ export const Asis = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("annually")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "annually",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "annually"
+                                            searchParams.frequent == "annually"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -535,25 +637,19 @@ export const Asis = () => {
                                         </Switch>
                                         <span>PPM</span>
                                     </div>
-                                    <button
-                                        disabled
-                                        onClick={() =>
-                                            setAlert({
-                                                bool: true,
-                                                comp: "excel",
-                                            })
-                                        }
-                                        className="flex gap-1 cursor-pointer items-center border-[1px] p-1 rounded-sm"
-                                    >
-                                        <HiOutlineDocumentAdd />
-                                        <span className="text-[11px] font-semibold">
-                                            Export Excel
-                                        </span>
-                                    </button>
+                                    <div className="rounded border px-2 py-1 min-w-[98px] flex justify-center items-center">
+                                        <div className="text-xl font-semibold">
+                                            89%
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div className="w-full h-full">
-                                <AsisChart frequent={frequent} ppmOn={ppmOn} />
+                                <AsisChart
+                                    ppmOn={ppmOn}
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
+                                />
                             </div>
                         </div>
                     </Card>
@@ -569,7 +665,7 @@ export const Asis = () => {
                                         Quantity OK
                                     </span>
                                     <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1AsisOkCount || 0}
+                                        {line1AsisCounter.ok || 0}
                                     </span>
                                 </Card>
                             </Link>
@@ -581,18 +677,34 @@ export const Asis = () => {
                                         Quantity NG
                                     </span>
                                     <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1AsisNgCount || 0}
+                                        {line1AsisCounter.ng || 0}
                                     </span>
                                 </Card>
                             </Link>
-                            <Card>
-                                <span className='bg-[#FEF4E6] h-[32px] rounded-xl flex items-center justify-center text-[#F59F00] text-sm'>Quantity NDF</span>
-                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>~</span>
-                            </Card>
-                            <Card>
-                                <span className='bg-[#E7F6FD] h-[32px] rounded-xl flex items-center justify-center text-[#229BD8] text-sm'>Quantity INT</span>
-                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>~</span>
-                            </Card>
+                            <Link to={`log?judgement=ndf`}>
+                                <Card
+                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
+                                >
+                                    <span className="bg-[#FEF4E6] h-[32px] rounded-xl flex items-center justify-center text-[#F59F00] text-sm">
+                                        Quantity NDF
+                                    </span>
+                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                        {line1AsisCounter.ndf || 0}
+                                    </span>
+                                </Card>
+                            </Link>
+                            <Link to={`log?judgement=int`}>
+                                <Card
+                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
+                                >
+                                    <span className="bg-[#E7F6FD] h-[32px] rounded-xl flex items-center justify-center text-[#229BD8] text-sm">
+                                        Quantity INT
+                                    </span>
+                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                        {line1AsisCounter.int || 0}
+                                    </span>
+                                </Card>
+                            </Link>
                         </div>
                         <div className="flex gap-3 flex-col border rounded-xl py-[19px] px-[24px]">
                             <div className="flex justify-between pb-1 items-center">

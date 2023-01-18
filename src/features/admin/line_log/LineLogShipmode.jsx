@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { HomeIcon, SearchIcon } from "../../../common/components/icons";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { HiOutlineArrowCircleDown } from "react-icons/hi";
 import { Table } from "../../../common/components/table/Table";
-import { useLine1ShipmodeLogsQuery } from "../../../app/services/shipmodeService";
+// import { useLine1ShipmodeLogsQuery } from "../../../app/services/shipmodeService";
 import { OpenAlert } from "../line_detail/Shipmode";
 import { useDispatch } from "react-redux";
 import moment from "moment/moment";
 import { useEffect } from "react";
+import { config } from "../../../common/utils";
 
 export const Line1ShipmodeLogTable = ({ alert: _alert }) => {
     const [alert, setAlert] = _alert;
@@ -21,15 +22,15 @@ export const Line1ShipmodeLogTable = ({ alert: _alert }) => {
         start_date: queryParam.get("start_date") || "",
         end_date: queryParam.get("end_date") || "",
     });
-    const { data: line1ShipmodeLogs, isLoading: line1ShipmodeLogsLoading } =
-        useLine1ShipmodeLogsQuery({
-            page: qParams.page,
-            q: qParams.q,
-            per_page: qParams.per_page,
-            judgement: qParams.judgement,
-            start_date: qParams.start_date,
-            end_date: qParams.end_date,
-        });
+    // const { data: line1ShipmodeLogs, isLoading: line1ShipmodeLogsLoading } =
+    //     useLine1ShipmodeLogsQuery({
+    //         page: qParams.page,
+    //         q: qParams.q,
+    //         per_page: qParams.per_page,
+    //         judgement: qParams.judgement,
+    //         start_date: qParams.start_date,
+    //         end_date: qParams.end_date,
+    //     });
     useEffect(() => {
         setQueryParam(qParams, { replace: true });
     }, [qParams]);
@@ -173,7 +174,7 @@ export const Line1ShipmodeLogTable = ({ alert: _alert }) => {
                         </Table.Tr>
                     </Table.Thead>
                     <tbody>
-                        {line1ShipmodeLogs?.map((item, i) => {
+                        {/* {line1ShipmodeLogs?.map((item, i) => {
                             return (
                                 <Table.Tr
                                     className={`even:bg-[#F8F7FF]`}
@@ -224,7 +225,7 @@ export const Line1ShipmodeLogTable = ({ alert: _alert }) => {
                                     </Table.Td>
                                 </Table.Tr>
                             );
-                        })}
+                        })} */}
                     </tbody>
                 </Table>
                 <div className="flex justify-between items-center pt-4">
@@ -257,14 +258,14 @@ export const Line1ShipmodeLogTable = ({ alert: _alert }) => {
                         <div
                             className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-r-[5px] flex items-center cursor-pointer"
                             onClick={(e) => {
-                                setQParams((queryParam) => ({
-                                    ...queryParam,
-                                    page:
-                                        line1ShipmodeLogs.length ==
-                                        qParams.per_page
-                                            ? parseInt(qParams.page || 1) + 1
-                                            : parseInt(qParams.page || 1),
-                                }));
+                                // setQParams((queryParam) => ({
+                                //     ...queryParam,
+                                //     page:
+                                //         line1ShipmodeLogs.length ==
+                                //         qParams.per_page
+                                //             ? parseInt(qParams.page || 1) + 1
+                                //             : parseInt(qParams.page || 1),
+                                // }));
                             }}
                         >
                             Next
@@ -287,11 +288,26 @@ export const LineLogShipmode = () => {
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Dashboard</span>
+                        <Link
+                            to={`${config.pathPrefix}dashboard`}
+                            className="font-semibold text-sm"
+                        >
+                            Dashboard
+                        </Link>
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">Line 1</span>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1`}
+                            className="font-semibold text-sm"
+                        >
+                            Line 1
+                        </Link>
                         <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm">ASIS</span>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1/shipmode`}
+                            className="font-semibold text-sm"
+                        >
+                            SHIPMODE
+                        </Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
                             Log

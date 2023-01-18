@@ -42,7 +42,7 @@ const OptionManualChart = ({ frequent, ppmOn }) => {
         data: line1OptionManualProcessChart = [],
         isLoading: line1OptionManualProcessChartLoading,
     } = useGetLine1OptionManualProcessChartQuery(frequent, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const data = useMemo(() => {
         return {
@@ -227,7 +227,7 @@ const TopOptionManualManualNgTable = () => {
         data: line1OptionManualTop5NgCause = [],
         isLoading: line1OptionManualTop5NgCauseLoading,
     } = useGetLine1OptionManualTop5NgCauseQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     return (
         <Table>
@@ -321,7 +321,7 @@ export const OptionManual = () => {
     } = useGetLine1OptionManualOkCountQuery(
         { frequent },
         {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         }
     );
     const {
@@ -330,14 +330,14 @@ export const OptionManual = () => {
     } = useGetLine1OptionManualNgCountQuery(
         { frequent },
         {
-            pollingInterval: 10000,
+            pollingInterval: 5000,
         }
     );
     const {
         data: line1OptionManualTopTenLogs = [],
         isLoading: line1OptionManualTopTenLogsLoading,
     } = useGetLine1OptionManualTopTenLogsQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const [syncMutation, { isLoading: syncMutationLoading }] =
         useLine1OptionManualSyncMutation();
@@ -377,7 +377,7 @@ export const OptionManual = () => {
                         </Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
-                            OPTION AUTO
+                            OPTION MANUAL
                         </span>
                     </div>
                 </div>

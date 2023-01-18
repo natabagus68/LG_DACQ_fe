@@ -26,25 +26,15 @@ export const asisService = apiSlice.injectEndpoints({
             }),
             transformResponse: (res) => res?.data?.[0] || {},
         }),
-        getLine1AsisNgCount: builder.query({
+        getLine1AsisCounter: builder.query({
             query: (query) => ({
-                url: `process/line-1/asis/auto-ng-causes/quantity-ng?${Object.keys(
+                url: `process/line-1/asis/auto-ng-causes/quantity?${Object.keys(
                     query
                 )
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyNg || 0,
-        }),
-        getLine1AsisOkCount: builder.query({
-            query: (query) => ({
-                url: `process/line-1/asis/auto-ng-causes/quantity-ok?${Object.keys(
-                    query
-                )
-                    .map((item) => `${item}=${query[item]}`)
-                    .join("&")}`,
-            }),
-            transformResponse: (res) => res?.data?.qtyOk || 0,
+            transformResponse: (res) => res?.data || {},
         }),
         getLine1AsisTopTenLogs: builder.query({
             query: () => ({
@@ -89,8 +79,7 @@ export const {
     useGetLine1AsisProcessChartQuery,
     useGetLine1AsisChartLastWeekQuery,
     useGetLine1AsisTopNgCauseQuery,
-    useGetLine1AsisNgCountQuery,
-    useGetLine1AsisOkCountQuery,
+    useGetLine1AsisCounterQuery,
     useGetLine1AsisTopTenLogsQuery,
     useGetLine1Top5NgCauseQuery,
     useGetLine1AsisUpdateManualNgMutation,

@@ -19,7 +19,7 @@ const OnepoleTwopoleChart = ({ frequent, ppmOn }) => {
         data: line1OnepoleTwopoleProcessChart = [],
         isLoading: line1OnepoleTwopoleProcessChartLoading,
     } = useGetLine1OnepoleTwopoleProcessChartQuery(frequent, {
-        // pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const data = useMemo(() => {
         return {
@@ -206,7 +206,7 @@ const TopAutoNgTable = () => {
         data: line1OnepoleTwopoleTop5NgCause = [],
         isLoading: line1OnepoleTwopoleTop5NgCauseLoading,
     } = useGetLine1Top5NgCauseQuery(null, {
-        // pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     return (
         <Table>
@@ -291,7 +291,7 @@ export const OnepoleTwopole = () => {
     } = useGetLine1OnepoleTwopoleOkCountQuery(
         { frequent },
         {
-            // pollingInterval: 10000,
+            pollingInterval: 5000,
         }
     );
     const {
@@ -300,14 +300,14 @@ export const OnepoleTwopole = () => {
     } = useGetLine1OnepoleTwopoleNgCountQuery(
         { frequent },
         {
-            // pollingInterval: 10000,
+            pollingInterval: 5000,
         }
     );
     const {
         data: line1OnepoleTwopoleTopTenLogs = [],
         isLoading: line1OnepoleTwopoleTopTenLogsLoading,
     } = useGetLine1OnepoleTwopoleTopTenLogsQuery(null, {
-        // pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const [alert, setAlert] = useState();
     const viewImage = (e, image) => {

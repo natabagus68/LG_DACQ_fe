@@ -27,6 +27,8 @@ import { WhiteBalance } from "../features/admin/line_detail/WhiteBalance";
 import { LineLogWhiteBalance } from "../features/admin/line_log/LineLogWhiteBalance";
 import { Shipmode } from "../features/admin/line_detail/Shipmode";
 import { LineLogShipmode } from "../features/admin/line_log/LineLogShipmode";
+import { DTVInspection } from "../features/admin/line_detail/DTVInspection";
+import { LineLogDTVInspection } from "../features/admin/line_log/LineLogDTVInspection";
 
 const Root = () => {
     return <Outlet />;
@@ -88,6 +90,14 @@ export default createBrowserRouter([
             {
                 path: "lines/line-1/hipot/log",
                 element: <LineLogHipot />,
+            },
+            {
+                path: "lines/line-1/dtv-inspection",
+                element: <DTVInspection />,
+            },
+            {
+                path: "lines/line-1/dtv-inspection/log",
+                element: <LineLogDTVInspection />,
             },
             {
                 path: "lines/line-1/option-auto",

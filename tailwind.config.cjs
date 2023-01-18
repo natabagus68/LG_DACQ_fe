@@ -32,6 +32,12 @@ module.exports = {
                     50: "#E8F5F3",
                 },
                 info: "#229BD8",
+                danger: "#DE1B1B",
+                blue: {
+                    foundation: {
+                        700: "#2064AD",
+                    },
+                },
             },
             fontSize: {
                 "4xl": "34px",

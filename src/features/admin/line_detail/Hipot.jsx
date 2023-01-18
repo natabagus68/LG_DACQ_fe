@@ -42,7 +42,7 @@ const HipotChart = ({ frequent, ppmOn }) => {
         data: line1HipotProcessChart = [],
         isLoading: line1HipotProcessChartLoading,
     } = useGetLine1HipotProcessChartQuery(frequent, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const data = useMemo(() => {
         return {
@@ -227,7 +227,7 @@ const TopAutoNgTable = () => {
         data: line1HipotTop5NgCause = [],
         isLoading: line1HipotTop5NgCauseLoading,
     } = useGetLine1HipotTop5NgCauseQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     return (
         <Table>
@@ -313,21 +313,21 @@ export const Hipot = () => {
         useGetLine1HipotOkCountQuery(
             { frequent },
             {
-                pollingInterval: 10000,
+                pollingInterval: 5000,
             }
         );
     const { data: line1HipotNgCount, isLoading: line1HipotNgCountLoading } =
         useGetLine1HipotNgCountQuery(
             { frequent },
             {
-                pollingInterval: 10000,
+                pollingInterval: 5000,
             }
         );
     const {
         data: line1HipotTopTenLogs = [],
         isLoading: line1HipotTopTenLogsLoading,
     } = useGetLine1HipotTopTenLogsQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: 5000,
     });
     const [syncMutation, { isLoading: syncMutationLoading }] =
         useLine1HipotSyncMutation();
