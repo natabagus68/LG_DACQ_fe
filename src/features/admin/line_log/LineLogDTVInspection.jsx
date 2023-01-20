@@ -3,15 +3,15 @@ import { HomeIcon, SearchIcon } from "../../../common/components/icons";
 import { Link, useSearchParams } from "react-router-dom";
 import { HiOutlineArrowCircleDown } from "react-icons/hi";
 import { Table } from "../../../common/components/table/Table";
-import { useGetLine1DTVInspectionLogsQuery } from "../../../app/services/dtvInspectionService";
+import { useGetline1DtvInspectionLogsQuery } from "../../../app/services/dtvInspectionService";
 import { OpenAlert } from "../line_detail/DTVInspection";
 import { useDispatch } from "react-redux";
-import { line1DTVInspectionSetSelectedLogImage } from "../line_detail/line1DTVInspectionSlice";
+import { line1DtvInspectionSetSelectedLogImage } from "../line_detail/line1DtvInspectionSlice";
 import moment from "moment/moment";
 import { useEffect } from "react";
 import { config } from "../../../common/utils";
 
-export const Line1DTVInspectionLogTable = ({ alert: _alert }) => {
+export const Line1DtvInspectionLogTable = ({ alert: _alert }) => {
     const [alert, setAlert] = _alert;
     const dispatch = useDispatch();
     const [queryParam, setQueryParam] = useSearchParams();
@@ -23,8 +23,8 @@ export const Line1DTVInspectionLogTable = ({ alert: _alert }) => {
         start_date: queryParam.get("start_date") || "",
         end_date: queryParam.get("end_date") || "",
     });
-    const { data: line1DTVInspectionLogs, isLoading: line1DTVInspectionLogsLoading } =
-        useGetLine1DTVInspectionLogsQuery({
+    const { data: line1DtvInspectionLogs, isLoading: line1DtvInspectionLogsLoading } =
+        useGetline1DtvInspectionLogsQuery({
             page: qParams.page,
             q: qParams.q,
             per_page: qParams.per_page,
@@ -37,7 +37,7 @@ export const Line1DTVInspectionLogTable = ({ alert: _alert }) => {
     }, [qParams]);
     const viewImage = (e, image) => {
         e.preventDefault();
-        dispatch(line1DTVInspectionSetSelectedLogImage(image));
+        dispatch(line1DtvInspectionSetSelectedLogImage(image));
         setAlert({ comp: "image", bool: true });
     };
     return (
@@ -175,7 +175,7 @@ export const Line1DTVInspectionLogTable = ({ alert: _alert }) => {
                         </Table.Tr>
                     </Table.Thead>
                     <tbody>
-                        {line1DTVInspectionLogs?.map((item, i) => {
+                        {line1DtvInspectionLogs?.map((item, i) => {
                             return (
                                 <Table.Tr
                                     className={`even:bg-[#F8F7FF]`}
@@ -264,7 +264,7 @@ export const Line1DTVInspectionLogTable = ({ alert: _alert }) => {
                                 setQParams((queryParam) => ({
                                     ...queryParam,
                                     page:
-                                        line1DTVInspectionLogs.length == qParams.per_page
+                                        line1DtvInspectionLogs.length == qParams.per_page
                                             ? parseInt(qParams.page || 1) + 1
                                             : parseInt(qParams.page || 1),
                                 }));
@@ -317,7 +317,7 @@ export const LineLogDTVInspection = () => {
                                 <span>Download</span>
                             </button>
                         </div>
-                        <Line1DTVInspectionLogTable alert={_alert} />
+                        <Line1DtvInspectionLogTable alert={_alert} />
                     </div>
                 </div>
             </div>

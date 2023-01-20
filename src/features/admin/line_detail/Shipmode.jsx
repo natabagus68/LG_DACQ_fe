@@ -21,14 +21,16 @@ import ng_image from "../../../assets/ng_image.png";
 import { Table } from "../../../common/components/table/Table";
 import { useState } from "react";
 import {
-    useGetLine1ShipmodeInstartCountQuery,
-    useGetLine1ShipmodeInstopCountQuery,
+    useGetLine1ShipmodeNgCountQuery,
+    useGetLine1ShipmodeOkCountQuery,
     useGetLine1ShipmodeProcessChartQuery,
     useGetLine1ShipmodeTopTenLogsQuery,
     useGetLine1ShipmodeTop5NgCauseQuery,
     useLine1ShipmodeTopManualNgQuery,
     useLine1ShipmodeUpdateManualNgMutation,
     useLine1ShipmodeSyncMutation,
+    useGetLine1ShipmodeInstartCountQuery,
+    useGetLine1ShipmodeInstopCountQuery,
 } from "../../../app/services/shipmodeService";
 import { Switch } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
@@ -310,9 +312,18 @@ export const Shipmode = () => {
     };
     const [frequent, setFrequent] = useState("hourly");
     const {
-        data: line1ShipmodeInstopCount,
-        isLoading: line1ShipmodeInstopCountLoading,
-    } = useGetLine1ShipmodeInstopCountQuery(
+        data: line1ShipmodeOkCount,
+        isLoading: line1ShipmodeOkCountLoading,
+    } = useGetLine1ShipmodeOkCountQuery(
+        { frequent },
+        {
+            pollingInterval: 5000,
+        }
+    );
+    const {
+        data: line1ShipmodeNgCount,
+        isLoading: line1ShipmodeNgCountLoading,
+    } = useGetLine1ShipmodeNgCountQuery(
         { frequent },
         {
             pollingInterval: 5000,
@@ -322,6 +333,15 @@ export const Shipmode = () => {
         data: line1ShipmodeInstartCount,
         isLoading: line1ShipmodeInstartCountLoading,
     } = useGetLine1ShipmodeInstartCountQuery(
+        { frequent },
+        {
+            pollingInterval: 5000,
+        }
+    );
+    const {
+        data: line1ShipmodeInstopCount,
+        isLoading: line1ShipmodeInstopCountLoading,
+    } = useGetLine1ShipmodeInstopCountQuery(
         { frequent },
         {
             pollingInterval: 5000,
@@ -512,52 +532,48 @@ export const Shipmode = () => {
                 <div className="grid grid-cols-5 gap-4">
                     <div className="col-span-3 flex gap-4 flex-col">
                         <div className="grid grid-cols-2 gap-4">
-                            <Card className={`flex gap-4`}>
-                                <div className="flex-1 text-center font-bold">
-                                    Instart
+                            <Card className={`py-[21px] px-[10px] flex`}>
+                                <div className="text-xl font-bold mx-auto mb-2">
+                                    InStart
                                 </div>
-                                <div className="flex px-7 gap-3">
-                                    <div className="flex-1 flex flex-col justify-center gap-3">
-                                        <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm px-4 py-1">
+                                <div className="flex gap-2 justify-around">
+                                    <div className="flex flex-col items-center">
+                                        <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm px-3">
                                             Quantity OK
                                         </span>
                                         <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                            {line1ShipmodeInstopCount?.qtyOk ||
-                                                0}
+                                            {line1ShipmodeInstartCount?.qtyOk || 0}
                                         </span>
                                     </div>
-                                    <div className="flex-1 flex flex-col justify-center gap-3">
-                                        <span className="bg-red-100 text-danger h-[32px] rounded-xl flex items-center justify-center text-sm px-4 py-1">
+                                    <div className="flex flex-col items-center">
+                                        <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm px-3">
                                             Quantity NG
                                         </span>
                                         <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                            {line1ShipmodeInstopCount?.qtyNg ||
-                                                0}
+                                            {line1ShipmodeInstartCount?.qtyNg || 0}
                                         </span>
                                     </div>
                                 </div>
                             </Card>
-                            <Card className={`flex gap-4`}>
-                                <div className="flex-1 text-center font-bold">
-                                    Instop
+                            <Card className={`py-[21px] px-[10px] flex`}>
+                                <div className="text-xl font-bold mx-auto mb-2">
+                                    InStop
                                 </div>
-                                <div className="flex px-7 gap-3">
-                                    <div className="flex-1 flex flex-col justify-center gap-3">
-                                        <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm px-4 py-1">
+                                <div className="flex gap-2 justify-around">
+                                    <div className="flex flex-col items-center">
+                                        <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm px-3">
                                             Quantity OK
                                         </span>
                                         <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                            {line1ShipmodeInstartCount?.qtyOk ||
-                                                0}
+                                            {line1ShipmodeInstopCount?.qtyOk || 0}
                                         </span>
                                     </div>
-                                    <div className="flex-1 flex flex-col justify-center gap-3">
-                                        <span className="bg-red-100 text-danger h-[32px] rounded-xl flex items-center justify-center text-sm px-4 py-1">
+                                    <div className="flex flex-col items-center">
+                                        <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm px-3">
                                             Quantity NG
                                         </span>
                                         <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                            {line1ShipmodeInstartCount?.qtyNg ||
-                                                0}
+                                            {line1ShipmodeInstopCount?.qtyNg || 0}
                                         </span>
                                     </div>
                                 </div>
@@ -595,12 +611,6 @@ export const Shipmode = () => {
                                             className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
                                             order={false}
                                         >
-                                            Process
-                                        </Table.Th>
-                                        <Table.Th
-                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
-                                        >
                                             Judgement
                                         </Table.Th>
                                         <Table.Th
@@ -608,12 +618,6 @@ export const Shipmode = () => {
                                             order={false}
                                         >
                                             NG Cause
-                                        </Table.Th>
-                                        <Table.Th
-                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
-                                        >
-                                            Capture NG
                                         </Table.Th>
                                     </Table.Tr>
                                 </Table.Thead>
@@ -630,9 +634,6 @@ export const Shipmode = () => {
                                                 {item.sn || "-"}
                                             </Table.Td>
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.process || "-"}
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
                                                 <span
                                                     className={`px-3 py-1 rounded-full text-xs ${
                                                         item.ok
@@ -645,14 +646,6 @@ export const Shipmode = () => {
                                             </Table.Td>
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
                                                 {item.ng_cause || "-"}
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                <button
-                                                    href=""
-                                                    className="underline text-blue-foundation-700"
-                                                >
-                                                    View Image
-                                                </button>
                                             </Table.Td>
                                         </Table.Tr>
                                     ))}

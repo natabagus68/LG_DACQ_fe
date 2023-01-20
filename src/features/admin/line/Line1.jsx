@@ -26,6 +26,18 @@ import {
     useLine1HipotTopManualNgQuery,
 } from "../../../app/services/hipotService";
 import {
+    useGetLine1WhiteBalanceChartLastWeekQuery,
+    useGetLine1WhiteBalanceNgRatioQuery,
+    useGetLine1WhiteBalanceTopNgCauseQuery,
+    useLine1WhiteBalanceTopManualNgQuery,
+} from "../../../app/services/whiteBalanceService";
+import {
+    useGetLine1ShipmodeChartLastWeekQuery,
+    useGetLine1ShipmodeNgRatioQuery,
+    useGetLine1ShipmodeTopNgCauseQuery,
+    useLine1ShipmodeTopManualNgQuery,
+} from "../../../app/services/shipmodeService";
+import {
     useGetLine1OptionAutoChartLastWeekQuery,
     useGetLine1OptionAutoNgRatioQuery,
     useGetLine1OptionAutoTopNgCauseQuery,
@@ -38,11 +50,11 @@ import {
     useLine1OptionManualTopManualNgQuery,
 } from "../../../app/services/optionManualService";
 import {
-    useGetLine1ShipmodeChartLastWeekQuery,
-    useGetLine1ShipmodeNgRatioQuery,
-    useGetLine1ShipmodeTopNgCauseQuery,
-    useLine1ShipmodeTopManualNgQuery,
-} from "../../../app/services/shipmodeService";
+    useGetline1DtvInspectionChartLastWeekQuery,
+    useGetline1DtvInspectionNgRatioQuery,
+    useGetline1DtvInspectionTopNgCauseQuery,
+    useLine1DtvInspectionTopManualNgQuery,
+} from "../../../app/services/dtvInspectionService";
 
 export const Line1 = () => {
     const [ppmOn, setPpmOn] = useState(false);
@@ -118,6 +130,56 @@ export const Line1 = () => {
             ),
         };
     }, [line1HipotChartLastWeek, ppmOn]);
+
+    const whiteBalanceManualNgOn = useSelector((state) => state.line1WhiteBalance.manualNgOn);
+    const { data: line1WhiteBalanceTopManualNg } = useLine1WhiteBalanceTopManualNgQuery();
+    const { data: line1WhiteBalanceChartLastWeek = [] } =
+        useGetLine1WhiteBalanceChartLastWeekQuery(null, {
+            pollingInterval: 5000,
+        });
+    const { data: line1WhiteBalanceTopNgCause } = useGetLine1WhiteBalanceTopNgCauseQuery(
+        null,
+        {
+            pollingInterval: 5000,
+        }
+    );
+    const { data: line1WhiteBalanceNgRatio, isLoading: line1WhiteBalanceNgRatioLoading } =
+        useGetLine1WhiteBalanceNgRatioQuery(null, {
+            pollingInterval: 5000,
+        });
+    const whiteBalanceChartData = useMemo(() => {
+        return {
+            labels: line1WhiteBalanceChartLastWeek.map((item) => item?.x || "-"),
+            datas: line1WhiteBalanceChartLastWeek.map(
+                (item) => (item?.y || 0) * (ppmOn ? 10000 : 1)
+            ),
+        };
+    }, [line1WhiteBalanceChartLastWeek, ppmOn]);
+    
+    const shipmodeManualNgOn = useSelector((state) => state.line1Shipmode.manualNgOn);
+    const { data: line1ShipmodeTopManualNg } = useLine1ShipmodeTopManualNgQuery();
+    const { data: line1ShipmodeChartLastWeek = [] } =
+        useGetLine1ShipmodeChartLastWeekQuery(null, {
+            pollingInterval: 5000,
+        });
+    const { data: line1ShipmodeTopNgCause } = useGetLine1ShipmodeTopNgCauseQuery(
+        null,
+        {
+            pollingInterval: 5000,
+        }
+    );
+    const { data: line1ShipmodeNgRatio, isLoading: line1ShipmodeNgRatioLoading } =
+        useGetLine1ShipmodeNgRatioQuery(null, {
+            pollingInterval: 5000,
+        });
+    const shipmodeChartData = useMemo(() => {
+        return {
+            labels: line1ShipmodeChartLastWeek.map((item) => item?.x || "-"),
+            datas: line1ShipmodeChartLastWeek.map(
+                (item) => (item?.y || 0) * (ppmOn ? 10000 : 1)
+            ),
+        };
+    }, [line1ShipmodeChartLastWeek, ppmOn]);
     const optionAutoManualNgOn = useSelector(
         (state) => state.line1OptionAuto.manualNgOn
     );
@@ -174,34 +236,30 @@ export const Line1 = () => {
             ),
         };
     }, [line1OptionManualChartLastWeek, ppmOn]);
-    const shipmodeManualNgOn = useSelector(
-        (state) => state.line1Shipmode.manualNgOn
+    const dtvInspectionManualNgOn = useSelector((state) => state.line1DtvInspection.manualNgOn);
+    const { data: line1DtvInspectionTopManualNg } = useLine1DtvInspectionTopManualNgQuery();
+    const { data: line1DtvInspectionChartLastWeek = [] } =
+        useGetline1DtvInspectionChartLastWeekQuery(null, {
+            pollingInterval: 5000,
+        });
+    const { data: line1DtvInspectionTopNgCause } = useGetline1DtvInspectionTopNgCauseQuery(
+        null,
+        {
+            pollingInterval: 5000,
+        }
     );
-    const { data: line1ShipmodeTopManualNg } =
-        useLine1ShipmodeTopManualNgQuery();
-    const { data: line1ShipmodeChartLastWeek = [] } =
-        useGetLine1ShipmodeChartLastWeekQuery(null, {
+    const { data: line1DtvInspectionNgRatio, isLoading: line1DtvInspectionNgRatioLoading } =
+        useGetline1DtvInspectionNgRatioQuery(null, {
             pollingInterval: 5000,
         });
-    const { data: line1ShipmodeTopNgCause } =
-        useGetLine1ShipmodeTopNgCauseQuery(null, {
-            pollingInterval: 5000,
-        });
-    const {
-        data: line1ShipmodeNgRatio = null,
-        isLoading: line1ShipmodeNgRatioLoading,
-    } = useGetLine1ShipmodeNgRatioQuery(null, {
-        pollingInterval: 5000,
-    });
-    const shipmodeChartData = useMemo(() => {
+    const dtvInspectionChartData = useMemo(() => {
         return {
-            labels: line1ShipmodeChartLastWeek.map((item) => item?.x || "-"),
-            datas: line1ShipmodeChartLastWeek.map(
+            labels: line1DtvInspectionChartLastWeek.map((item) => item?.x || "-"),
+            datas: line1DtvInspectionChartLastWeek.map(
                 (item) => (item?.y || 0) * (ppmOn ? 10000 : 1)
             ),
         };
-    }, [line1ShipmodeChartLastWeek, ppmOn]);
-
+    }, [line1DtvInspectionChartLastWeek, ppmOn]);
     return (
         <>
             <div className="h-full p-[2%] flex font-inter flex-col bg-white">
@@ -616,13 +674,13 @@ export const Line1 = () => {
                             <Card
                                 title="DTV INSPECTION"
                                 subTitle={
-                                    line1OptionManualNgRatioLoading ? (
+                                    line1DtvInspectionNgRatioLoading ? (
                                         <>
                                             <div className="w-6 h-6 bg-gray-300 animate-pulse"></div>
                                         </>
                                     ) : (
                                         `${
-                                            line1OptionManualNgRatio?.toFixed(
+                                            line1DtvInspectionNgRatio?.toFixed(
                                                 1
                                             ) || "-"
                                         }%`
@@ -632,9 +690,9 @@ export const Line1 = () => {
                                 <div className="flex flex-col justify-between flex-1">
                                     <div className="flex gap-[14px] items-center flex-1">
                                         <ChartLine
-                                            datas={optionManualChartData.datas}
+                                            datas={dtvInspectionChartData.datas}
                                             labels={
-                                                optionManualChartData.labels
+                                                dtvInspectionChartData.labels
                                             }
                                             width={"100%"}
                                             height={"100%"}
@@ -644,13 +702,13 @@ export const Line1 = () => {
                                         <span className="text-[10px] text-[#514E4E] font-medium">
                                             NG Cause
                                         </span>
-                                        {optionManualManualNgOn ? (
+                                        {dtvInspectionManualNgOn ? (
                                             <div className="border-[1px] rounded-xl flex flex-col justify-between p-2">
                                                 <span className="text-[10px] text-[#514E4E] font-medium">
                                                     NG Cause
                                                 </span>
                                                 <span className="text-[10px] text-[#858383] font-medium">
-                                                    {line1OptionManualTopManualNg?.[0]
+                                                    {line1DtvInspectionTopManualNg?.[0]
                                                         ?.description || "-"}
                                                 </span>
                                             </div>
@@ -658,7 +716,7 @@ export const Line1 = () => {
                                             <div className="border-[1px] rounded-xl flex justify-between">
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1 border-r">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1OptionManualTopNgCause?.model ||
+                                                        {line1DtvInspectionTopNgCause?.model ||
                                                             "-"}
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
@@ -667,7 +725,7 @@ export const Line1 = () => {
                                                 </div>
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1OptionManualTopNgCause?.ng_cause ||
+                                                        {line1DtvInspectionTopNgCause?.ng_cause ||
                                                             "-"}
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">

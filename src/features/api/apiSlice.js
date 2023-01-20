@@ -18,6 +18,7 @@ export const apiSlice = createApi({
         "Manual Ng Cause",
         "Line 1 Asis Manual Ng Cause",
         "Line 1 Hipot Manual Ng Cause",
+        "Line 1 Asis Logs",
     ],
     endpoints: (builder) => ({}),
 });

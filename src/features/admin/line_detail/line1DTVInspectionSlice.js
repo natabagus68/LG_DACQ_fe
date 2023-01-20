@@ -5,21 +5,21 @@ const initialState = {
     manualNgOn: false,
 };
 
-export const line1DTVInspectionSlice = createSlice({
-    name: "line1DTVInspection",
+export const line1DtvInspectionSlice = createSlice({
+    name: "line1DtvInspection",
     initialState,
     reducers: {
-        line1DTVInspectionSetSelectedLogImage: (state, { payload }) => {
+        line1DtvInspectionSetSelectedLogImage: (state, { payload }) => {
             state.selectedLogImage = payload;
         },
-        line1DTVInspectionSetManualNg: (state, { payload }) => {
+        line1DtvInspectionSetManualNg: (state, { payload }) => {
             state.manualNgOn = payload;
         },
     },
 });
 
 export const {
-    line1DTVInspectionSetSelectedLogImage,
-    line1DTVInspectionSetManualNg,
-} = line1DTVInspectionSlice.actions;
-export default line1DTVInspectionSlice.reducer;
+    line1DtvInspectionSetSelectedLogImage,
+    line1DtvInspectionSetManualNg,
+} = line1DtvInspectionSlice.actions;
+export default line1DtvInspectionSlice.reducer;

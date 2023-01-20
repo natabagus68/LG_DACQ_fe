@@ -1,10 +1,9 @@
-import { createBrowserRouter, Navigate, Outlet, } from "react-router-dom";
+import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import { Error404 } from "../common/components";
 import { config } from "../common/utils";
 import { AdminLayout } from "../features/admin/adminLayout";
 import { Dashboard } from "../features/admin/dashboard";
 import { Report } from "../features/admin/report";
-import { Log } from "../features/admin/log";
 import { Account } from "../features/admin/account/Account";
 import { Access } from "../features/admin/access/Access";
 import { Mapping } from "../features/admin/access/Mapping";
@@ -19,14 +18,14 @@ import { OnepoleTwopole } from "../features/admin/line_detail/OnepoleTwopole";
 import { LineLog1p2p } from "../features/admin/line_log/LineLog1p2p";
 import { Hipot } from "../features/admin/line_detail/Hipot";
 import { LineLogHipot } from "../features/admin/line_log/LineLogHipot";
+import { Shipmode } from "../features/admin/line_detail/Shipmode";
+import { LineLogShipmode } from "../features/admin/line_log/LineLogShipmode";
 import { OptionAuto } from "../features/admin/line_detail/OptionAuto";
 import { LineLogOptionAuto } from "../features/admin/line_log/LineLogOptionAuto";
 import { OptionManual } from "../features/admin/line_detail/OptionManual";
 import { LineLogOptionManual } from "../features/admin/line_log/LineLogOptionManual";
 import { WhiteBalance } from "../features/admin/line_detail/WhiteBalance";
 import { LineLogWhiteBalance } from "../features/admin/line_log/LineLogWhiteBalance";
-import { Shipmode } from "../features/admin/line_detail/Shipmode";
-import { LineLogShipmode } from "../features/admin/line_log/LineLogShipmode";
 import { DTVInspection } from "../features/admin/line_detail/DTVInspection";
 import { LineLogDTVInspection } from "../features/admin/line_log/LineLogDTVInspection";
 
@@ -92,6 +91,14 @@ export default createBrowserRouter([
                 element: <LineLogHipot />,
             },
             {
+                path: "lines/line-1/shipmode",
+                element: <Shipmode />,
+            },
+            {
+                path: "lines/line-1/shipmode/log",
+                element: <LineLogShipmode />,
+            },
+            {
                 path: "lines/line-1/dtv-inspection",
                 element: <DTVInspection />,
             },
@@ -106,14 +113,6 @@ export default createBrowserRouter([
             {
                 path: "lines/line-1/option-auto/log",
                 element: <LineLogOptionAuto />,
-            },
-            {
-                path: "lines/line-1/shipmode",
-                element: <Shipmode />,
-            },
-            {
-                path: "lines/line-1/shipmode/log",
-                element: <LineLogShipmode />,
             },
             {
                 path: "lines/line-1/option-manual",

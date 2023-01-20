@@ -69,7 +69,23 @@ export const asisService = apiSlice.injectEndpoints({
                     .map((item, i) => `${item}=${data[item]}`)
                     .join("&")}`,
             }),
+            providesTags: ["Line 1 Asis Logs"],
             transformResponse: (res) => res?.data || [],
+        }),
+        line1AsisUpdateJudgement: builder.mutation({
+            query: ({ id, ...data }) => ({
+                url: `process/line-1/asis/${id}/update-judgement`,
+                method: "put",
+                body: data,
+            }),
+            invalidatesTags: ["Line 1 Asis Logs"],
+        }),
+        line1AsisDestroy: builder.mutation({
+            query: (id) => ({
+                url: `process/line-1/asis/auto-ng-cause/${id}`,
+                method: "delete",
+            }),
+            invalidatesTags: ["Line 1 Asis Logs"],
         }),
     }),
 });
@@ -85,4 +101,6 @@ export const {
     useGetLine1AsisUpdateManualNgMutation,
     useGetLine1AsisTopManualNgQuery,
     useGetLine1AsisLogsQuery,
+    useLine1AsisUpdateJudgementMutation,
+    useLine1AsisDestroyMutation,
 } = asisService;

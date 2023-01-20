@@ -21,37 +21,37 @@ import ng_image from "../../../assets/ng_image.png";
 import { Table } from "../../../common/components/table/Table";
 import { useState } from "react";
 import {
-    useGetLine1DTVInspectionNgCountQuery,
-    useGetLine1DTVInspectionOkCountQuery,
-    useGetLine1DTVInspectionProcessChartQuery,
-    useGetLine1DTVInspectionTopTenLogsQuery,
+    useGetline1DtvInspectionNgCountQuery,
+    useGetline1DtvInspectionOkCountQuery,
+    useGetline1DtvInspectionProcessChartQuery,
+    useGetline1DtvInspectionTopTenLogsQuery,
     useGetLine1Top5NgCauseQuery,
-    useGetLine1DTVInspectionTopManualNgQuery,
-    useGetLine1DTVInspectionUpdateManualNgMutation,
+    useLine1DtvInspectionTopManualNgQuery,
+    useGetline1DtvInspectionUpdateManualNgMutation,
 } from "../../../app/services/dtvInspectionService";
 import { Switch } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    line1DTVInspectionSetManualNg,
-    line1DTVInspectionSetSelectedLogImage,
-} from "./line1DTVInspectionSlice";
+    line1DtvInspectionSetManualNg,
+    line1DtvInspectionSetSelectedLogImage,
+} from "./line1DtvInspectionSlice";
 import { config } from "../../../common/utils";
 
-const DTVInspectionChart = ({ frequent, ppmOn }) => {
+const DtvInspectionChart = ({ frequent, ppmOn }) => {
     const {
-        data: line1DTVInspectionProcessChart = [],
-        isLoading: line1DTVInspectionProcessChartLoading,
-    } = useGetLine1DTVInspectionProcessChartQuery(frequent, {
+        data: line1DtvInspectionProcessChart = [],
+        isLoading: line1DtvInspectionProcessChartLoading,
+    } = useGetline1DtvInspectionProcessChartQuery(frequent, {
         pollingInterval: 5000,
     });
     const data = useMemo(() => {
         return {
-            labels: line1DTVInspectionProcessChart.map((item) => item?.x || "-"),
-            datas: line1DTVInspectionProcessChart.map(
+            labels: line1DtvInspectionProcessChart.map((item) => item?.x || "-"),
+            datas: line1DtvInspectionProcessChart.map(
                 (item) => (item?.y || 0) * (ppmOn ? 10000 : 1)
             ),
         };
-    }, [line1DTVInspectionProcessChart, ppmOn]);
+    }, [line1DtvInspectionProcessChart, ppmOn]);
     return (
         <ChartLine
             datas={data.datas}
@@ -241,18 +241,18 @@ const CompAddData = ({ setAlert }) => {
         return _setDescription(payload);
     };
     const [
-        line1DTVInspectionUpdateManualNg,
+        line1DtvInspectionUpdateManualNg,
         {
-            error: line1DTVInspectionUpdateManualNgError,
-            isLoading: line1DTVInspectionUpdateManualNgLoading,
+            error: line1DtvInspectionUpdateManualNgError,
+            isLoading: line1DtvInspectionUpdateManualNgLoading,
         },
-    ] = useGetLine1DTVInspectionUpdateManualNgMutation();
-    const line1DTVInspectionSubmitManualNg = (e) => {
+    ] = useGetline1DtvInspectionUpdateManualNgMutation();
+    const line1DtvInspectionSubmitManualNg = (e) => {
         e.preventDefault();
-        line1DTVInspectionUpdateManualNg(description);
+        line1DtvInspectionUpdateManualNg(description);
     };
     return (
-        <form onSubmit={line1DTVInspectionSubmitManualNg}>
+        <form onSubmit={line1DtvInspectionSubmitManualNg}>
             <div className="w-[432px] flex flex-col gap-2">
                 <div className="flex gap-4 items-center">
                     <NgCauseIcon />
@@ -296,7 +296,7 @@ const CompAddData = ({ setAlert }) => {
 
 export const CompImage = ({ setAlert }) => {
     const selectedLogImage = useSelector(
-        (state) => state.line1DTVInspection.selectedLogImage
+        (state) => state.line1DtvInspection.selectedLogImage
     );
     useEffect(() => {
         console.log(`${config.assetUrl}${selectedLogImage}`);
@@ -324,8 +324,8 @@ export const OpenAlert = ({ alert, setAlert }) => {
 
 const TopAutoNgTable = () => {
     const {
-        data: line1DTVInspectionTop5NgCause = [],
-        isLoading: line1DTVInspectionTop5NgCauseLoading,
+        data: line1DtvInspectionTop5NgCause = [],
+        isLoading: line1DtvInspectionTop5NgCauseLoading,
     } = useGetLine1Top5NgCauseQuery(null, {
         pollingInterval: 5000,
     });
@@ -354,7 +354,7 @@ const TopAutoNgTable = () => {
                 </Table.Tr>
             </Table.Thead>
             <tbody>
-                {line1DTVInspectionTop5NgCause.map((item, i) => (
+                {line1DtvInspectionTop5NgCause.map((item, i) => (
                     <Table.Tr key={i}>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">
                             {item.model || "-"}
@@ -374,7 +374,7 @@ const TopAutoNgTable = () => {
 
 const TopManualNgTable = () => {
     const { data: topManualNg, isLoading: topManualNgLoading } =
-        useGetLine1DTVInspectionTopManualNgQuery();
+        useLine1DtvInspectionTopManualNgQuery();
     if (topManualNgLoading) {
         return (
             <>
@@ -400,35 +400,35 @@ export const DTVInspection = () => {
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
     // const [manualNgOn, setManualNgOn] = useState(false);
-    const manualNgOn = useSelector((state) => state.line1DTVInspection.manualNgOn);
+    const manualNgOn = useSelector((state) => state.line1DtvInspection.manualNgOn);
     const setManualNgOn = (e) => {
-        dispatch(line1DTVInspectionSetManualNg(!manualNgOn));
+        dispatch(line1DtvInspectionSetManualNg(!manualNgOn));
     };
     const [frequent, setFrequent] = useState("hourly");
-    const { data: line1DTVInspectionOkCount, isLoading: line1DTVInspectionOkCountLoading } =
-        useGetLine1DTVInspectionOkCountQuery(
+    const { data: line1DtvInspectionOkCount, isLoading: line1DtvInspectionOkCountLoading } =
+        useGetline1DtvInspectionOkCountQuery(
             { frequent },
             {
                 pollingInterval: 5000,
             }
         );
-    const { data: line1DTVInspectionNgCount, isLoading: line1DTVInspectionNgCountLoading } =
-        useGetLine1DTVInspectionNgCountQuery(
+    const { data: line1DtvInspectionNgCount, isLoading: line1DtvInspectionNgCountLoading } =
+        useGetline1DtvInspectionNgCountQuery(
             { frequent },
             {
                 pollingInterval: 5000,
             }
         );
     const {
-        data: line1DTVInspectionTopTenLogs = [],
-        isLoading: line1DTVInspectionTopTenLogsLoading,
-    } = useGetLine1DTVInspectionTopTenLogsQuery(null, {
+        data: line1DtvInspectionTopTenLogs = [],
+        isLoading: line1DtvInspectionTopTenLogsLoading,
+    } = useGetline1DtvInspectionTopTenLogsQuery(null, {
         pollingInterval: 5000,
     });
     const [alert, setAlert] = useState();
     const viewImage = (e, image) => {
         e.preventDefault();
-        dispatch(line1DTVInspectionSetSelectedLogImage(image));
+        dispatch(line1DtvInspectionSetSelectedLogImage(image));
         setAlert({ comp: "image", bool: true });
     };
 
@@ -453,7 +453,7 @@ export const DTVInspection = () => {
                     <Card>
                         <div className="flex flex-col flex-1 gap-1">
                             <div className="flex items-center justify-between">
-                                <span className="font-bold text-lg">DTVInspection</span>
+                                <span className="font-bold text-lg">DtvInspection</span>
                                 <div className="flex items-center gap-2">
                                     <div
                                         onClick={() => setFrequent("hourly")}
@@ -548,7 +548,7 @@ export const DTVInspection = () => {
                                 </div>
                             </div>
                             <div className="w-full h-full">
-                                <DTVInspectionChart frequent={frequent} ppmOn={ppmOn} />
+                                <DtvInspectionChart frequent={frequent} ppmOn={ppmOn} />
                             </div>
                         </div>
                     </Card>
@@ -564,7 +564,7 @@ export const DTVInspection = () => {
                                         Quantity OK
                                     </span>
                                     <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1DTVInspectionOkCount || 0}
+                                        {line1DtvInspectionOkCount || 0}
                                     </span>
                                 </Card>
                             </Link>
@@ -576,7 +576,7 @@ export const DTVInspection = () => {
                                         Quantity NG
                                     </span>
                                     <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1DTVInspectionNgCount || 0}
+                                        {line1DtvInspectionNgCount || 0}
                                     </span>
                                 </Card>
                             </Link>
@@ -638,7 +638,7 @@ export const DTVInspection = () => {
                                     </Table.Tr>
                                 </Table.Thead>
                                 <tbody>
-                                    {line1DTVInspectionTopTenLogs.map((item, i) => (
+                                    {line1DtvInspectionTopTenLogs.map((item, i) => (
                                         <Table.Tr
                                             key={i}
                                             className={`even:bg-[#F0F1F3]`}

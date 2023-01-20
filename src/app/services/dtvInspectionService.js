@@ -2,31 +2,31 @@ import { apiSlice } from "../../features/api/apiSlice";
 
 export const dtvInspectionService = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getLine1DTVInspectionNgRatio: builder.query({
+        getline1DtvInspectionNgRatio: builder.query({
             query: () => ({ url: "/process/line-1/dtv-inspection/ng-ratio" }),
             providesTags: ["process/line-1/dtv-inspection/ng-ratio"],
             transformResponse: (response, meta, arg) =>
                 response?.data?.ngRatio || 0,
         }),
-        getLine1DTVInspectionProcessChart: builder.query({
+        getline1DtvInspectionProcessChart: builder.query({
             query: (frequent) => ({
                 url: `process/line-1/dtv-inspection/chart?frequent=${frequent}`,
             }),
             transformResponse: (res) => res?.data || [],
         }),
-        getLine1DTVInspectionChartLastWeek: builder.query({
+        getline1DtvInspectionChartLastWeek: builder.query({
             query: () => ({
                 url: "process/line-1/dtv-inspection/chart?frequent=weekly",
             }),
             transformResponse: (res) => res?.data || [],
         }),
-        getLine1DTVInspectionTopNgCause: builder.query({
+        getline1DtvInspectionTopNgCause: builder.query({
             query: () => ({
                 url: "process/line-1/dtv-inspection/top-ng-cause",
             }),
             transformResponse: (res) => res?.data?.[0] || {},
         }),
-        getLine1DTVInspectionNgCount: builder.query({
+        getline1DtvInspectionNgCount: builder.query({
             query: (query) => ({
                 url: `process/line-1/dtv-inspection/auto-ng-causes/quantity-ng?${Object.keys(
                     query
@@ -36,7 +36,7 @@ export const dtvInspectionService = apiSlice.injectEndpoints({
             }),
             transformResponse: (res) => res?.data?.qtyNg || 0,
         }),
-        getLine1DTVInspectionOkCount: builder.query({
+        getline1DtvInspectionOkCount: builder.query({
             query: (query) => ({
                 url: `process/line-1/dtv-inspection/auto-ng-causes/quantity-ok?${Object.keys(
                     query
@@ -46,7 +46,7 @@ export const dtvInspectionService = apiSlice.injectEndpoints({
             }),
             transformResponse: (res) => res?.data?.qtyOk || 0,
         }),
-        getLine1DTVInspectionTopTenLogs: builder.query({
+        getline1DtvInspectionTopTenLogs: builder.query({
             query: () => ({
                 url: "process/line-1/dtv-inspection/logs",
             }),
@@ -58,22 +58,22 @@ export const dtvInspectionService = apiSlice.injectEndpoints({
             }),
             transformResponse: (res) => res?.data || [],
         }),
-        getLine1DTVInspectionUpdateManualNg: builder.mutation({
+        getline1DtvInspectionUpdateManualNg: builder.mutation({
             query: (description) => ({
                 url: "process/line-1/dtv-inspection/manual-ng-cause",
                 method: "POST",
                 body: { description },
             }),
-            invalidatesTags: ["Line 1 DTVInspection Manual Ng Cause"],
+            invalidatesTags: ["Line 1 DtvInspection Manual Ng Cause"],
         }),
-        getLine1DTVInspectionTopManualNg: builder.query({
+        line1DtvInspectionTopManualNg: builder.query({
             query: () => ({
                 url: "process/line-1/dtv-inspection/manual-ng-causes",
             }),
-            providesTags: ["Line 1 DTVInspection Manual Ng Cause"],
+            providesTags: ["Line 1 DtvInspection Manual Ng Cause"],
             transformResponse: (res) => res?.data || [],
         }),
-        getLine1DTVInspectionLogs: builder.query({
+        getline1DtvInspectionLogs: builder.query({
             query: (data = []) => ({
                 url: `process/line-1/dtv-inspection/auto-ng-causes?${Object.keys(data)
                     .map((item, i) => `${item}=${data[item]}`)
@@ -85,15 +85,15 @@ export const dtvInspectionService = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetLine1DTVInspectionNgRatioQuery,
-    useGetLine1DTVInspectionProcessChartQuery,
-    useGetLine1DTVInspectionChartLastWeekQuery,
-    useGetLine1DTVInspectionTopNgCauseQuery,
-    useGetLine1DTVInspectionNgCountQuery,
-    useGetLine1DTVInspectionOkCountQuery,
-    useGetLine1DTVInspectionTopTenLogsQuery,
+    useGetline1DtvInspectionNgRatioQuery,
+    useGetline1DtvInspectionProcessChartQuery,
+    useGetline1DtvInspectionChartLastWeekQuery,
+    useGetline1DtvInspectionTopNgCauseQuery,
+    useGetline1DtvInspectionNgCountQuery,
+    useGetline1DtvInspectionOkCountQuery,
+    useGetline1DtvInspectionTopTenLogsQuery,
     useGetLine1Top5NgCauseQuery,
-    useGetLine1DTVInspectionUpdateManualNgMutation,
-    useGetLine1DTVInspectionTopManualNgQuery,
-    useGetLine1DTVInspectionLogsQuery,
+    useGetline1DtvInspectionUpdateManualNgMutation,
+    useLine1DtvInspectionTopManualNgQuery,
+    useGetline1DtvInspectionLogsQuery,
 } = dtvInspectionService;

@@ -26,6 +26,26 @@ export const shipmodeService = apiSlice.injectEndpoints({
             }),
             transformResponse: (res) => res?.data?.[0] || {},
         }),
+        getLine1ShipmodeNgCount: builder.query({
+            query: (query) => ({
+                url: `process/line-1/shipmode/auto-ng-causes/quantity-ng?${Object.keys(
+                    query
+                )
+                    .map((item) => `${item}=${query[item]}`)
+                    .join("&")}`,
+            }),
+            transformResponse: (res) => res?.data?.qtyNg || 0,
+        }),
+        getLine1ShipmodeOkCount: builder.query({
+            query: (query) => ({
+                url: `process/line-1/shipmode/auto-ng-causes/quantity-ok?${Object.keys(
+                    query
+                )
+                    .map((item) => `${item}=${query[item]}`)
+                    .join("&")}`,
+            }),
+            transformResponse: (res) => res?.data?.qtyOk || 0,
+        }),
         getLine1ShipmodeInstartCount: builder.query({
             query: (query) => ({
                 url: `process/line-1/shipmode/auto-ng-causes/quantity-in-start?${Object.keys(
@@ -34,7 +54,11 @@ export const shipmodeService = apiSlice.injectEndpoints({
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyNg || 0,
+            transformResponse: (res) =>
+                res?.data || {
+                    qtyOk: 0,
+                    qtyNg: 0,
+                },
         }),
         getLine1ShipmodeInstopCount: builder.query({
             query: (query) => ({
@@ -44,7 +68,11 @@ export const shipmodeService = apiSlice.injectEndpoints({
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyOk || 0,
+            transformResponse: (res) =>
+                res?.data || {
+                    qtyOk: 0,
+                    qtyNg: 0,
+                },
         }),
         getLine1ShipmodeTopTenLogs: builder.query({
             query: () => ({
@@ -54,7 +82,7 @@ export const shipmodeService = apiSlice.injectEndpoints({
         }),
         getLine1ShipmodeTop5NgCause: builder.query({
             query: () => ({
-                url: "process/line-1/shipmode/manual-ng-causes/top5",
+                url: "process/line-1/shipmode/auto-ng-causes/top5",
             }),
             transformResponse: (res) => res?.data || [],
         }),
@@ -75,9 +103,7 @@ export const shipmodeService = apiSlice.injectEndpoints({
         }),
         line1ShipmodeLogs: builder.query({
             query: (data = []) => ({
-                url: `process/line-1/shipmode/manual-ng-causes?${Object.keys(
-                    data
-                )
+                url: `process/line-1/shipmode/auto-ng-causes?${Object.keys(data)
                     .map((item, i) => `${item}=${data[item]}`)
                     .join("&")}`,
             }),
@@ -99,12 +125,14 @@ export const {
     useGetLine1ShipmodeProcessChartQuery,
     useGetLine1ShipmodeChartLastWeekQuery,
     useGetLine1ShipmodeTopNgCauseQuery,
-    useGetLine1ShipmodeInstartCountQuery,
-    useGetLine1ShipmodeInstopCountQuery,
+    useGetLine1ShipmodeNgCountQuery,
+    useGetLine1ShipmodeOkCountQuery,
     useGetLine1ShipmodeTopTenLogsQuery,
     useGetLine1ShipmodeTop5NgCauseQuery,
     useLine1ShipmodeUpdateManualNgMutation,
     useLine1ShipmodeTopManualNgQuery,
     useLine1ShipmodeLogsQuery,
     useLine1ShipmodeSyncMutation,
+    useGetLine1ShipmodeInstartCountQuery,
+    useGetLine1ShipmodeInstopCountQuery,
 } = shipmodeService;

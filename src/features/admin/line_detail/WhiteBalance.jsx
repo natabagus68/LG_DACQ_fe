@@ -10,11 +10,14 @@ import {
     HiOutlinePlusSm,
     HiOutlineChevronRight,
     HiOutlineDownload,
+    HiOutlineCalendar,
+    HiTrendingDown,
     HiX,
 } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { ChartLine } from "../../../common/components/ChartLine";
 import { Alert } from "../../../common/components/Alert";
+import ng_image from "../../../assets/ng_image.png";
 import { Table } from "../../../common/components/table/Table";
 import { useState } from "react";
 import {
@@ -219,7 +222,7 @@ export const OpenAlert = ({ alert, setAlert }) => {
     );
 };
 
-const TopManualNgTable = () => {
+const TopAutoNgTable = () => {
     const {
         data: line1WhiteBalanceTop5NgCause = [],
         isLoading: line1WhiteBalanceTop5NgCauseLoading,
@@ -274,7 +277,7 @@ const TopManualNgTable = () => {
     );
 };
 
-const TopWhiteBalanceManualNgTable = () => {
+const TopManualNgTable = () => {
     const { data: topManualNg, isLoading: topManualNgLoading } =
         useLine1WhiteBalanceTopManualNgQuery();
     if (topManualNgLoading) {
@@ -301,31 +304,25 @@ const TopWhiteBalanceManualNgTable = () => {
 export const WhiteBalance = () => {
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
-    const manualNgOn = useSelector(
-        (state) => state.line1WhiteBalance.manualNgOn
-    );
+    const manualNgOn = useSelector((state) => state.line1WhiteBalance.manualNgOn);
     const setManualNgOn = (e) => {
         dispatch(line1WhiteBalanceSetManualNg(!manualNgOn));
     };
     const [frequent, setFrequent] = useState("hourly");
-    const {
-        data: line1WhiteBalanceOkCount,
-        isLoading: line1WhiteBalanceOkCountLoading,
-    } = useGetLine1WhiteBalanceOkCountQuery(
-        { frequent },
-        {
-            pollingInterval: 5000,
-        }
-    );
-    const {
-        data: line1WhiteBalanceNgCount,
-        isLoading: line1WhiteBalanceNgCountLoading,
-    } = useGetLine1WhiteBalanceNgCountQuery(
-        { frequent },
-        {
-            pollingInterval: 5000,
-        }
-    );
+    const { data: line1WhiteBalanceOkCount, isLoading: line1WhiteBalanceOkCountLoading } =
+        useGetLine1WhiteBalanceOkCountQuery(
+            { frequent },
+            {
+                pollingInterval: 5000,
+            }
+        );
+    const { data: line1WhiteBalanceNgCount, isLoading: line1WhiteBalanceNgCountLoading } =
+        useGetLine1WhiteBalanceNgCountQuery(
+            { frequent },
+            {
+                pollingInterval: 5000,
+            }
+        );
     const {
         data: line1WhiteBalanceTopTenLogs = [],
         isLoading: line1WhiteBalanceTopTenLogsLoading,
@@ -375,89 +372,35 @@ export const WhiteBalance = () => {
                     </div>
                 </div>
                 <div className="flex flex-col flex-1">
-                    <div className="flex-1 grid lg:grid-cols-3 gap-3 mb-3">
-                        <div className="rounded-lg border p-4">
-                            <div className="text-xl font-bold mb-2">WB 1</div>
-                            <form
-                                className="flex gap-2 flex-1"
-                                onSubmit={submitSync}
-                            >
-                                <Input
-                                    type="text"
-                                    placeholder="WB 1 file directory"
-                                    required
-                                    value={syncForm.path}
-                                    className={`w-full`}
-                                    onChange={(e) =>
-                                        setSyncForm((old) => ({
-                                            ...old,
-                                            base_path: e.target.value,
-                                        }))
-                                    }
-                                />
-                                <button className="flex items-center text-white gap-3 rounded-lg bg-info px-4 py-3">
-                                    <SyncIcon />
-                                    Sync
-                                </button>
-                            </form>
-                        </div>
-                        <div className="rounded-lg border p-4">
-                            <div className="text-xl font-bold mb-2">WB 2</div>
-                            <form
-                                className="flex gap-2 flex-1"
-                                onSubmit={submitSync}
-                            >
-                                <Input
-                                    type="text"
-                                    placeholder="WB 2 file directory"
-                                    required
-                                    value={syncForm.path}
-                                    className={`w-full`}
-                                    onChange={(e) =>
-                                        setSyncForm((old) => ({
-                                            ...old,
-                                            base_path: e.target.value,
-                                        }))
-                                    }
-                                />
-                                <button className="flex items-center text-white gap-3 rounded-lg bg-info px-4 py-3">
-                                    <SyncIcon />
-                                    Sync
-                                </button>
-                            </form>
-                        </div>
-                        <div className="rounded-lg border p-4">
-                            <div className="text-xl font-bold mb-2">WB 3</div>
-                            <form
-                                className="flex gap-2 flex-1"
-                                onSubmit={submitSync}
-                            >
-                                <Input
-                                    type="text"
-                                    placeholder="WB 3 file directory"
-                                    required
-                                    value={syncForm.path}
-                                    className={`w-full`}
-                                    onChange={(e) =>
-                                        setSyncForm((old) => ({
-                                            ...old,
-                                            base_path: e.target.value,
-                                        }))
-                                    }
-                                />
-                                <button className="flex items-center text-white gap-3 rounded-lg bg-info px-4 py-3">
-                                    <SyncIcon />
-                                    Sync
-                                </button>
-                            </form>
-                        </div>
+                    <div className="flex gap-2 mb-3">
+                        <form
+                            className="flex gap-2 flex-1"
+                            onSubmit={submitSync}
+                        >
+                            {/* <Input type="date" /> */}
+                            <Input
+                                type="text"
+                                placeholder="WhiteBalance file directory"
+                                required
+                                value={syncForm.path}
+                                className={`w-full`}
+                                onChange={(e) =>
+                                    setSyncForm((old) => ({
+                                        ...old,
+                                        base_path: e.target.value,
+                                    }))
+                                }
+                            />
+                            <button className="flex items-center text-white gap-3 rounded-lg bg-info px-4 py-3">
+                                <SyncIcon />
+                                Sync
+                            </button>
+                        </form>
                     </div>
                     <Card>
                         <div className="flex flex-col flex-1 gap-1">
                             <div className="flex items-center justify-between">
-                                <span className="font-bold text-lg">
-                                    WhiteBalance
-                                </span>
+                                <span className="font-bold text-lg">WhiteBalance</span>
                                 <div className="flex items-center gap-2">
                                     <div
                                         onClick={() => setFrequent("hourly")}
@@ -552,86 +495,38 @@ export const WhiteBalance = () => {
                                 </div>
                             </div>
                             <div className="w-full h-full">
-                                <WhiteBalanceChart
-                                    frequent={frequent}
-                                    ppmOn={ppmOn}
-                                />
+                                <WhiteBalanceChart frequent={frequent} ppmOn={ppmOn} />
                             </div>
                         </div>
                     </Card>
                 </div>
                 <div className="grid grid-cols-5 gap-4">
                     <div className="col-span-3 flex gap-4 flex-col">
-                        <div className="grid grid-cols-3 gap-4">
-                            <Card className={`py-[21px] px-4`}>
-                                <div className="mx-auto text-lg font-bold">
-                                    WB 1
-                                </div>
-                                <div className="flex gap-2">
-                                    <div className="flex flex-1 flex-col justify-center">
-                                        <span className="bg-[#B6E9D1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
-                                            Quantity OK
-                                        </span>
-                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                            {line1WhiteBalanceOkCount || 0}
-                                        </span>
-                                    </div>
-                                    <div className="flex flex-1 flex-col justify-center">
-                                        <span className="bg-[#FAC5C1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
-                                            Quantity NG
-                                        </span>
-                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                            {line1WhiteBalanceNgCount || 0}
-                                        </span>
-                                    </div>
-                                </div>
+                        <div className="grid grid-cols-4 gap-4">
+                            <Card className={`py-[21px] px-[10px]`}>
+                                <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
+                                    Quantity OK
+                                </span>
+                                <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                    {line1WhiteBalanceOkCount || 0}
+                                </span>
                             </Card>
-                            <Card className={`py-[21px] px-4`}>
-                                <div className="mx-auto text-lg font-bold">
-                                    WB 2
-                                </div>
-                                <div className="flex gap-2">
-                                    <div className="flex flex-1 flex-col justify-center">
-                                        <span className="bg-[#B6E9D1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
-                                            Quantity OK
-                                        </span>
-                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                            {line1WhiteBalanceOkCount || 0}
-                                        </span>
-                                    </div>
-                                    <div className="flex flex-1 flex-col justify-center">
-                                        <span className="bg-[#FAC5C1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
-                                            Quantity NG
-                                        </span>
-                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                            {line1WhiteBalanceNgCount || 0}
-                                        </span>
-                                    </div>
-                                </div>
+                            <Card className={`py-[21px] px-[10px]`}>
+                                <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
+                                    Quantity NG
+                                </span>
+                                <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                    {line1WhiteBalanceNgCount || 0}
+                                </span>
                             </Card>
-                            <Card className={`py-[21px] px-4`}>
-                                <div className="mx-auto text-lg font-bold">
-                                    WB 3
-                                </div>
-                                <div className="flex gap-2">
-                                    <div className="flex flex-1 flex-col justify-center">
-                                        <span className="bg-[#B6E9D1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
-                                            Quantity OK
-                                        </span>
-                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                            {line1WhiteBalanceOkCount || 0}
-                                        </span>
-                                    </div>
-                                    <div className="flex flex-1 flex-col justify-center">
-                                        <span className="bg-[#FAC5C1] h-[32px] p-1 rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
-                                            Quantity NG
-                                        </span>
-                                        <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                            {line1WhiteBalanceNgCount || 0}
-                                        </span>
-                                    </div>
-                                </div>
+                            {/* <Card>
+                                <span className='bg-[#FEF4E6] h-[32px] rounded-xl flex items-center justify-center text-[#F59F00] text-sm'>Quantity NDF</span>
+                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>65</span>
                             </Card>
+                            <Card>
+                                <span className='bg-[#E7F6FD] h-[32px] rounded-xl flex items-center justify-center text-[#229BD8] text-sm'>Quantity INT</span>
+                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>34</span>
+                            </Card> */}
                         </div>
                         <div className="flex gap-3 flex-col border rounded-xl py-[19px] px-[24px]">
                             <div className="flex justify-between pb-1 items-center">
@@ -667,35 +562,42 @@ export const WhiteBalance = () => {
                                         >
                                             Judgement
                                         </Table.Th>
+                                        <Table.Th
+                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
+                                            order={false}
+                                        >
+                                            NG Cause
+                                        </Table.Th>
                                     </Table.Tr>
                                 </Table.Thead>
                                 <tbody>
-                                    {line1WhiteBalanceTopTenLogs.map(
-                                        (item, i) => (
-                                            <Table.Tr
-                                                key={i}
-                                                className={`even:bg-[#F0F1F3]`}
-                                            >
-                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                    {item.model || "-"}
-                                                </Table.Td>
-                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                    {item.sn || "-"}
-                                                </Table.Td>
-                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                    <span
-                                                        className={`px-3 py-1 rounded-full text-xs ${
-                                                            item.ok
-                                                                ? "bg-[#B6E9D1] text-[#084D2D]"
-                                                                : "bg-[#FAC5C1] text-[#F04438]"
-                                                        }`}
-                                                    >
-                                                        {item.ok ? "OK" : "NO"}
-                                                    </span>
-                                                </Table.Td>
-                                            </Table.Tr>
-                                        )
-                                    )}
+                                    {line1WhiteBalanceTopTenLogs.map((item, i) => (
+                                        <Table.Tr
+                                            key={i}
+                                            className={`even:bg-[#F0F1F3]`}
+                                        >
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                {item.model || "-"}
+                                            </Table.Td>
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                {item.sn || "-"}
+                                            </Table.Td>
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                <span
+                                                    className={`px-3 py-1 rounded-full text-xs ${
+                                                        item.ok
+                                                            ? "bg-[#B6E9D1] text-[#084D2D]"
+                                                            : "bg-[#FAC5C1] text-[#F04438]"
+                                                    }`}
+                                                >
+                                                    {item.ok ? "OK" : "NO"}
+                                                </span>
+                                            </Table.Td>
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                {item.ng_cause || "-"}
+                                            </Table.Td>
+                                        </Table.Tr>
+                                    ))}
                                 </tbody>
                             </Table>
                         </div>
@@ -749,9 +651,9 @@ export const WhiteBalance = () => {
                         </div>
                         <div className="flex">
                             {manualNgOn ? (
-                                <TopWhiteBalanceManualNgTable />
-                            ) : (
                                 <TopManualNgTable />
+                            ) : (
+                                <TopAutoNgTable />
                             )}
                         </div>
                     </div>

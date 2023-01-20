@@ -36,7 +36,412 @@ import { config } from "../../../common/utils";
 import { useRef } from "react";
 import { getElementAtEvent } from "react-chartjs-2";
 import moment from "moment/moment";
-const AsisChart = ({ searchParams, setSearchParams, ppmOn }) => {
+
+export const Asis = () => {
+    const dispatch = useDispatch();
+    const [ppmOn, setPpmOn] = useState(false);
+    const manualNgOn = useSelector((state) => state.line1Asis.manualNgOn);
+    const setManualNgOn = (e) => {
+        dispatch(line1AsisSetManualNg(!manualNgOn));
+    };
+    const [_searchParams, _setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useState({
+        ...(_searchParams.get("frequent")
+            ? { frequent: _searchParams.get("frequent") }
+            : { frequent: "hourly" }),
+        ...(_searchParams.get("from_date")
+            ? { from_date: _searchParams.get("from_date") }
+            : {}),
+        ...(_searchParams.get("to_date")
+            ? { to_date: _searchParams.get("to_date") }
+            : {}),
+    });
+    const [frequent, setFrequent] = useState("hourly");
+    const { data: line1AsisCounter = {}, isLoading: line1AsisCounterLoading } =
+        useGetLine1AsisCounterQuery(searchParams, {
+            pollingInterval: 5000,
+        });
+    const {
+        data: line1AsisTopTenLogs = [],
+        isLoading: line1AsisTopTenLogsLoading,
+    } = useGetLine1AsisTopTenLogsQuery(null, {
+        pollingInterval: 5000,
+    });
+    const [alert, setAlert] = useState();
+    const viewImage = (e, image) => {
+        e.preventDefault();
+        dispatch(line1AsisSetSelectedLogImage(image));
+        setAlert({ comp: "image", bool: true });
+    };
+    useEffect(() => {
+        _setSearchParams(searchParams, { replace: true });
+    }, [searchParams]);
+    const [ngRate, setNgRate] = useState(0);
+
+    return (
+        <>
+            {alert && <OpenAlert alert={alert} setAlert={setAlert} />}
+            <div className="relative h-full p-6 flex font-inter flex-col gap-4 bg-white">
+                <div className="text-[#A9A8A8] flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-1">
+                        <HomeIcon width="12px" height="13px" />
+                        <span className="text-sm">/</span>
+                        <Link
+                            to={`${config.pathPrefix}dashboard`}
+                            className="font-semibold text-sm"
+                        >
+                            Dashboard
+                        </Link>
+                        <span className="text-sm">/</span>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1`}
+                            className="font-semibold text-sm"
+                        >
+                            Line 1
+                        </Link>
+                        <span className="text-sm">/</span>
+                        <span className="font-semibold text-sm text-[#514E4E]">
+                            ASIS
+                        </span>
+                    </div>
+                </div>
+                <div className="flex flex-col flex-1">
+                    <Card>
+                        <div className="flex flex-col flex-1 gap-1">
+                            <div className="flex items-center justify-between">
+                                <span className="font-bold text-lg">Asis</span>
+                                <div className="flex items-center gap-2">
+                                    <div
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "hourly",
+                                            }))
+                                        }
+                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
+                                            searchParams.frequent == "hourly"
+                                                ? "text-black border-[1px]"
+                                                : "text-[#858383]"
+                                        }`}
+                                    >
+                                        <span className="text-[11px] font-semibold">
+                                            Hourly
+                                        </span>
+                                    </div>
+                                    <div
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "daily",
+                                            }))
+                                        }
+                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
+                                            searchParams.frequent == "daily"
+                                                ? "text-black border-[1px]"
+                                                : "text-[#858383]"
+                                        }`}
+                                    >
+                                        <span className="text-[11px] font-semibold">
+                                            Daily
+                                        </span>
+                                    </div>
+                                    <div
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "monthly",
+                                            }))
+                                        }
+                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
+                                            searchParams.frequent == "monthly"
+                                                ? "text-black border-[1px]"
+                                                : "text-[#858383]"
+                                        }`}
+                                    >
+                                        <span className="text-[11px] font-semibold">
+                                            Monthly
+                                        </span>
+                                    </div>
+                                    <div
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "annually",
+                                            }))
+                                        }
+                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
+                                            searchParams.frequent == "annually"
+                                                ? "text-black border-[1px]"
+                                                : "text-[#858383]"
+                                        }`}
+                                    >
+                                        <span className="text-[11px] font-semibold">
+                                            Annual
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="flex gap-3 items-center">
+                                    <div className="flex items-center gap-2 text-[#2E3032] text-sm">
+                                        <span>NG Rate</span>
+                                        <Switch
+                                            as={`div`}
+                                            checked={ppmOn}
+                                            onChange={setPpmOn}
+                                            className={`${
+                                                ppmOn
+                                                    ? "bg-blue-600"
+                                                    : "bg-gray-200"
+                                            } cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full`}
+                                        >
+                                            <span className="sr-only">
+                                                Enable notifications
+                                            </span>
+                                            <span
+                                                className={`${
+                                                    ppmOn
+                                                        ? "translate-x-6"
+                                                        : "translate-x-1"
+                                                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                                            />
+                                        </Switch>
+                                        <span>PPM</span>
+                                    </div>
+                                    <div className="rounded border px-2 py-1 min-w-[98px] flex justify-center items-center">
+                                        <div className="text-xl font-semibold">
+                                            {ngRate}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="w-full h-full">
+                                <AsisChart
+                                    ppmOn={ppmOn}
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
+                                    ngRate={ngRate}
+                                    setNgRate={setNgRate}
+                                />
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+                <div className="grid grid-cols-5 gap-4">
+                    <div className="col-span-3 flex gap-4 flex-col">
+                        <div className="grid grid-cols-4 gap-4">
+                            <Link
+                                to={`log?judgement=ok&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                            >
+                                <Card
+                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
+                                >
+                                    <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
+                                        Quantity OK
+                                    </span>
+                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                        {line1AsisCounter.ok || 0}
+                                    </span>
+                                </Card>
+                            </Link>
+                            <Link
+                                to={`log?judgement=ng&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                            >
+                                <Card
+                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
+                                >
+                                    <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
+                                        Quantity NG
+                                    </span>
+                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                        {line1AsisCounter.ng || 0}
+                                    </span>
+                                </Card>
+                            </Link>
+                            <Link
+                                to={`log?judgement=ndf&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                            >
+                                <Card
+                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
+                                >
+                                    <span className="bg-[#FEF4E6] h-[32px] rounded-xl flex items-center justify-center text-[#F59F00] text-sm">
+                                        Quantity NDF
+                                    </span>
+                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                        {line1AsisCounter.ndf || 0}
+                                    </span>
+                                </Card>
+                            </Link>
+                            <Link
+                                to={`log?judgement=int&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                            >
+                                <Card
+                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
+                                >
+                                    <span className="bg-[#E7F6FD] h-[32px] rounded-xl flex items-center justify-center text-[#229BD8] text-sm">
+                                        Quantity INT
+                                    </span>
+                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                        {line1AsisCounter.int || 0}
+                                    </span>
+                                </Card>
+                            </Link>
+                        </div>
+                        <div className="flex gap-3 flex-col border rounded-xl py-[19px] px-[24px]">
+                            <div className="flex justify-between pb-1 items-center">
+                                <span className="font-bold text-lg">Log</span>
+                                <Link
+                                    to={"log"}
+                                    className="flex gap-1 items-center px-3 py-2 bg-[#229BD8] text-white rounded-md"
+                                >
+                                    <span className="text-[11px] font-semibold">
+                                        See All
+                                    </span>
+                                    <HiOutlineChevronRight />
+                                </Link>
+                            </div>
+                            <Table>
+                                <Table.Thead className={`bg-[#D0D3D9]`}>
+                                    <Table.Tr>
+                                        <Table.Th
+                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
+                                            order={false}
+                                        >
+                                            Model
+                                        </Table.Th>
+                                        <Table.Th
+                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
+                                            order={false}
+                                        >
+                                            Serial Number
+                                        </Table.Th>
+                                        <Table.Th
+                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
+                                            order={false}
+                                        >
+                                            Judgement
+                                        </Table.Th>
+                                        <Table.Th
+                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
+                                            order={false}
+                                        >
+                                            NG Cause
+                                        </Table.Th>
+                                        <Table.Th
+                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
+                                            order={false}
+                                        >
+                                            Capture Image
+                                        </Table.Th>
+                                    </Table.Tr>
+                                </Table.Thead>
+                                <tbody>
+                                    {line1AsisTopTenLogs.map((item, i) => (
+                                        <Table.Tr
+                                            key={i}
+                                            className={`even:bg-[#F0F1F3]`}
+                                        >
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                {item.model || "-"}
+                                            </Table.Td>
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                {item.sn || "-"}
+                                            </Table.Td>
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                <span
+                                                    className={`px-3 py-1 rounded-full text-xs ${
+                                                        item.ok
+                                                            ? "bg-[#B6E9D1] text-[#084D2D]"
+                                                            : "bg-[#FAC5C1] text-[#F04438]"
+                                                    }`}
+                                                >
+                                                    {item.ok ? "OK" : "NO"}
+                                                </span>
+                                            </Table.Td>
+                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                {item.ng_cause || "-"}
+                                            </Table.Td>
+                                            <Table.Td className="whitespace-nowrap py-1">
+                                                <span
+                                                    className="cursor-pointer underline text-[#2064AD]"
+                                                    onClick={(e) =>
+                                                        viewImage(
+                                                            e,
+                                                            item.image_local_path
+                                                        )
+                                                    }
+                                                >
+                                                    view image
+                                                </span>
+                                            </Table.Td>
+                                        </Table.Tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </div>
+                    <div className="col-span-2 flex flex-col gap-4 px-6 py-7 border rounded-xl">
+                        <div className="flex justify-between items-center pb-1">
+                            <span className="font-bold text-lg">
+                                Manual NG Cause
+                            </span>
+                            <div className="flex gap-4">
+                                <div className="flex items-center gap-2 text-[#2E3032] text-sm">
+                                    <Switch
+                                        as={`div`}
+                                        checked={manualNgOn}
+                                        onChange={setManualNgOn}
+                                        className={`${
+                                            manualNgOn
+                                                ? "bg-blue-600"
+                                                : "bg-gray-200"
+                                        } cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full`}
+                                    >
+                                        <span className="sr-only">
+                                            Enable notifications
+                                        </span>
+                                        <span
+                                            className={`${
+                                                manualNgOn
+                                                    ? "translate-x-6"
+                                                    : "translate-x-1"
+                                            } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                                        />
+                                    </Switch>
+                                    <span>Inactive</span>
+                                </div>
+                                <button
+                                    disabled={!manualNgOn}
+                                    onClick={() =>
+                                        setAlert({
+                                            bool: true,
+                                            comp: "addData",
+                                        })
+                                    }
+                                    className="flex gap-1 cursor-pointer items-center px-3 py-2 bg-[#229BD8] text-white rounded-lg disabled:bg-gray-200 disabled:cursor-not-allowed"
+                                >
+                                    <HiOutlinePlusSm />
+                                    <span className="text-[11px] font-semibold">
+                                        Add Data
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                        <div className="flex">
+                            {manualNgOn ? (
+                                <TopManualNgTable />
+                            ) : (
+                                <TopAutoNgTable />
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+
+const AsisChart = ({
+    searchParams,
+    setSearchParams,
+    ppmOn,
+    ngRate,
+    setNgRate,
+}) => {
     const chartRef = useRef();
     const {
         data: line1AsisProcessChart = [],
@@ -53,87 +458,101 @@ const AsisChart = ({ searchParams, setSearchParams, ppmOn }) => {
         };
     }, [line1AsisProcessChart, ppmOn]);
     const dispatch = useDispatch();
+    const [selectedChart, setSelectedChart] = useState(false);
+    useEffect(() => {
+        console.log("Berubah =>", data?.datas?.length - 1)
+        setNgRate(
+            parseFloat(data?.datas[
+                selectedChart == false ? data?.datas?.length - 1 : selectedChart
+            ]).toFixed(2)
+        );
+    }, [data, selectedChart]);
     return (
-        <ChartLine
-            datas={data.datas}
-            labels={data.labels}
-            height="100%"
-            width="100%"
-            ref={chartRef}
-            onClick={(event) => {
-                const [lineEl] = getElementAtEvent(chartRef.current, event);
-                if (lineEl) {
-                    let from_date = moment(
-                        line1AsisProcessChart?.[lineEl.index]?.x,
-                        "hh-mm"
-                    )
-                        .add(-1, "hour")
-                        .startOf("hour")
-                        .utc();
-                    let to_date = moment(
-                        line1AsisProcessChart?.[lineEl.index]?.x,
-                        "hh-mm"
-                    )
-                        .add(-1, "hour")
-                        .endOf("hour")
-                        .utc();
-                    switch (searchParams.frequent) {
-                        case "daily":
-                            from_date = moment(
-                                line1AsisProcessChart?.[lineEl.index]?.x,
-                                "DD-MMM"
-                            )
-                                .startOf("day")
-                                .utc();
-                            to_date = moment(
-                                line1AsisProcessChart?.[lineEl.index]?.x,
-                                "DD-MMM"
-                            )
-                                .endOf("day")
-                                .utc();
-                            break;
-                        case "monthly":
-                            from_date = moment(
-                                line1AsisProcessChart?.[lineEl.index]?.x,
-                                "MMM"
-                            )
-                                .startOf("month")
-                                .utc();
-                            to_date = moment(
-                                line1AsisProcessChart?.[lineEl.index]?.x,
-                                "MMM"
-                            )
-                                .endOf("month")
-                                .utc();
-                            break;
-                        case "annually":
-                            from_date = moment(
-                                line1AsisProcessChart?.[lineEl.index]?.x,
-                                "YYYY"
-                            )
-                                .startOf("year")
-                                .utc();
-                            to_date = moment(
-                                line1AsisProcessChart?.[lineEl.index]?.x,
-                                "YYYY"
-                            )
-                                .endOf("year")
-                                .utc();
-                            break;
-                        default:
-                            break;
+        <>
+            {/* {ngRate} */}
+            <ChartLine
+                datas={data.datas}
+                labels={data.labels}
+                height="100%"
+                width="100%"
+                ref={chartRef}
+                onClick={(event) => {
+                    const [lineEl] = getElementAtEvent(chartRef.current, event);
+                    setSelectedChart(lineEl.index)
+                    if (lineEl) {
+                        let from_date = moment(
+                            line1AsisProcessChart?.[lineEl.index]?.x,
+                            "hh-mm"
+                        )
+                            .add(-1, "hour")
+                            .startOf("hour")
+                            .utc();
+                        let to_date = moment(
+                            line1AsisProcessChart?.[lineEl.index]?.x,
+                            "hh-mm"
+                        )
+                            .add(-1, "hour")
+                            .endOf("hour")
+                            .utc();
+                        switch (searchParams.frequent) {
+                            case "daily":
+                                from_date = moment(
+                                    line1AsisProcessChart?.[lineEl.index]?.x,
+                                    "DD-MMM"
+                                )
+                                    .startOf("day")
+                                    .utc();
+                                to_date = moment(
+                                    line1AsisProcessChart?.[lineEl.index]?.x,
+                                    "DD-MMM"
+                                )
+                                    .endOf("day")
+                                    .utc();
+                                break;
+                            case "monthly":
+                                from_date = moment(
+                                    line1AsisProcessChart?.[lineEl.index]?.x,
+                                    "MMM"
+                                )
+                                    .startOf("month")
+                                    .utc();
+                                to_date = moment(
+                                    line1AsisProcessChart?.[lineEl.index]?.x,
+                                    "MMM"
+                                )
+                                    .endOf("month")
+                                    .utc();
+                                break;
+                            case "annually":
+                                from_date = moment(
+                                    line1AsisProcessChart?.[lineEl.index]?.x,
+                                    "YYYY"
+                                )
+                                    .startOf("year")
+                                    .utc();
+                                to_date = moment(
+                                    line1AsisProcessChart?.[lineEl.index]?.x,
+                                    "YYYY"
+                                )
+                                    .endOf("year")
+                                    .utc();
+                                break;
+                            default:
+                                break;
+                        }
+                        console.log({ from_date, to_date });
+                        setSearchParams((searchParams) => ({
+                            ...searchParams,
+                            from_date: from_date,
+                            to_date: to_date,
+                        }));
                     }
-                    console.log({ from_date, to_date });
-                    setSearchParams((searchParams) => ({
-                        ...searchParams,
-                        from_date : from_date,
-                        to_date : to_date,
-                    }));
-                }
-            }}
-        />
+                }}
+            />
+        </>
     );
 };
+
 const CompExcel = ({ setAlert }) => {
     const [params, setParams] = useState({
         frequent: "hourly",
@@ -440,7 +859,11 @@ const TopAutoNgTable = () => {
                             {item.ng_cause || "-"}
                         </Table.Td>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">
-                            {item.image_updated_at || "-"}
+                            {item.image_updated_at
+                                ? moment(item.image_updated_at).format(
+                                      "DD MMMM YYYY HH:mm:ss"
+                                  )
+                                : "-"}
                         </Table.Td>
                     </Table.Tr>
                 ))}
@@ -468,393 +891,6 @@ const TopManualNgTable = () => {
                         <span>{item.description}</span>
                     </div>
                 ))}
-            </div>
-        </>
-    );
-};
-
-export const Asis = () => {
-    const dispatch = useDispatch();
-    const [ppmOn, setPpmOn] = useState(false);
-    const manualNgOn = useSelector((state) => state.line1Asis.manualNgOn);
-    const setManualNgOn = (e) => {
-        dispatch(line1AsisSetManualNg(!manualNgOn));
-    };
-    const [_searchParams, _setSearchParams] = useSearchParams();
-    const [searchParams, setSearchParams] = useState({
-        ...(_searchParams.get("frequent")
-            ? { frequent: _searchParams.get("frequent") }
-            : { frequent: "hourly" }),
-        ...(_searchParams.get("from_date")
-            ? { from_date: _searchParams.get("from_date") }
-            : {}),
-        ...(_searchParams.get("to_date")
-            ? { to_date: _searchParams.get("to_date") }
-            : {}),
-    });
-    const [frequent, setFrequent] = useState("hourly");
-    const { data: line1AsisCounter = {}, isLoading: line1AsisCounterLoading } =
-        useGetLine1AsisCounterQuery(searchParams, {
-            pollingInterval: 5000,
-        });
-    const {
-        data: line1AsisTopTenLogs = [],
-        isLoading: line1AsisTopTenLogsLoading,
-    } = useGetLine1AsisTopTenLogsQuery(null, {
-        pollingInterval: 5000,
-    });
-    const [alert, setAlert] = useState();
-    const viewImage = (e, image) => {
-        e.preventDefault();
-        dispatch(line1AsisSetSelectedLogImage(image));
-        setAlert({ comp: "image", bool: true });
-    };
-    useEffect(() => {
-        _setSearchParams(searchParams, { replace: true });
-    }, [searchParams]);
-
-    return (
-        <>
-            {alert && <OpenAlert alert={alert} setAlert={setAlert} />}
-            <div className="relative h-full p-6 flex font-inter flex-col gap-4 bg-white">
-                <div className="text-[#A9A8A8] flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-1">
-                        <HomeIcon width="12px" height="13px" />
-                        <span className="text-sm">/</span>
-                        <Link
-                            to={`${config.pathPrefix}dashboard`}
-                            className="font-semibold text-sm"
-                        >
-                            Dashboard
-                        </Link>
-                        <span className="text-sm">/</span>
-                        <Link
-                            to={`${config.pathPrefix}lines/line-1`}
-                            className="font-semibold text-sm"
-                        >
-                            Line 1
-                        </Link>
-                        <span className="text-sm">/</span>
-                        <span className="font-semibold text-sm text-[#514E4E]">
-                            ASIS
-                        </span>
-                    </div>
-                </div>
-                <div className="flex flex-col flex-1">
-                    <Card>
-                        <div className="flex flex-col flex-1 gap-1">
-                            <div className="flex items-center justify-between">
-                                <span className="font-bold text-lg">Asis</span>
-                                <div className="flex items-center gap-2">
-                                    <div
-                                        onClick={() =>
-                                            setSearchParams((params) => ({
-                                                frequent: "hourly",
-                                            }))
-                                        }
-                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            searchParams.frequent == "hourly"
-                                                ? "text-black border-[1px]"
-                                                : "text-[#858383]"
-                                        }`}
-                                    >
-                                        <span className="text-[11px] font-semibold">
-                                            Hourly
-                                        </span>
-                                    </div>
-                                    <div
-                                        onClick={() =>
-                                            setSearchParams((params) => ({
-                                                frequent: "daily",
-                                            }))
-                                        }
-                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            searchParams.frequent == "daily"
-                                                ? "text-black border-[1px]"
-                                                : "text-[#858383]"
-                                        }`}
-                                    >
-                                        <span className="text-[11px] font-semibold">
-                                            Daily
-                                        </span>
-                                    </div>
-                                    <div
-                                        onClick={() =>
-                                            setSearchParams((params) => ({
-                                                frequent: "monthly",
-                                            }))
-                                        }
-                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            searchParams.frequent == "monthly"
-                                                ? "text-black border-[1px]"
-                                                : "text-[#858383]"
-                                        }`}
-                                    >
-                                        <span className="text-[11px] font-semibold">
-                                            Monthly
-                                        </span>
-                                    </div>
-                                    <div
-                                        onClick={() =>
-                                            setSearchParams((params) => ({
-                                                frequent: "annually",
-                                            }))
-                                        }
-                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            searchParams.frequent == "annually"
-                                                ? "text-black border-[1px]"
-                                                : "text-[#858383]"
-                                        }`}
-                                    >
-                                        <span className="text-[11px] font-semibold">
-                                            Annual
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="flex gap-3 items-center">
-                                    <div className="flex items-center gap-2 text-[#2E3032] text-sm">
-                                        <span>NG Rate</span>
-                                        <Switch
-                                            as={`div`}
-                                            checked={ppmOn}
-                                            onChange={setPpmOn}
-                                            className={`${
-                                                ppmOn
-                                                    ? "bg-blue-600"
-                                                    : "bg-gray-200"
-                                            } cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full`}
-                                        >
-                                            <span className="sr-only">
-                                                Enable notifications
-                                            </span>
-                                            <span
-                                                className={`${
-                                                    ppmOn
-                                                        ? "translate-x-6"
-                                                        : "translate-x-1"
-                                                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                                            />
-                                        </Switch>
-                                        <span>PPM</span>
-                                    </div>
-                                    <div className="rounded border px-2 py-1 min-w-[98px] flex justify-center items-center">
-                                        <div className="text-xl font-semibold">
-                                            89%
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="w-full h-full">
-                                <AsisChart
-                                    ppmOn={ppmOn}
-                                    searchParams={searchParams}
-                                    setSearchParams={setSearchParams}
-                                />
-                            </div>
-                        </div>
-                    </Card>
-                </div>
-                <div className="grid grid-cols-5 gap-4">
-                    <div className="col-span-3 flex gap-4 flex-col">
-                        <div className="grid grid-cols-4 gap-4">
-                            <Link to={`log?judgement=ok&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}>
-                                <Card
-                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
-                                >
-                                    <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
-                                        Quantity OK
-                                    </span>
-                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1AsisCounter.ok || 0}
-                                    </span>
-                                </Card>
-                            </Link>
-                            <Link to={`log?judgement=ng&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}>
-                                <Card
-                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
-                                >
-                                    <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
-                                        Quantity NG
-                                    </span>
-                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1AsisCounter.ng || 0}
-                                    </span>
-                                </Card>
-                            </Link>
-                            <Link to={`log?judgement=ndf&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}>
-                                <Card
-                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
-                                >
-                                    <span className="bg-[#FEF4E6] h-[32px] rounded-xl flex items-center justify-center text-[#F59F00] text-sm">
-                                        Quantity NDF
-                                    </span>
-                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1AsisCounter.ndf || 0}
-                                    </span>
-                                </Card>
-                            </Link>
-                            <Link to={`log?judgement=int&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}>
-                                <Card
-                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
-                                >
-                                    <span className="bg-[#E7F6FD] h-[32px] rounded-xl flex items-center justify-center text-[#229BD8] text-sm">
-                                        Quantity INT
-                                    </span>
-                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1AsisCounter.int || 0}
-                                    </span>
-                                </Card>
-                            </Link>
-                        </div>
-                        <div className="flex gap-3 flex-col border rounded-xl py-[19px] px-[24px]">
-                            <div className="flex justify-between pb-1 items-center">
-                                <span className="font-bold text-lg">Log</span>
-                                <Link
-                                    to={"log"}
-                                    className="flex gap-1 items-center px-3 py-2 bg-[#229BD8] text-white rounded-md"
-                                >
-                                    <span className="text-[11px] font-semibold">
-                                        See All
-                                    </span>
-                                    <HiOutlineChevronRight />
-                                </Link>
-                            </div>
-                            <Table>
-                                <Table.Thead className={`bg-[#D0D3D9]`}>
-                                    <Table.Tr>
-                                        <Table.Th
-                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
-                                        >
-                                            Model
-                                        </Table.Th>
-                                        <Table.Th
-                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
-                                        >
-                                            Serial Number
-                                        </Table.Th>
-                                        <Table.Th
-                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
-                                        >
-                                            Judgement
-                                        </Table.Th>
-                                        <Table.Th
-                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
-                                        >
-                                            NG Cause
-                                        </Table.Th>
-                                        <Table.Th
-                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
-                                        >
-                                            Capture Image
-                                        </Table.Th>
-                                    </Table.Tr>
-                                </Table.Thead>
-                                <tbody>
-                                    {line1AsisTopTenLogs.map((item, i) => (
-                                        <Table.Tr
-                                            key={i}
-                                            className={`even:bg-[#F0F1F3]`}
-                                        >
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.model || "-"}
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.sn || "-"}
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                <span
-                                                    className={`px-3 py-1 rounded-full text-xs ${
-                                                        item.ok
-                                                            ? "bg-[#B6E9D1] text-[#084D2D]"
-                                                            : "bg-[#FAC5C1] text-[#F04438]"
-                                                    }`}
-                                                >
-                                                    {item.ok ? "OK" : "NO"}
-                                                </span>
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.ng_cause || "-"}
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1">
-                                                <span
-                                                    className="cursor-pointer underline text-[#2064AD]"
-                                                    onClick={(e) =>
-                                                        viewImage(
-                                                            e,
-                                                            item.image_local_path
-                                                        )
-                                                    }
-                                                >
-                                                    view image
-                                                </span>
-                                            </Table.Td>
-                                        </Table.Tr>
-                                    ))}
-                                </tbody>
-                            </Table>
-                        </div>
-                    </div>
-                    <div className="col-span-2 flex flex-col gap-4 px-6 py-7 border rounded-xl">
-                        <div className="flex justify-between items-center pb-1">
-                            <span className="font-bold text-lg">
-                                Manual NG Cause
-                            </span>
-                            <div className="flex gap-4">
-                                <div className="flex items-center gap-2 text-[#2E3032] text-sm">
-                                    <Switch
-                                        as={`div`}
-                                        checked={manualNgOn}
-                                        onChange={setManualNgOn}
-                                        className={`${
-                                            manualNgOn
-                                                ? "bg-blue-600"
-                                                : "bg-gray-200"
-                                        } cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full`}
-                                    >
-                                        <span className="sr-only">
-                                            Enable notifications
-                                        </span>
-                                        <span
-                                            className={`${
-                                                manualNgOn
-                                                    ? "translate-x-6"
-                                                    : "translate-x-1"
-                                            } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                                        />
-                                    </Switch>
-                                    <span>Inactive</span>
-                                </div>
-                                <button
-                                    disabled={!manualNgOn}
-                                    onClick={() =>
-                                        setAlert({
-                                            bool: true,
-                                            comp: "addData",
-                                        })
-                                    }
-                                    className="flex gap-1 cursor-pointer items-center px-3 py-2 bg-[#229BD8] text-white rounded-lg disabled:bg-gray-200 disabled:cursor-not-allowed"
-                                >
-                                    <HiOutlinePlusSm />
-                                    <span className="text-[11px] font-semibold">
-                                        Add Data
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="flex">
-                            {manualNgOn ? (
-                                <TopManualNgTable />
-                            ) : (
-                                <TopAutoNgTable />
-                            )}
-                        </div>
-                    </div>
-                </div>
             </div>
         </>
     );

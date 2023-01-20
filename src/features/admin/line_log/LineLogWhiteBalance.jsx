@@ -65,7 +65,7 @@ export const Line1WhiteBalanceLogTable = ({
                     </div>
                 </div>
             </div>
-            <div className="px-[24px] pb-[18px] flex-1 flex flex-col justify-between">
+            <div className="px-[24px] pb-[18px] flex flex-col justify-between">
                 <Table>
                     <Table.Thead>
                         <Table.Tr>
@@ -80,6 +80,78 @@ export const Line1WhiteBalanceLogTable = ({
                                 order={false}
                             >
                                 SERIAL NUMBER
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                X1
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                RANGE X1
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                X2
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                RANGE X2
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                X3
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                RANGE X3
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                X1
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                RANGE X1
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                X2
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                RANGE X2
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                X3
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
+                                RANGE X3
                             </Table.Th>
                             <Table.Th
                                 className="py-4 bg-[#E2F1FF]"
@@ -104,6 +176,45 @@ export const Line1WhiteBalanceLogTable = ({
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         {item?.sn || "-"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.x1 || "-"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.x1_min || "~"} -{" "}
+                                        {item?.x1_max || "~"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.x2 || "~"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.x2_min || "~"} -{" "}
+                                        {item?.x2_max || "~"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.x3 || "~"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.x3_min || "~"} -{" "}
+                                        {item?.x3_max || "~"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.y1 || "~"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.y1_min || "~"}-{item?.y1_max || "~"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.y2 || "~"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.y2_min || "~"}-{item?.y2_max || "~"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.y3 || "~"}
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.y3_min || "~"}-{item?.y3_max || "~"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         <span
