@@ -50,9 +50,9 @@ import {
     useLine1OptionManualTopManualNgQuery,
 } from "../../../app/services/optionManualService";
 import {
-    useGetline1DtvInspectionChartLastWeekQuery,
-    useGetline1DtvInspectionNgRatioQuery,
-    useGetline1DtvInspectionTopNgCauseQuery,
+    useGetLine1DtvInspectionChartLastWeekQuery,
+    useGetLine1DtvInspectionNgRatioQuery,
+    useGetLine1DtvInspectionTopNgCauseQuery,
     useLine1DtvInspectionTopManualNgQuery,
 } from "../../../app/services/dtvInspectionService";
 
@@ -250,17 +250,17 @@ export const Line1 = () => {
     const { data: line1DtvInspectionTopManualNg } =
         useLine1DtvInspectionTopManualNgQuery();
     const { data: line1DtvInspectionChartLastWeek = [] } =
-        useGetline1DtvInspectionChartLastWeekQuery(null, {
+        useGetLine1DtvInspectionChartLastWeekQuery(null, {
             pollingInterval: 10000,
         });
     const { data: line1DtvInspectionTopNgCause } =
-        useGetline1DtvInspectionTopNgCauseQuery(null, {
+        useGetLine1DtvInspectionTopNgCauseQuery(null, {
             pollingInterval: 10000,
         });
     const {
         data: line1DtvInspectionNgRatio,
         isLoading: line1DtvInspectionNgRatioLoading,
-    } = useGetline1DtvInspectionNgRatioQuery(null, {
+    } = useGetLine1DtvInspectionNgRatioQuery(null, {
         pollingInterval: 10000,
     });
     const dtvInspectionChartData = useMemo(() => {

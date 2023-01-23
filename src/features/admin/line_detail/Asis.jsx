@@ -6,7 +6,6 @@ import {
 } from "../../../common/components/icons";
 import { Card } from "../../../common/components/Card";
 import {
-    HiOutlineDocumentAdd,
     HiOutlinePlusSm,
     HiOutlineChevronRight,
     HiOutlineDownload,
@@ -24,7 +23,6 @@ import {
     useGetLine1Top5NgCauseQuery,
     useGetLine1AsisTopManualNgQuery,
     useGetLine1AsisUpdateManualNgMutation,
-    asisService,
 } from "../../../app/services/asisService";
 import { Switch } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
@@ -73,6 +71,7 @@ export const Asis = () => {
         dispatch(line1AsisSetSelectedLogImage(image));
         setAlert({ comp: "image", bool: true });
     };
+
     useEffect(() => {
         _setSearchParams(searchParams, { replace: true });
     }, [searchParams]);
@@ -474,7 +473,6 @@ const AsisChart = ({
     const dispatch = useDispatch();
     const [selectedChart, setSelectedChart] = useState(false);
     useEffect(() => {
-        console.log("Berubah =>", data?.datas?.length - 1);
         setNgRate(
             parseFloat(
                 data?.datas[
@@ -558,11 +556,10 @@ const AsisChart = ({
                             default:
                                 break;
                         }
-                        console.log({ from_date, to_date });
                         setSearchParams((searchParams) => ({
                             ...searchParams,
-                            from_date: from_date,
-                            to_date: to_date,
+                            from_date: from_date.format(),
+                            to_date: to_date.format(),
                         }));
                     }
                 }}
@@ -835,12 +832,9 @@ const TopAutoNgTable = ({ searchParams, setSearchParams }) => {
     const {
         data: line1AsisTop5NgCause = [],
         isLoading: line1AsisTop5NgCauseLoading,
-    } = useGetLine1Top5NgCauseQuery(
-        searchParams,
-        {
-            pollingInterval: 5000,
-        }
-    );
+    } = useGetLine1Top5NgCauseQuery(searchParams, {
+        pollingInterval: 5000,
+    });
     return (
         <Table>
             <Table.Thead>

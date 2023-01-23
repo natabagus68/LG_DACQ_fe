@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
     HomeIcon,
     ManualNgIcon,
@@ -10,24 +10,20 @@ import {
     HiOutlinePlusSm,
     HiOutlineChevronRight,
     HiOutlineDownload,
-    HiOutlineCalendar,
-    HiTrendingDown,
     HiX,
 } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ChartLine } from "../../../common/components/ChartLine";
 import { Alert } from "../../../common/components/Alert";
-import ng_image from "../../../assets/ng_image.png";
 import { Table } from "../../../common/components/table/Table";
 import { useState } from "react";
 import {
-    useGetline1DtvInspectionNgCountQuery,
-    useGetline1DtvInspectionOkCountQuery,
-    useGetline1DtvInspectionProcessChartQuery,
-    useGetline1DtvInspectionTopTenLogsQuery,
+    useGetLine1DtvInspectionProcessChartQuery,
+    useGetLine1DtvInspectionTopTenLogsQuery,
     useGetLine1Top5NgCauseQuery,
     useLine1DtvInspectionTopManualNgQuery,
-    useGetline1DtvInspectionUpdateManualNgMutation,
+    useGetLine1DtvInspectionUpdateManualNgMutation,
+    useGetLine1DtvInspectionCountQuery,
 } from "../../../app/services/dtvInspectionService";
 import { Switch } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,28 +32,130 @@ import {
     line1DtvInspectionSetSelectedLogImage,
 } from "./line1DtvInspectionSlice";
 import { config } from "../../../common/utils";
+import { getElementAtEvent } from "react-chartjs-2";
+import moment from "moment";
 
-const DtvInspectionChart = ({ frequent, ppmOn }) => {
+const DtvInspectionChart = ({
+    searchParams,
+    setSearchParams,
+    ppmOn,
+    ngRate,
+    setNgRate,
+}) => {
+    const chartRef = useRef();
     const {
         data: line1DtvInspectionProcessChart = [],
         isLoading: line1DtvInspectionProcessChartLoading,
-    } = useGetline1DtvInspectionProcessChartQuery(frequent, {
+    } = useGetLine1DtvInspectionProcessChartQuery(searchParams.frequent, {
         pollingInterval: 5000,
     });
     const data = useMemo(() => {
         return {
-            labels: line1DtvInspectionProcessChart.map((item) => item?.x || "-"),
+            labels: line1DtvInspectionProcessChart.map(
+                (item) => item?.x || "-"
+            ),
             datas: line1DtvInspectionProcessChart.map(
                 (item) => (item?.y || 0) * (ppmOn ? 10000 : 1)
             ),
         };
     }, [line1DtvInspectionProcessChart, ppmOn]);
+    const dispatch = useDispatch();
+    const [selectedChart, setSelectedChart] = useState(false);
+    useEffect(() => {
+        setNgRate(
+            parseFloat(
+                data?.datas[
+                    selectedChart == false
+                        ? data?.datas?.length - 1
+                        : selectedChart
+                ]
+            ).toFixed(2)
+        );
+    }, [data, selectedChart]);
     return (
         <ChartLine
             datas={data.datas}
             labels={data.labels}
             height="100%"
             width="100%"
+            ref={chartRef}
+            onClick={(event) => {
+                const [lineEl] = getElementAtEvent(chartRef.current, event);
+                setSelectedChart(lineEl.index);
+                if (lineEl) {
+                    let from_date = moment(
+                        line1DtvInspectionProcessChart?.[lineEl.index]?.x,
+                        "hh-mm"
+                    )
+                        .add(-1, "hour")
+                        .startOf("hour")
+                        .utc();
+                    let to_date = moment(
+                        line1DtvInspectionProcessChart?.[lineEl.index]?.x,
+                        "hh-mm"
+                    )
+                        .add(-1, "hour")
+                        .endOf("hour")
+                        .utc();
+                    switch (searchParams.frequent) {
+                        case "daily":
+                            from_date = moment(
+                                line1DtvInspectionProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "DD-MMM"
+                            )
+                                .startOf("day")
+                                .utc();
+                            to_date = moment(
+                                line1DtvInspectionProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "DD-MMM"
+                            )
+                                .endOf("day")
+                                .utc();
+                            break;
+                        case "monthly":
+                            from_date = moment(
+                                line1DtvInspectionProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "MMM"
+                            )
+                                .startOf("month")
+                                .utc();
+                            to_date = moment(
+                                line1DtvInspectionProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "MMM"
+                            )
+                                .endOf("month")
+                                .utc();
+                            break;
+                        case "annually":
+                            from_date = moment(
+                                line1DtvInspectionProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "YYYY"
+                            )
+                                .startOf("year")
+                                .utc();
+                            to_date = moment(
+                                line1DtvInspectionProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "YYYY"
+                            )
+                                .endOf("year")
+                                .utc();
+                            break;
+                        default:
+                            break;
+                    }
+                    setSearchParams((searchParams) => ({
+                        ...searchParams,
+                        from_date: from_date.format(),
+                        to_date: to_date.format(),
+                    }));
+                }
+            }}
         />
     );
 };
@@ -246,7 +344,7 @@ const CompAddData = ({ setAlert }) => {
             error: line1DtvInspectionUpdateManualNgError,
             isLoading: line1DtvInspectionUpdateManualNgLoading,
         },
-    ] = useGetline1DtvInspectionUpdateManualNgMutation();
+    ] = useGetLine1DtvInspectionUpdateManualNgMutation();
     const line1DtvInspectionSubmitManualNg = (e) => {
         e.preventDefault();
         line1DtvInspectionUpdateManualNg(description);
@@ -322,11 +420,11 @@ export const OpenAlert = ({ alert, setAlert }) => {
     );
 };
 
-const TopAutoNgTable = () => {
+const TopAutoNgTable = ({ searchParams, setSearchParams }) => {
     const {
         data: line1DtvInspectionTop5NgCause = [],
         isLoading: line1DtvInspectionTop5NgCauseLoading,
-    } = useGetLine1Top5NgCauseQuery(null, {
+    } = useGetLine1Top5NgCauseQuery(searchParams, {
         pollingInterval: 5000,
     });
     return (
@@ -399,30 +497,35 @@ const TopManualNgTable = () => {
 export const DTVInspection = () => {
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
-    // const [manualNgOn, setManualNgOn] = useState(false);
-    const manualNgOn = useSelector((state) => state.line1DtvInspection.manualNgOn);
+    const manualNgOn = useSelector(
+        (state) => state.line1DtvInspection.manualNgOn
+    );
     const setManualNgOn = (e) => {
         dispatch(line1DtvInspectionSetManualNg(!manualNgOn));
     };
+    const [_searchParams, _setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useState({
+        ...(_searchParams.get("frequent")
+            ? { frequent: _searchParams.get("frequent") }
+            : { frequent: "hourly" }),
+        ...(_searchParams.get("from_date")
+            ? { from_date: _searchParams.get("from_date") }
+            : {}),
+        ...(_searchParams.get("to_date")
+            ? { to_date: _searchParams.get("to_date") }
+            : {}),
+    });
     const [frequent, setFrequent] = useState("hourly");
-    const { data: line1DtvInspectionOkCount, isLoading: line1DtvInspectionOkCountLoading } =
-        useGetline1DtvInspectionOkCountQuery(
-            { frequent },
-            {
-                pollingInterval: 5000,
-            }
-        );
-    const { data: line1DtvInspectionNgCount, isLoading: line1DtvInspectionNgCountLoading } =
-        useGetline1DtvInspectionNgCountQuery(
-            { frequent },
-            {
-                pollingInterval: 5000,
-            }
-        );
+    const {
+        data: line1DtvInspectionCount = {},
+        isLoading: line1DtvInspectionCountLoading,
+    } = useGetLine1DtvInspectionCountQuery(searchParams, {
+        pollingInterval: 5000,
+    });
     const {
         data: line1DtvInspectionTopTenLogs = [],
         isLoading: line1DtvInspectionTopTenLogsLoading,
-    } = useGetline1DtvInspectionTopTenLogsQuery(null, {
+    } = useGetLine1DtvInspectionTopTenLogsQuery(null, {
         pollingInterval: 5000,
     });
     const [alert, setAlert] = useState();
@@ -432,6 +535,11 @@ export const DTVInspection = () => {
         setAlert({ comp: "image", bool: true });
     };
 
+    useEffect(() => {
+        _setSearchParams(searchParams, { replace: true });
+    }, [searchParams]);
+    const [ngRate, setNgRate] = useState(0);
+
     return (
         <>
             {alert && <OpenAlert alert={alert} setAlert={setAlert} />}
@@ -440,12 +548,28 @@ export const DTVInspection = () => {
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
-                        <Link to={`${config.pathPrefix}dashboard`} className="font-semibold text-sm">Dashboard</Link>
+                        <Link
+                            to={`${config.pathPrefix}dashboard`}
+                            className="font-semibold text-sm"
+                        >
+                            Dashboard
+                        </Link>
                         <span className="text-sm">/</span>
-                        <Link to={`${config.pathPrefix}lines/line-1`} className="font-semibold text-sm">Line 1</Link>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1`}
+                            className="font-semibold text-sm"
+                        >
+                            Line 1
+                        </Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
                             DTV INSPECTION
+                        </span>
+                    </div>
+                    <div className="text-lg font-semibold text-black">
+                        MODEL RUNNING :{" "}
+                        <span className="rounded px-4 py-2 border">
+                            {line1DtvInspectionTopTenLogs?.[0]?.model}
                         </span>
                     </div>
                 </div>
@@ -453,12 +577,18 @@ export const DTVInspection = () => {
                     <Card>
                         <div className="flex flex-col flex-1 gap-1">
                             <div className="flex items-center justify-between">
-                                <span className="font-bold text-lg">DtvInspection</span>
+                                <span className="font-bold text-lg">
+                                    DtvInspection
+                                </span>
                                 <div className="flex items-center gap-2">
                                     <div
-                                        onClick={() => setFrequent("hourly")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "hourly",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "hourly"
+                                            searchParams.frequent == "hourly"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -468,9 +598,13 @@ export const DTVInspection = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("daily")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "daily",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "daily"
+                                            searchParams.frequent == "daily"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -480,9 +614,13 @@ export const DTVInspection = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("monthly")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "monthly",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "monthly"
+                                            searchParams.frequent == "monthly"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -492,9 +630,13 @@ export const DTVInspection = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("annually")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "annually",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "annually"
+                                            searchParams.frequent == "annually"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -530,25 +672,21 @@ export const DTVInspection = () => {
                                         </Switch>
                                         <span>PPM</span>
                                     </div>
-                                    <button
-                                        disabled
-                                        onClick={() =>
-                                            setAlert({
-                                                bool: true,
-                                                comp: "excel",
-                                            })
-                                        }
-                                        className="flex gap-1 cursor-pointer items-center border-[1px] p-1 rounded-sm"
-                                    >
-                                        <HiOutlineDocumentAdd />
-                                        <span className="text-[11px] font-semibold">
-                                            Export Excel
-                                        </span>
-                                    </button>
+                                    <div className="rounded border px-2 py-1 min-w-[98px] flex justify-center items-center">
+                                        <div className="text-xl font-semibold">
+                                            {ngRate}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div className="w-full h-full">
-                                <DtvInspectionChart frequent={frequent} ppmOn={ppmOn} />
+                                <DtvInspectionChart
+                                    ppmOn={ppmOn}
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
+                                    ngRate={ngRate}
+                                    setNgRate={setNgRate}
+                                />
                             </div>
                         </div>
                     </Card>
@@ -556,7 +694,9 @@ export const DTVInspection = () => {
                 <div className="grid grid-cols-5 gap-4">
                     <div className="col-span-3 flex gap-4 flex-col">
                         <div className="grid grid-cols-2 gap-4">
-                            <Link to={`log?judgement=ok`}>
+                            <Link
+                                to={`log?judgement=ok&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                            >
                                 <Card
                                     className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
                                 >
@@ -564,11 +704,13 @@ export const DTVInspection = () => {
                                         Quantity OK
                                     </span>
                                     <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1DtvInspectionOkCount || 0}
+                                        {line1DtvInspectionCount.ok || 0}
                                     </span>
                                 </Card>
                             </Link>
-                            <Link to={`log?judgement=ng`}>
+                            <Link
+                                to={`log?judgement=ng&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                            >
                                 <Card
                                     className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
                                 >
@@ -576,7 +718,7 @@ export const DTVInspection = () => {
                                         Quantity NG
                                     </span>
                                     <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1DtvInspectionNgCount || 0}
+                                        {line1DtvInspectionCount.ng || 0}
                                     </span>
                                 </Card>
                             </Link>
@@ -638,46 +780,48 @@ export const DTVInspection = () => {
                                     </Table.Tr>
                                 </Table.Thead>
                                 <tbody>
-                                    {line1DtvInspectionTopTenLogs.map((item, i) => (
-                                        <Table.Tr
-                                            key={i}
-                                            className={`even:bg-[#F0F1F3]`}
-                                        >
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.model || "-"}
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.sn || "-"}
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                <span
-                                                    className={`px-3 py-1 rounded-full text-xs ${
-                                                        item.ok
-                                                            ? "bg-[#B6E9D1] text-[#084D2D]"
-                                                            : "bg-[#FAC5C1] text-[#F04438]"
-                                                    }`}
-                                                >
-                                                    {item.ok ? "OK" : "NO"}
-                                                </span>
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.ng_cause || "-"}
-                                            </Table.Td>
-                                            <Table.Td className="whitespace-nowrap py-1">
-                                                <span
-                                                    className="cursor-pointer underline text-[#2064AD]"
-                                                    onClick={(e) =>
-                                                        viewImage(
-                                                            e,
-                                                            item.image_local_path
-                                                        )
-                                                    }
-                                                >
-                                                    view image
-                                                </span>
-                                            </Table.Td>
-                                        </Table.Tr>
-                                    ))}
+                                    {line1DtvInspectionTopTenLogs.map(
+                                        (item, i) => (
+                                            <Table.Tr
+                                                key={i}
+                                                className={`even:bg-[#F0F1F3]`}
+                                            >
+                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                    {item.model || "-"}
+                                                </Table.Td>
+                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                    {item.sn || "-"}
+                                                </Table.Td>
+                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                    <span
+                                                        className={`px-3 py-1 rounded-full text-xs ${
+                                                            item.ok
+                                                                ? "bg-[#B6E9D1] text-[#084D2D]"
+                                                                : "bg-[#FAC5C1] text-[#F04438]"
+                                                        }`}
+                                                    >
+                                                        {item.ok ? "OK" : "NO"}
+                                                    </span>
+                                                </Table.Td>
+                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                    {item.ng_cause || "-"}
+                                                </Table.Td>
+                                                <Table.Td className="whitespace-nowrap py-1">
+                                                    <span
+                                                        className="cursor-pointer underline text-[#2064AD]"
+                                                        onClick={(e) =>
+                                                            viewImage(
+                                                                e,
+                                                                item.image_local_path
+                                                            )
+                                                        }
+                                                    >
+                                                        view image
+                                                    </span>
+                                                </Table.Td>
+                                            </Table.Tr>
+                                        )
+                                    )}
                                 </tbody>
                             </Table>
                         </div>
@@ -685,7 +829,9 @@ export const DTVInspection = () => {
                     <div className="col-span-2 flex flex-col gap-4 px-6 py-7 border rounded-xl">
                         <div className="flex justify-between items-center pb-1">
                             <span className="font-bold text-lg">
-                                Manual NG Cause
+                                {manualNgOn
+                                    ? "Manual NG Cause"
+                                    : "Trending NG Cause"}
                             </span>
                             <div className="flex gap-4">
                                 <div className="flex items-center gap-2 text-[#2E3032] text-sm">
@@ -710,7 +856,7 @@ export const DTVInspection = () => {
                                             } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                                         />
                                     </Switch>
-                                    <span>Inactive</span>
+                                    <span>Manual NG</span>
                                 </div>
                                 <button
                                     disabled={!manualNgOn}
@@ -731,9 +877,15 @@ export const DTVInspection = () => {
                         </div>
                         <div className="flex">
                             {manualNgOn ? (
-                                <TopManualNgTable />
+                                <TopManualNgTable
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
+                                />
                             ) : (
-                                <TopAutoNgTable />
+                                <TopAutoNgTable
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
+                                />
                             )}
                         </div>
                     </div>

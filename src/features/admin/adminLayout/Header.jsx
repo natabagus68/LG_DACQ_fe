@@ -13,7 +13,7 @@ export const Header = () => {
     const dispatch = useDispatch();
     const { data: auth, isLoading, isError } = useGetAuthenticatedUserQuery();
     useEffect(() => {
-        console.log(auth)
+        // console.log(auth)
     }, [auth])
 
     if (isLoading) return <Loader />;

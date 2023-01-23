@@ -20,25 +20,15 @@ export const onepoleTwopoleService = apiSlice.injectEndpoints({
             }),
             transformResponse: (res) => res?.data || [],
         }),
-        getLine1OnepoleTwopoleNgCount: builder.query({
+        getLine1OnepoleTwopoleCounter: builder.query({
             query: (query) => ({
-                url: `process/line-1/onepole-twopole/auto-ng-causes/quantity-ng?${Object.keys(
+                url: `process/line-1/onepole-twopole/auto-ng-causes/quantity?${Object.keys(
                     query
                 )
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyNg || 0,
-        }),
-        getLine1OnepoleTwopoleOkCount: builder.query({
-            query: (query) => ({
-                url: `process/line-1/onepole-twopole/auto-ng-causes/quantity-ok?${Object.keys(
-                    query
-                )
-                    .map((item) => `${item}=${query[item]}`)
-                    .join("&")}`,
-            }),
-            transformResponse: (res) => res?.data?.qtyOk || 0,
+            transformResponse: (res) => res?.data || {},
         }),
         getLine1OnepoleTwopoleTopTenLogs: builder.query({
             query: () => ({
@@ -47,18 +37,14 @@ export const onepoleTwopoleService = apiSlice.injectEndpoints({
             transformResponse: (res) => res?.data || [],
         }),
         getLine1Top5NgCause: builder.query({
-            query: () => ({
-                url: "process/line-1/onepole-twopole/auto-ng-causes/top5",
+            query: (params) => ({
+                url: `process/line-1/onepole-twopole/auto-ng-causes/top5?${Object.keys(
+                    params
+                )
+                    .map((item) => `${item}=${params[item]}`)
+                    .join("&")}`,
             }),
             transformResponse: (res) => res?.data || [],
-        }),
-        line1OnepoleTwopoleUpdateManualNg: builder.mutation({
-            query: (description) => ({
-                url: "process/line-1/onepole-twopole/manual-ng-cause",
-                method: "POST",
-                body: { description },
-            }),
-            invalidatesTags: ["Manual Ng Cause"],
         }),
         line1OnepoleTwopoleTopManualNg: builder.query({
             query: () => ({
@@ -77,6 +63,21 @@ export const onepoleTwopoleService = apiSlice.injectEndpoints({
             }),
             transformResponse: (res) => res?.data || [],
         }),
+        line1OnepoleTwopoleUpdateManualNg: builder.mutation({
+            query: (description) => ({
+                url: "process/line-1/onepole-twopole/manual-ng-cause",
+                method: "POST",
+                body: { description },
+            }),
+            invalidatesTags: ["Manual Ng Cause"],
+        }),
+        line1OnepoleTwopoleDestroy: builder.mutation({
+            query: (id) => ({
+                url: `process/line-1/asis/auto-ng-cause/${id}`,
+                method: "delete",
+            }),
+            invalidatesTags: ["Line 1 OnepoleTwopole Logs"],
+        }),
     }),
 });
 
@@ -84,11 +85,11 @@ export const {
     useGetLine1NgRatioOnepoleTwopoleQuery,
     useGetLine1OnepoleTwopoleProcessChartQuery,
     useGetLine1OnepoleTwopoleChartLastWeekQuery,
-    useGetLine1OnepoleTwopoleNgCountQuery,
-    useGetLine1OnepoleTwopoleOkCountQuery,
+    useGetLine1OnepoleTwopoleCounterQuery,
     useGetLine1OnepoleTwopoleTopTenLogsQuery,
     useGetLine1Top5NgCauseQuery,
-    useLine1OnepoleTwopoleUpdateManualNgMutation,
     useLine1OnepoleTwopoleTopManualNgQuery,
     useLine1OnepoleTwopoleLogsQuery,
+    useLine1OnepoleTwopoleUpdateManualNgMutation,
+    useLine1OnepoleTwopoleDestroyMutation,
 } = onepoleTwopoleService;

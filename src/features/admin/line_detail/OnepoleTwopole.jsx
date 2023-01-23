@@ -1,24 +1,47 @@
+import React, { useEffect, useMemo, useRef } from "react";
+import {
+    HomeIcon,
+    ManualNgIcon,
+    NgCauseIcon,
+} from "../../../common/components/icons";
+import { Card } from "../../../common/components/Card";
+import {
+    HiOutlineDocumentAdd,
+    HiOutlinePlusSm,
+    HiOutlineChevronRight,
+    HiOutlineDownload,
+    HiX,
+} from "react-icons/hi";
+import { Link, useSearchParams } from "react-router-dom";
+import { ChartLine } from "../../../common/components/ChartLine";
+import { Alert } from "../../../common/components/Alert";
+import { Table } from "../../../common/components/table/Table";
+import { useState } from "react";
+import {
+    useGetLine1OnepoleTwopoleProcessChartQuery,
+    useGetLine1OnepoleTwopoleTopTenLogsQuery,
+    useLine1OnepoleTwopoleTopManualNgQuery,
+    useLine1OnepoleTwopoleUpdateManualNgMutation,
+    useGetLine1OnepoleTwopoleCounterQuery,
+} from "../../../app/services/onepoleTwopoleService";
+import { Switch } from "@headlessui/react";
+import { useDispatch, useSelector } from "react-redux";
+import { config } from "../../../common/utils";
+import moment from "moment/moment";
+import { getElementAtEvent } from "react-chartjs-2";
 
-import React, { useEffect, useMemo } from 'react';
-import { HomeIcon, ManualNgIcon, NgCauseIcon } from '../../../common/components/icons';
-import { Card } from '../../../common/components/Card';
-import { HiOutlineDocumentAdd, HiOutlinePlusSm, HiOutlineChevronRight, HiOutlineDownload, HiOutlineCalendar, HiTrendingDown, HiX } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
-import { ChartLine } from '../../../common/components/ChartLine';
-import { Alert } from '../../../common/components/Alert';
-import { Table } from '../../../common/components/table/Table';
-import { useState } from 'react';
-import { useGetLine1OnepoleTwopoleNgCountQuery, useGetLine1OnepoleTwopoleOkCountQuery, useGetLine1OnepoleTwopoleProcessChartQuery, useGetLine1OnepoleTwopoleTopTenLogsQuery, useGetLine1Top5NgCauseQuery, useLine1OnepoleTwopoleTopManualNgQuery, useLine1OnepoleTwopoleUpdateManualNgMutation } from '../../../app/services/onepoleTwopoleService';
-import { Switch } from '@headlessui/react';
-import { useDispatch, useSelector } from 'react-redux';
-import { config } from '../../../common/utils';
-import moment from 'moment/moment';
-
-const OnepoleTwopoleChart = ({ frequent, ppmOn }) => {
+const OnepoleTwopoleChart = ({
+    searchParams,
+    setSearchParams,
+    ppmOn,
+    ngRate,
+    setNgRate,
+}) => {
+    const chartRef = useRef();
     const {
         data: line1OnepoleTwopoleProcessChart = [],
         isLoading: line1OnepoleTwopoleProcessChartLoading,
-    } = useGetLine1OnepoleTwopoleProcessChartQuery(frequent, {
+    } = useGetLine1OnepoleTwopoleProcessChartQuery(searchParams.frequent, {
         pollingInterval: 5000,
     });
     const data = useMemo(() => {
@@ -31,17 +54,115 @@ const OnepoleTwopoleChart = ({ frequent, ppmOn }) => {
             ),
         };
     }, [line1OnepoleTwopoleProcessChart, ppmOn]);
+    const dispatch = useDispatch();
+    const [selectedChart, setSelectedChart] = useState(false);
+    useEffect(() => {
+        setNgRate(
+            parseFloat(
+                data?.datas[
+                    selectedChart == false
+                        ? data?.datas?.length - 1
+                        : selectedChart
+                ]
+            ).toFixed(2)
+        );
+    }, [data, selectedChart]);
     return (
         <ChartLine
             datas={data.datas}
             labels={data.labels}
             height="100%"
             width="100%"
+            ref={chartRef}
+            onClick={(event) => {
+                const [lineEl] = getElementAtEvent(chartRef.current, event);
+                setSelectedChart(lineEl.index);
+                if (lineEl) {
+                    let from_date = moment(
+                        line1OnepoleTwopoleProcessChart?.[lineEl.index]?.x,
+                        "hh-mm"
+                    )
+                        .add(-1, "hour")
+                        .startOf("hour")
+                        .utc();
+                    let to_date = moment(
+                        line1OnepoleTwopoleProcessChart?.[lineEl.index]?.x,
+                        "hh-mm"
+                    )
+                        .add(-1, "hour")
+                        .endOf("hour")
+                        .utc();
+                    switch (searchParams.frequent) {
+                        case "daily":
+                            from_date = moment(
+                                line1OnepoleTwopoleProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "DD-MMM"
+                            )
+                                .startOf("day")
+                                .utc();
+                            to_date = moment(
+                                line1OnepoleTwopoleProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "DD-MMM"
+                            )
+                                .endOf("day")
+                                .utc();
+                            break;
+                        case "monthly":
+                            from_date = moment(
+                                line1OnepoleTwopoleProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "MMM"
+                            )
+                                .startOf("month")
+                                .utc();
+                            to_date = moment(
+                                line1OnepoleTwopoleProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "MMM"
+                            )
+                                .endOf("month")
+                                .utc();
+                            break;
+                        case "annually":
+                            from_date = moment(
+                                line1OnepoleTwopoleProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "YYYY"
+                            )
+                                .startOf("year")
+                                .utc();
+                            to_date = moment(
+                                line1OnepoleTwopoleProcessChart?.[lineEl.index]
+                                    ?.x,
+                                "YYYY"
+                            )
+                                .endOf("year")
+                                .utc();
+                            break;
+                        default:
+                            break;
+                    }
+                    setSearchParams((searchParams) => ({
+                        ...searchParams,
+                        from_date: from_date.format(),
+                        to_date: to_date.format(),
+                    }));
+                }
+            }}
         />
     );
 };
 
 const CompExcel = ({ setAlert }) => {
+    const [params, setParams] = useState({
+        frequent: "hourly",
+        date: null,
+        start_time: null,
+        end_time: null,
+        isCustom: false,
+    });
     return (
         <div className="w-[432px] flex flex-col gap-2">
             <div className="flex gap-4 items-center">
@@ -54,16 +175,55 @@ const CompExcel = ({ setAlert }) => {
             </div>
             <span className="font-medium text-[16px]">Select Time </span>
             <div className="flex justify-between">
-                <div className="h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]">
+                <div
+                    onClick={(e) =>
+                        setParams((param) => ({ ...param, frequent: "hourly" }))
+                    }
+                    className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
+                        params.searchParams.frequent == "hourly"
+                            ? "border border-blue-500"
+                            : ""
+                    }`}
+                >
                     Hourly
                 </div>
-                <div className="h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]">
+                <div
+                    onClick={(e) =>
+                        setParams((param) => ({ ...param, frequent: "daily" }))
+                    }
+                    className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
+                        params.searchParams.frequent == "daily"
+                            ? "border border-blue-500"
+                            : ""
+                    }`}
+                >
                     Daily
                 </div>
-                <div className="h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]">
+                <div
+                    onClick={(e) =>
+                        setParams((param) => ({
+                            ...param,
+                            frequent: "monthly",
+                        }))
+                    }
+                    className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
+                        params.searchParams.frequent == "monthly"
+                            ? "border border-blue-500"
+                            : ""
+                    }`}
+                >
                     Monthly
                 </div>
-                <div className="h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A]">
+                <div
+                    onClick={(e) =>
+                        setParams((param) => ({ ...param, frequent: "annual" }))
+                    }
+                    className={`h-[40px] w-[100px] border-[1px] flex items-center justify-center text-[14px] text-[#2D2A2A] cursor-pointer hover:shadow rounded-lg ${
+                        params.searchParams.frequent == "annual"
+                            ? "border border-blue-500"
+                            : ""
+                    }`}
+                >
                     Annual
                 </div>
             </div>
@@ -73,30 +233,65 @@ const CompExcel = ({ setAlert }) => {
                     <span className="text-xs">Latest</span>
                 </div>
                 <div className="flex gap-2">
-                    <input type={"radio"} name="date" />
-                    <span className="text-xs">Custom</span>
+                    <input
+                        type={"radio"}
+                        id="input_is_custom"
+                        name="is_custom"
+                        value={true}
+                        checked={params.isCustom}
+                        onChange={(e) =>
+                            e.target.checked
+                                ? setParams((param) => ({
+                                      ...param,
+                                      isCustom: true,
+                                  }))
+                                : true
+                        }
+                    />
+                    <label htmlFor="input_is_custom" className="text-xs">
+                        Custom
+                    </label>
                 </div>
             </div>
             <div className="flex flex-col">
                 <input
                     type={"date"}
-                    className="flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]"
+                    disabled={!params.isCustom}
+                    value={params.date}
+                    onChange={(e) =>
+                        setParams((param) => ({
+                            ...param,
+                            date: e.target.value,
+                        }))
+                    }
+                    className="flex-1 border-[1px] p-2 rounded-sm outline-none disabled:text-[#DADBDB]"
                 />
             </div>
             <div className="flex gap-2">
-                <select
-                    name="time"
-                    className="flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]"
-                >
-                    <option value="1">10:00PM</option>
-                </select>
-                <select
-                    name="time"
-                    className="flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]"
-                >
-                    <option value="1">10:00AM</option>
-                    <option value="1">10:00AM</option>
-                </select>
+                <input
+                    type="time"
+                    disabled={!params.isCustom}
+                    value={params.start_time}
+                    onChange={(e) =>
+                        setParams((param) => ({
+                            ...param,
+                            start_time: e.target.value,
+                        }))
+                    }
+                    className="flex-1 border-[1px] p-2 rounded-sm outline-none disabled:text-[#DADBDB]"
+                />
+                <input
+                    type="time"
+                    disabled={!params.isCustom}
+                    value={params.end_time}
+                    onChange={(e) =>
+                        setParams((param) => ({
+                            ...param,
+                            end_time: e.target.value,
+                        }))
+                    }
+                    className="flex-1 border-[1px] p-2 rounded-sm outline-none disabled:text-[#DADBDB]"
+                />
             </div>
             <div className="flex gap-2">
                 <div
@@ -201,64 +396,16 @@ export const OpenAlert = ({ alert, setAlert }) => {
     );
 };
 
-const TopAutoNgTable = () => {
-    const {
-        data: line1OnepoleTwopoleTop5NgCause = [],
-        isLoading: line1OnepoleTwopoleTop5NgCauseLoading,
-    } = useGetLine1Top5NgCauseQuery(null, {
-        pollingInterval: 5000,
-    });
-    return (
-        <Table>
-            <Table.Thead>
-                <Table.Tr>
-                    <Table.Th
-                        className={`bg-[#E2F1FF] py-2 text-sm`}
-                        order={false}
-                    >
-                        Model
-                    </Table.Th>
-                    <Table.Th
-                        className={`bg-[#E2F1FF] py-2 text-sm`}
-                        order={false}
-                    >
-                        NG Cause
-                    </Table.Th>
-                    <Table.Th
-                        className={`bg-[#E2F1FF] py-2 text-sm`}
-                        order={false}
-                    >
-                        Timestamp
-                    </Table.Th>
-                </Table.Tr>
-            </Table.Thead>
-            <tbody>
-                {line1OnepoleTwopoleTop5NgCauseLoading && (
-                    <>
-                        <div className="flex flex-1 bg-red-300"></div>
-                    </>
-                )}
-                {line1OnepoleTwopoleTop5NgCause.map((item, i) => (
-                    <Table.Tr key={i}>
-                        <Table.Td className="whitespace-nowrap py-2 text-sm">
-                            {item.model || "-"}
-                        </Table.Td>
-                        <Table.Td className="whitespace-nowrap py-2 text-sm">
-                            {item.ng_cause || "-"}
-                        </Table.Td>
-                        <Table.Td className="whitespace-nowrap py-2 text-sm">
-                            {item.logged_at || "-"}
-                        </Table.Td>
-                    </Table.Tr>
-                ))}
-            </tbody>
-        </Table>
-    );
-};
-
 const TopManualNgTable = () => {
-    const { data: topManualNg, isLoading: topManualNgLoading } =
-        useLine1OnepoleTwopoleTopManualNgQuery();
+    const {
+        data: topManualNg,
+        isLoading: topManualNgLoading,
+        isError: topManualNgIsError,
+        errors: topManualNgErrors,
+    } = useLine1OnepoleTwopoleTopManualNgQuery();
+    useEffect(() => {
+        console.log({ topManualNg, topManualNgIsError, topManualNgErrors });
+    }, [topManualNg, topManualNgIsError]);
     if (topManualNgLoading) {
         return (
             <>
@@ -269,7 +416,7 @@ const TopManualNgTable = () => {
     return (
         <>
             <div className="flex flex-col gap-4">
-                {topManualNg.map((item, i) => (
+                {topManualNg?.map((item, i) => (
                     <div key={i} className="flex items-center gap-2">
                         <ManualNgIcon />
                         <span>{item.description}</span>
@@ -281,28 +428,27 @@ const TopManualNgTable = () => {
 };
 
 export const OnepoleTwopole = () => {
-    const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
-    const [manualNgOn, setManualNgOn] = useState(false);
+    const [_searchParams, _setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useState({
+        ...(_searchParams.get("frequent")
+            ? { frequent: _searchParams.get("frequent") }
+            : { frequent: "hourly" }),
+        ...(_searchParams.get("from_date")
+            ? { from_date: _searchParams.get("from_date") }
+            : {}),
+        ...(_searchParams.get("to_date")
+            ? { to_date: _searchParams.get("to_date") }
+            : {}),
+    });
+
     const [frequent, setFrequent] = useState("hourly");
     const {
-        data: line1OnepoleTwopoleOkCount,
-        isLoading: line1OnepoleTwopoleOkCountLoading,
-    } = useGetLine1OnepoleTwopoleOkCountQuery(
-        { frequent },
-        {
-            pollingInterval: 5000,
-        }
-    );
-    const {
-        data: line1OnepoleTwopoleNgCount,
-        isLoading: line1OnepoleTwopoleNgCountLoading,
-    } = useGetLine1OnepoleTwopoleNgCountQuery(
-        { frequent },
-        {
-            pollingInterval: 5000,
-        }
-    );
+        data: line1OnepoleTwopoleCounter = {},
+        isLoading: line1OnepoleTwopoleCounterLoading,
+    } = useGetLine1OnepoleTwopoleCounterQuery(searchParams, {
+        pollingInterval: 5000,
+    });
     const {
         data: line1OnepoleTwopoleTopTenLogs = [],
         isLoading: line1OnepoleTwopoleTopTenLogsLoading,
@@ -310,11 +456,11 @@ export const OnepoleTwopole = () => {
         pollingInterval: 5000,
     });
     const [alert, setAlert] = useState();
-    const viewImage = (e, image) => {
-        e.preventDefault();
-        // dispatch(line1OnepoleTwopoleSetSelectedLogImage(image));
-        setAlert({ comp: "image", bool: true });
-    };
+
+    useEffect(() => {
+        _setSearchParams(searchParams, { replace: true });
+    }, [searchParams]);
+    const [ngRate, setNgRate] = useState(0);
 
     return (
         <>
@@ -324,12 +470,28 @@ export const OnepoleTwopole = () => {
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
-                        <Link to={`${config.pathPrefix}dashboard`} className="font-semibold text-sm">Dashboard</Link>
+                        <Link
+                            to={`${config.pathPrefix}dashboard`}
+                            className="font-semibold text-sm"
+                        >
+                            Dashboard
+                        </Link>
                         <span className="text-sm">/</span>
-                        <Link to={`${config.pathPrefix}lines/line-1`} className="font-semibold text-sm">Line 1</Link>
+                        <Link
+                            to={`${config.pathPrefix}lines/line-1`}
+                            className="font-semibold text-sm"
+                        >
+                            Line 1
+                        </Link>
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
                             One Pole Two Pole
+                        </span>
+                    </div>
+                    <div className="text-lg font-semibold text-black">
+                        SN RUNNING :{" "}
+                        <span className="rounded px-4 py-2 border">
+                            {line1OnepoleTwopoleTopTenLogs?.[0]?.sn}
                         </span>
                     </div>
                 </div>
@@ -342,9 +504,13 @@ export const OnepoleTwopole = () => {
                                 </span>
                                 <div className="flex items-center gap-2">
                                     <div
-                                        onClick={() => setFrequent("hourly")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "hourly",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "hourly"
+                                            searchParams.frequent == "hourly"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -354,9 +520,13 @@ export const OnepoleTwopole = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("daily")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "daily",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "daily"
+                                            searchParams.frequent == "daily"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -366,9 +536,13 @@ export const OnepoleTwopole = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("monthly")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "monthly",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "monthly"
+                                            searchParams.frequent == "monthly"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -378,9 +552,13 @@ export const OnepoleTwopole = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("annually")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "annually",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "annually"
+                                            searchParams.frequent == "annually"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -435,8 +613,11 @@ export const OnepoleTwopole = () => {
                             </div>
                             <div className="w-full h-full">
                                 <OnepoleTwopoleChart
-                                    frequent={frequent}
                                     ppmOn={ppmOn}
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
+                                    ngRate={ngRate}
+                                    setNgRate={setNgRate}
                                 />
                             </div>
                         </div>
@@ -445,22 +626,30 @@ export const OnepoleTwopole = () => {
                 <div className="grid grid-cols-5 gap-4">
                     <div className="col-span-3 flex gap-4 flex-col">
                         <div className="grid grid-cols-4 gap-4">
-                            <Card className={`py-[21px] px-[10px]`}>
-                                <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
-                                    Quantity OK
-                                </span>
-                                <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                    {line1OnepoleTwopoleOkCount || 0}
-                                </span>
-                            </Card>
-                            <Card className={`py-[21px] px-[10px]`}>
-                                <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
-                                    Quantity NG
-                                </span>
-                                <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                    {line1OnepoleTwopoleNgCount || 0}
-                                </span>
-                            </Card>
+                            <Link
+                                to={`log?judgement=ok&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                            >
+                                <Card className={`py-[21px] px-[10px] hover:shadow transition`}>
+                                    <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
+                                        Quantity OK
+                                    </span>
+                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                        {line1OnepoleTwopoleCounter.ok || 0}
+                                    </span>
+                                </Card>
+                            </Link>
+                            <Link
+                                to={`log?judgement=ng&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                            >
+                                <Card className={`py-[21px] px-[10px] hover:shadow transition`}>
+                                    <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
+                                        Quantity NG
+                                    </span>
+                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                        {line1OnepoleTwopoleCounter.ng || 0}
+                                    </span>
+                                </Card>
+                            </Link>
                             {/* <Card>
                                 <span className='bg-[#FEF4E6] h-[32px] rounded-xl flex items-center justify-center text-[#F59F00] text-sm'>Quantity NDF</span>
                                 <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>65</span>
