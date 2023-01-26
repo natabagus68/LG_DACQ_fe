@@ -26,25 +26,15 @@ export const optionAutoService = apiSlice.injectEndpoints({
             }),
             transformResponse: (res) => res?.data?.[0] || {},
         }),
-        getLine1OptionAutoNgCount: builder.query({
-            query: (query) => ({
-                url: `process/line-1/option-auto/auto-ng-causes/quantity-ng?${Object.keys(
+        getLine1OptionAutoCount: builder.query({
+            query: (query = {}) => ({
+                url: `process/line-1/option-auto/auto-ng-causes/quantity?${Object.keys(
                     query
                 )
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyNg || 0,
-        }),
-        getLine1OptionAutoOkCount: builder.query({
-            query: (query) => ({
-                url: `process/line-1/option-auto/auto-ng-causes/quantity-ok?${Object.keys(
-                    query
-                )
-                    .map((item) => `${item}=${query[item]}`)
-                    .join("&")}`,
-            }),
-            transformResponse: (res) => res?.data?.qtyOk || 0,
+            transformResponse: (res) => res?.data || {},
         }),
         getLine1OptionAutoTopTenLogs: builder.query({
             query: () => ({
@@ -53,8 +43,12 @@ export const optionAutoService = apiSlice.injectEndpoints({
             transformResponse: (res) => res?.data || [],
         }),
         getLine1OptionAutoTop5NgCause: builder.query({
-            query: () => ({
-                url: "process/line-1/option-auto/auto-ng-causes/top5",
+            query: (params = {}) => ({
+                url: `process/line-1/option-auto/auto-ng-causes/top5?${Object.keys(
+                    params
+                )
+                    .map((item) => `${item}=${params[item]}`)
+                    .join("&")}`,
             }),
             transformResponse: (res) => res?.data || [],
         }),
@@ -81,7 +75,8 @@ export const optionAutoService = apiSlice.injectEndpoints({
                     .map((item, i) => `${item}=${data[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data || [],
+            invalidatesTags: ["Line 1 Option Auto Logs"],
+            transformResponse: (res) => res?.data || { total: 0, data: [] },
         }),
         line1OptionAutoSync: builder.mutation({
             query: (data) => {
@@ -91,6 +86,13 @@ export const optionAutoService = apiSlice.injectEndpoints({
                 };
             },
         }),
+        line1OptionAutoDestroy: builder.mutation({
+            query: (id) => ({
+                url: `process/line-1/asis/auto-ng-cause/${id}`,
+                method: "delete",
+            }),
+            invalidatesTags: ["Line 1 Option Auto Logs"],
+        }),
     }),
 });
 
@@ -99,12 +101,12 @@ export const {
     useGetLine1OptionAutoProcessChartQuery,
     useGetLine1OptionAutoChartLastWeekQuery,
     useGetLine1OptionAutoTopNgCauseQuery,
-    useGetLine1OptionAutoNgCountQuery,
-    useGetLine1OptionAutoOkCountQuery,
+    useGetLine1OptionAutoCountQuery,
     useGetLine1OptionAutoTopTenLogsQuery,
     useGetLine1OptionAutoTop5NgCauseQuery,
     useLine1OptionAutoUpdateManualNgMutation,
     useLine1OptionAutoTopManualNgQuery,
     useLine1OptionAutoLogsQuery,
     useLine1OptionAutoSyncMutation,
+    useLine1OptionAutoDestroyMutation,
 } = optionAutoService;

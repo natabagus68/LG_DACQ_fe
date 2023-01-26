@@ -348,13 +348,29 @@ export const Asis = () => {
                                             </Table.Td>
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
                                                 <span
-                                                    className={`px-3 py-1 rounded-full text-xs ${
-                                                        item.ok
-                                                            ? "bg-[#B6E9D1] text-[#084D2D]"
-                                                            : "bg-[#FAC5C1] text-[#F04438]"
+                                                    className={`px-3 py-1 rounded-full text-xs uppercase 
+                                                    ${
+                                                        item?.judgement ==
+                                                            "ok" &&
+                                                        "text-[#12B76A] bg-[#B6E9D1]"
+                                                    }
+                                                    ${
+                                                        item?.judgement ==
+                                                            "ng" &&
+                                                        "text-[#F04438] bg-[#FAC5C1]"
+                                                    }
+                                                    ${
+                                                        item?.judgement ==
+                                                            "int" &&
+                                                        "text-[#F59F00] bg-[#FEF4E6]"
+                                                    }
+                                                    ${
+                                                        item?.judgement ==
+                                                            "ndf" &&
+                                                        "text-[#229BD8] bg-[#E7F6FD]"
                                                     }`}
                                                 >
-                                                    {item.ok ? "OK" : "NO"}
+                                                    {item?.judgement}
                                                 </span>
                                             </Table.Td>
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
@@ -455,7 +471,6 @@ const AsisChart = ({
     ngRate,
     setNgRate,
 }) => {
-    const chartRef = useRef();
     const {
         data: line1AsisProcessChart = [],
         isLoading: line1AsisProcessChartLoading,

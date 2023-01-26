@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
     HomeIcon,
     ManualNgIcon,
@@ -14,15 +14,14 @@ import {
     HiTrendingDown,
     HiX,
 } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ChartLine } from "../../../common/components/ChartLine";
 import { Alert } from "../../../common/components/Alert";
 import ng_image from "../../../assets/ng_image.png";
 import { Table } from "../../../common/components/table/Table";
 import { useState } from "react";
 import {
-    useGetLine1OptionAutoNgCountQuery,
-    useGetLine1OptionAutoOkCountQuery,
+    useGetLine1OptionAutoCountQuery,
     useGetLine1OptionAutoProcessChartQuery,
     useGetLine1OptionAutoTopTenLogsQuery,
     useGetLine1OptionAutoTop5NgCauseQuery,
@@ -36,12 +35,21 @@ import { line1OptionAutoSetManualNg } from "./line1OptionAutoSlice";
 import { config } from "../../../common/utils";
 import { Input } from "../../../common/components/input/Input";
 import SyncIcon from "../../../common/components/icons/SyncIcon";
+import { getElementAtEvent } from "react-chartjs-2";
+import moment from "moment";
 
-const OptionAutoChart = ({ frequent, ppmOn }) => {
+const OptionAutoChart = ({
+    searchParams,
+    setSearchParams,
+    ppmOn,
+    ngRate,
+    setNgRate,
+}) => {
+    const chartRef = useRef();
     const {
         data: line1OptionAutoProcessChart = [],
         isLoading: line1OptionAutoProcessChartLoading,
-    } = useGetLine1OptionAutoProcessChartQuery(frequent, {
+    } = useGetLine1OptionAutoProcessChartQuery(searchParams.frequent, {
         pollingInterval: 5000,
     });
     const data = useMemo(() => {
@@ -52,12 +60,97 @@ const OptionAutoChart = ({ frequent, ppmOn }) => {
             ),
         };
     }, [line1OptionAutoProcessChart, ppmOn]);
+    const dispatch = useDispatch();
+    const [selectedChart, setSelectedChart] = useState(false);
+    useEffect(() => {
+        setNgRate(
+            parseFloat(
+                data?.datas[
+                    selectedChart == false
+                        ? data?.datas?.length - 1
+                        : selectedChart
+                ]
+            ).toFixed(2)
+        );
+    }, [data, selectedChart]);
     return (
         <ChartLine
             datas={data.datas}
             labels={data.labels}
             height="100%"
             width="100%"
+            ref={chartRef}
+            onClick={(event) => {
+                const [lineEl] = getElementAtEvent(chartRef.current, event);
+                setSelectedChart(lineEl.index);
+                if (lineEl) {
+                    let from_date = moment(
+                        line1OptionAutoProcessChart?.[lineEl.index]?.x,
+                        "hh-mm"
+                    )
+                        .add(-1, "hour")
+                        .startOf("hour")
+                        .utc();
+                    let to_date = moment(
+                        line1OptionAutoProcessChart?.[lineEl.index]?.x,
+                        "hh-mm"
+                    )
+                        .add(-1, "hour")
+                        .endOf("hour")
+                        .utc();
+                    switch (searchParams.frequent) {
+                        case "daily":
+                            from_date = moment(
+                                line1OptionAutoProcessChart?.[lineEl.index]?.x,
+                                "DD-MMM"
+                            )
+                                .startOf("day")
+                                .utc();
+                            to_date = moment(
+                                line1OptionAutoProcessChart?.[lineEl.index]?.x,
+                                "DD-MMM"
+                            )
+                                .endOf("day")
+                                .utc();
+                            break;
+                        case "monthly":
+                            from_date = moment(
+                                line1OptionAutoProcessChart?.[lineEl.index]?.x,
+                                "MMM"
+                            )
+                                .startOf("month")
+                                .utc();
+                            to_date = moment(
+                                line1OptionAutoProcessChart?.[lineEl.index]?.x,
+                                "MMM"
+                            )
+                                .endOf("month")
+                                .utc();
+                            break;
+                        case "annually":
+                            from_date = moment(
+                                line1OptionAutoProcessChart?.[lineEl.index]?.x,
+                                "YYYY"
+                            )
+                                .startOf("year")
+                                .utc();
+                            to_date = moment(
+                                line1OptionAutoProcessChart?.[lineEl.index]?.x,
+                                "YYYY"
+                            )
+                                .endOf("year")
+                                .utc();
+                            break;
+                        default:
+                            break;
+                    }
+                    setSearchParams((searchParams) => ({
+                        ...searchParams,
+                        from_date: from_date.format(),
+                        to_date: to_date.format(),
+                    }));
+                }
+            }}
         />
     );
 };
@@ -222,11 +315,11 @@ export const OpenAlert = ({ alert, setAlert }) => {
     );
 };
 
-const TopAutoNgTable = () => {
+const TopAutoNgTable = ({ searchParams, setSearchParams }) => {
     const {
         data: line1OptionAutoTop5NgCause = [],
         isLoading: line1OptionAutoTop5NgCauseLoading,
-    } = useGetLine1OptionAutoTop5NgCauseQuery(null, {
+    } = useGetLine1OptionAutoTop5NgCauseQuery(searchParams, {
         pollingInterval: 5000,
     });
     return (
@@ -254,11 +347,6 @@ const TopAutoNgTable = () => {
                 </Table.Tr>
             </Table.Thead>
             <tbody>
-                {line1OptionAutoTop5NgCauseLoading && (
-                    <>
-                        <div className="flex flex-1 bg-red-300"></div>
-                    </>
-                )}
                 {line1OptionAutoTop5NgCause.map((item, i) => (
                     <Table.Tr key={i}>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">
@@ -314,25 +402,25 @@ export const OptionAuto = () => {
     const setManualNgOn = (e) => {
         dispatch(line1OptionAutoSetManualNg(!manualNgOn));
     };
+    const [_searchParams, _setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useState({
+        ...(_searchParams.get("frequent")
+            ? { frequent: _searchParams.get("frequent") }
+            : { frequent: "hourly" }),
+        ...(_searchParams.get("from_date")
+            ? { from_date: _searchParams.get("from_date") }
+            : {}),
+        ...(_searchParams.get("to_date")
+            ? { to_date: _searchParams.get("to_date") }
+            : {}),
+    });
     const [frequent, setFrequent] = useState("hourly");
     const {
-        data: line1OptionAutoOkCount,
-        isLoading: line1OptionAutoOkCountLoading,
-    } = useGetLine1OptionAutoOkCountQuery(
-        { frequent },
-        {
-            pollingInterval: 5000,
-        }
-    );
-    const {
-        data: line1OptionAutoNgCount,
-        isLoading: line1OptionAutoNgCountLoading,
-    } = useGetLine1OptionAutoNgCountQuery(
-        { frequent },
-        {
-            pollingInterval: 5000,
-        }
-    );
+        data: line1OptionAutoCount = {},
+        isLoading: line1OptionAutoCountLoading,
+    } = useGetLine1OptionAutoCountQuery(searchParams, {
+        pollingInterval: 5000,
+    });
     const {
         data: line1OptionAutoTopTenLogs = [],
         isLoading: line1OptionAutoTopTenLogsLoading,
@@ -354,6 +442,12 @@ export const OptionAuto = () => {
         e.preventDefault();
         syncMutation(syncForm);
     };
+
+    useEffect(() => {
+        _setSearchParams(searchParams, { replace: true });
+    }, [searchParams]);
+    const [ngRate, setNgRate] = useState(0);
+
     return (
         <>
             {alert && <OpenAlert alert={alert} setAlert={setAlert} />}
@@ -378,6 +472,12 @@ export const OptionAuto = () => {
                         <span className="text-sm">/</span>
                         <span className="font-semibold text-sm text-[#514E4E]">
                             OPTION AUTO
+                        </span>
+                    </div>
+                    <div className="text-lg font-semibold text-black">
+                        MODEL RUNNING :{" "}
+                        <span className="rounded px-4 py-2 border">
+                            {line1OptionAutoTopTenLogs?.[0]?.model}
                         </span>
                     </div>
                 </div>
@@ -415,9 +515,13 @@ export const OptionAuto = () => {
                                 </span>
                                 <div className="flex items-center gap-2">
                                     <div
-                                        onClick={() => setFrequent("hourly")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "hourly",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "hourly"
+                                            searchParams.frequent == "hourly"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -427,9 +531,13 @@ export const OptionAuto = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("daily")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "daily",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "daily"
+                                            searchParams.frequent == "daily"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -439,9 +547,13 @@ export const OptionAuto = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("monthly")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "monthly",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "monthly"
+                                            searchParams.frequent == "monthly"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -451,9 +563,13 @@ export const OptionAuto = () => {
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() => setFrequent("annually")}
+                                        onClick={() =>
+                                            setSearchParams((params) => ({
+                                                frequent: "annually",
+                                            }))
+                                        }
                                         className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            frequent == "annually"
+                                            searchParams.frequent == "annually"
                                                 ? "text-black border-[1px]"
                                                 : "text-[#858383]"
                                         }`}
@@ -489,27 +605,20 @@ export const OptionAuto = () => {
                                         </Switch>
                                         <span>PPM</span>
                                     </div>
-                                    <button
-                                        disabled
-                                        onClick={() =>
-                                            setAlert({
-                                                bool: true,
-                                                comp: "excel",
-                                            })
-                                        }
-                                        className="flex gap-1 cursor-pointer items-center border-[1px] p-1 rounded-sm"
-                                    >
-                                        <HiOutlineDocumentAdd />
-                                        <span className="text-[11px] font-semibold">
-                                            Export Excel
-                                        </span>
-                                    </button>
+                                    <div className="rounded border px-2 py-1 min-w-[98px] flex justify-center items-center">
+                                        <div className="text-xl font-semibold">
+                                            {ngRate}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div className="w-full h-full">
                                 <OptionAutoChart
-                                    frequent={frequent}
                                     ppmOn={ppmOn}
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
+                                    ngRate={ngRate}
+                                    setNgRate={setNgRate}
                                 />
                             </div>
                         </div>
@@ -518,34 +627,35 @@ export const OptionAuto = () => {
                 <div className="grid grid-cols-5 gap-4">
                     <div className="col-span-3 flex gap-4 flex-col">
                         <div className="grid grid-cols-4 gap-4">
-                            <Link to={`log?result=OK`}>
+                            <Link
+                                to={`log?judgement=ok&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                            >
                                 <Card
-                                    className={`py-[21px] px-[10px] cursor-pointer hover:shadow-lg hover:scale-[1.05] transition`}
+                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
                                 >
                                     <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm">
                                         Quantity OK
                                     </span>
                                     <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                        {line1OptionAutoOkCount || 0}
+                                        {line1OptionAutoCount.ok || 0}
                                     </span>
                                 </Card>
                             </Link>
-                            <Card className={`py-[21px] px-[10px]`}>
-                                <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
-                                    Quantity NG
-                                </span>
-                                <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                    {line1OptionAutoNgCount || 0}
-                                </span>
-                            </Card>
-                            {/* <Card>
-                                <span className='bg-[#FEF4E6] h-[32px] rounded-xl flex items-center justify-center text-[#F59F00] text-sm'>Quantity NDF</span>
-                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>65</span>
-                            </Card>
-                            <Card>
-                                <span className='bg-[#E7F6FD] h-[32px] rounded-xl flex items-center justify-center text-[#229BD8] text-sm'>Quantity INT</span>
-                                <span className='text-[#2D2A2A] m-auto text-[40px] font-bold'>34</span>
-                            </Card> */}
+
+                            <Link
+                                to={`log?judgement=ng&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                            >
+                                <Card
+                                    className={`py-[21px] px-[10px] cursor-pointer transition hover:shadow hover:-translate-y-1`}
+                                >
+                                    <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm">
+                                        Quantity NG
+                                    </span>
+                                    <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
+                                        {line1OptionAutoCount.ng || 0}
+                                    </span>
+                                </Card>
+                            </Link>
                         </div>
                         <div className="flex gap-3 flex-col border rounded-xl py-[19px] px-[24px]">
                             <div className="flex justify-between pb-1 items-center">
@@ -634,7 +744,9 @@ export const OptionAuto = () => {
                     <div className="col-span-2 flex flex-col gap-4 px-6 py-7 border rounded-xl">
                         <div className="flex justify-between items-center pb-1">
                             <span className="font-bold text-lg">
-                                Manual NG Cause
+                                {manualNgOn
+                                    ? "Manual NG Cause"
+                                    : "Trending NG Cause"}
                             </span>
                             <div className="flex gap-4">
                                 <div className="flex items-center gap-2 text-[#2E3032] text-sm">
@@ -659,7 +771,7 @@ export const OptionAuto = () => {
                                             } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                                         />
                                     </Switch>
-                                    <span>Inactive</span>
+                                    <span>Manual NG</span>
                                 </div>
                                 <button
                                     disabled={!manualNgOn}
@@ -680,9 +792,15 @@ export const OptionAuto = () => {
                         </div>
                         <div className="flex">
                             {manualNgOn ? (
-                                <TopManualNgTable />
+                                <TopManualNgTable
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
+                                />
                             ) : (
-                                <TopAutoNgTable />
+                                <TopAutoNgTable
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
+                                />
                             )}
                         </div>
                     </div>
