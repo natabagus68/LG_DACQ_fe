@@ -54,7 +54,7 @@ export const dtvInspectionService = apiSlice.injectEndpoints({
         }),
         getLine1DtvInspectionUpdateManualNg: builder.mutation({
             query: (description) => ({
-                url: "process/line-1/dtv-inspection/manual-ng-cause",
+                url: "process/line-1/dtv-inspection-manual-ng",
                 method: "POST",
                 body: { description },
             }),
@@ -62,7 +62,7 @@ export const dtvInspectionService = apiSlice.injectEndpoints({
         }),
         line1DtvInspectionTopManualNg: builder.query({
             query: () => ({
-                url: "process/line-1/dtv-inspection/manual-ng-causes",
+                url: "process/line-1/dtv-inspection-manual-ng",
             }),
             providesTags: ["Line 1 DtvInspection Manual Ng Cause"],
             transformResponse: (res) => res?.data || [],

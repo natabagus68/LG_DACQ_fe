@@ -7,3 +7,9 @@
         font-family: Rubik, system-ui, sans-serif;
     }
 }
+
+@layer utilities {
+    .page-break-inside-avoid{
+        page-break-inside: avoid;
+    }
+}

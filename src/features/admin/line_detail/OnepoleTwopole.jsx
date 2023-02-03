@@ -37,12 +37,13 @@ const OnepoleTwopoleChart = ({
     ngRate,
     setNgRate,
 }) => {
+    const interval = useSelector((state) => state.setting.interval);
     const chartRef = useRef();
     const {
         data: line1OnepoleTwopoleProcessChart = [],
         isLoading: line1OnepoleTwopoleProcessChartLoading,
     } = useGetLine1OnepoleTwopoleProcessChartQuery(searchParams.frequent, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const data = useMemo(() => {
         return {
@@ -428,6 +429,7 @@ const TopManualNgTable = () => {
 };
 
 export const OnepoleTwopole = () => {
+    const interval = useSelector((state) => state.setting.interval);
     const [ppmOn, setPpmOn] = useState(false);
     const [_searchParams, _setSearchParams] = useSearchParams();
     const [searchParams, setSearchParams] = useState({
@@ -447,13 +449,13 @@ export const OnepoleTwopole = () => {
         data: line1OnepoleTwopoleCounter = {},
         isLoading: line1OnepoleTwopoleCounterLoading,
     } = useGetLine1OnepoleTwopoleCounterQuery(searchParams, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const {
         data: line1OnepoleTwopoleTopTenLogs = [],
         isLoading: line1OnepoleTwopoleTopTenLogsLoading,
     } = useGetLine1OnepoleTwopoleTopTenLogsQuery(null, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const [alert, setAlert] = useState();
 

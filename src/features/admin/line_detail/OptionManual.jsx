@@ -38,11 +38,12 @@ import { Input } from "../../../common/components/input/Input";
 import SyncIcon from "../../../common/components/icons/SyncIcon";
 
 const OptionManualChart = ({ frequent, ppmOn }) => {
+    const interval = useSelector((state) => state.setting.interval);
     const {
         data: line1OptionManualProcessChart = [],
         isLoading: line1OptionManualProcessChartLoading,
     } = useGetLine1OptionManualProcessChartQuery(frequent, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const data = useMemo(() => {
         return {
@@ -223,11 +224,12 @@ export const OpenAlert = ({ alert, setAlert }) => {
 };
 
 const TopOptionManualManualNgTable = () => {
+    const interval = useSelector((state) => state.setting.interval);
     const {
         data: line1OptionManualTop5NgCause = [],
         isLoading: line1OptionManualTop5NgCauseLoading,
     } = useGetLine1OptionManualTop5NgCauseQuery(null, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     return (
         <Table>
@@ -306,6 +308,7 @@ const TopManualNgTable = () => {
 };
 
 export const OptionManual = () => {
+    const interval = useSelector((state) => state.setting.interval);
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
     const manualNgOn = useSelector(
@@ -321,7 +324,7 @@ export const OptionManual = () => {
     } = useGetLine1OptionManualOkCountQuery(
         { frequent },
         {
-            pollingInterval: 5000,
+            pollingInterval: interval,
         }
     );
     const {
@@ -330,14 +333,14 @@ export const OptionManual = () => {
     } = useGetLine1OptionManualNgCountQuery(
         { frequent },
         {
-            pollingInterval: 5000,
+            pollingInterval: interval,
         }
     );
     const {
         data: line1OptionManualTopTenLogs = [],
         isLoading: line1OptionManualTopTenLogsLoading,
     } = useGetLine1OptionManualTopTenLogsQuery(null, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const [syncMutation, { isLoading: syncMutationLoading }] =
         useLine1OptionManualSyncMutation();

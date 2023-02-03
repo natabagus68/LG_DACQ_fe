@@ -7,30 +7,42 @@ import {
     SearchIcon,
     TrashIcon,
 } from "../../../common/components/icons";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useSearchParams } from "react-router-dom";
 import { config } from "../../../common/utils/config";
 import {
     useGetUsersQuery,
+    userService,
     useToogleActiveUserMutation,
 } from "../../../app/services/userService";
 import Switch from "../../../common/components/input/Switch";
+import { useState } from "react";
+import { useEffect } from "react";
+
+let timeoutDebounce = null;
+
+const debounce = (f) => {
+    if (timeoutDebounce) clearTimeout(timeoutDebounce);
+    timeoutDebounce = setTimeout(() => f(), 250);
+};
 
 export const Account = () => {
+    const [userParams, setUserParams] = useState({
+        page: 1,
+        q: "",
+        per_page: 10,
+    });
+    const [searchParams, setSearchParams] = useSearchParams();
     const {
-        data: users,
+        data: users = {},
         isLoading: usersIsLoading,
-        isError: usersIsError,
         isSuccess: usersIsSuccess,
-        errors: usersErrors,
     } = useGetUsersQuery();
-
-    const [
-        toogleActiveUser,
-        {
-            error: useToogleActiveUserMutationError,
-            isLoading: useToogleActiveUserMutationIsLoading,
-        },
-    ] = useToogleActiveUserMutation();
+    const [toogleActiveUser] = useToogleActiveUserMutation();
+    useEffect(() => {
+        debounce(() => {
+            userService.endpoints.getUsers.initiate(userParams);
+        });
+    }, [userParams]);
     return (
         <>
             <div className="flex bg-white h-full p-[26px] flex-col font-inter">
@@ -51,13 +63,13 @@ export const Account = () => {
                             </span>
                             <div className="flex gap-2">
                                 <Link
-                                    to={`${config.pathPrefix}trash-account`}
+                                    to={`${config.pathPrefix}account/trashed`}
                                     className="flex gap-1 text-white items-center px-[14px] py-[6px] bg-[#667085] h-[32px] rounded-md"
                                 >
                                     <span>Trash</span>
                                 </Link>
                                 <NavLink
-                                    to={"motor"}
+                                    to={`${config.pathPrefix}account/create`}
                                     className="flex gap-1 text-white items-center px-[14px] py-[6px] bg-[#229BD8] h-[32px] rounded-md"
                                 >
                                     <PlusIcon />
@@ -66,12 +78,23 @@ export const Account = () => {
                             </div>
                         </div>
                         <div className="py-[18px] px-[24px] flex justify-between items-center">
-                            <div className="flex gap-2">
+                            <div className="flex items-center gap-2">
                                 <span>Show</span>
-                                <input
-                                    type="number"
-                                    className="w-[62px] pl-2 outline-none border-[1px] "
-                                />
+                                <select
+                                    onChange={(e) =>
+                                        setUserParams((d) => ({
+                                            ...d,
+                                            per_page: e.target.value,
+                                        }))
+                                    }
+                                    className="rounded px-3 py-1 bg-white border"
+                                    name="show"
+                                    id="show_input"
+                                >
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="100">100</option>
+                                </select>
                                 <span>Entries</span>
                             </div>
                             <div className="flex items-center border-[1px] border-[#A9A8A8] h-[40px] rounded-[5px] gap-[10px] px-[18px]">
@@ -81,6 +104,12 @@ export const Account = () => {
                                     fill="#514E4E"
                                 />
                                 <input
+                                    onChange={(e) =>
+                                        setUserParams((p) => ({
+                                            ...p,
+                                            q: e.target.value,
+                                        }))
+                                    }
                                     type="text"
                                     className="bg-transparent outline-none w-[150px] text-[#A4A6A8] font-inter font-normal placeholder:text-[#CACBCD]"
                                     placeholder="Search..."
@@ -192,33 +221,38 @@ export const Account = () => {
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-[#646566] text-base">
-                                    Showing 1 to 10 of 57 entries
+                                    Total : {users.total}
                                 </span>
                                 <div className="flex">
-                                    <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-l-[5px] flex items-center">
+                                    <button
+                                        onClick={(e) =>
+                                            setUserParams((p) => ({
+                                                ...p,
+                                                page: p.page - 1,
+                                            }))
+                                        }
+                                        disabled={userParams.page == 1}
+                                        className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-l-[5px] flex items-center cursor-pointer hover:shadow disabled:cursor-not-allowed"
+                                    >
                                         Previous
-                                    </div>
+                                    </button>
                                     <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center bg-[#617E8C] text-white">
-                                        1
+                                        {userParams.page}
                                     </div>
-                                    <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">
-                                        2
-                                    </div>
-                                    <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">
-                                        3
-                                    </div>
-                                    <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">
-                                        4
-                                    </div>
-                                    <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">
-                                        ...
-                                    </div>
-                                    <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">
-                                        8
-                                    </div>
-                                    <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-r-[5px] flex items-center">
+                                    <button
+                                        onClick={(e) =>
+                                            setUserParams((p) => ({
+                                                ...p,
+                                                page: p.page + 1,
+                                            }))
+                                        }
+                                        disabled={
+                                            users.total > userParams.per_page
+                                        }
+                                        className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-r-[5px] flex items-center cursor-pointer hover:shadow disabled:cursor-not-allowed"
+                                    >
                                         Next
-                                    </div>
+                                    </button>
                                 </div>
                             </div>
                         </div>

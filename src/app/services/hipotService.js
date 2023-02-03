@@ -26,25 +26,15 @@ export const hipotService = apiSlice.injectEndpoints({
             }),
             transformResponse: (res) => res?.data?.[0] || {},
         }),
-        getLine1HipotNgCount: builder.query({
+        getLine1HipotCount: builder.query({
             query: (query) => ({
-                url: `process/line-1/hipot/auto-ng-causes/quantity-ng?${Object.keys(
+                url: `process/line-1/hipot/auto-ng-causes/quantity?${Object.keys(
                     query
                 )
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyNg || 0,
-        }),
-        getLine1HipotOkCount: builder.query({
-            query: (query) => ({
-                url: `process/line-1/hipot/auto-ng-causes/quantity-ok?${Object.keys(
-                    query
-                )
-                    .map((item) => `${item}=${query[item]}`)
-                    .join("&")}`,
-            }),
-            transformResponse: (res) => res?.data?.qtyOk || 0,
+            transformResponse: (res) => res?.data || {ok : 0, ng : 0},
         }),
         getLine1HipotTopTenLogs: builder.query({
             query: () => ({
@@ -53,8 +43,12 @@ export const hipotService = apiSlice.injectEndpoints({
             transformResponse: (res) => res?.data || [],
         }),
         getLine1HipotTop5NgCause: builder.query({
-            query: () => ({
-                url: "process/line-1/hipot/auto-ng-causes/top5",
+            query: (query) => ({
+                url: `process/line-1/hipot/auto-ng-causes/top5?${Object.keys(
+                    query
+                )
+                    .map((item) => `${item}=${query[item]}`)
+                    .join("&")}`,
             }),
             transformResponse: (res) => res?.data || [],
         }),
@@ -79,7 +73,8 @@ export const hipotService = apiSlice.injectEndpoints({
                     .map((item, i) => `${item}=${data[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data || [],
+            transformResponse: (res) => res?.data || { total: 0, data: [] },
+            providesTags: ["Line 1 Hipot Logs"],
         }),
         line1HipotSync: builder.mutation({
             query: (data) => {
@@ -89,6 +84,13 @@ export const hipotService = apiSlice.injectEndpoints({
                 };
             },
         }),
+        line1HipotDestroy: builder.mutation({
+            query: (id) => ({
+                url: `process/line-1/hipot/auto-ng-cause/${id}`,
+                method: "delete",
+            }),
+            invalidatesTags: ["Line 1 Hipot Logs"],
+        }),
     }),
 });
 
@@ -97,12 +99,12 @@ export const {
     useGetLine1HipotProcessChartQuery,
     useGetLine1HipotChartLastWeekQuery,
     useGetLine1HipotTopNgCauseQuery,
-    useGetLine1HipotNgCountQuery,
-    useGetLine1HipotOkCountQuery,
+    useGetLine1HipotCountQuery,
     useGetLine1HipotTopTenLogsQuery,
     useGetLine1HipotTop5NgCauseQuery,
     useLine1HipotUpdateManualNgMutation,
     useLine1HipotTopManualNgQuery,
     useLine1HipotLogsQuery,
     useLine1HipotSyncMutation,
+    useLine1HipotDestroyMutation,
 } = hipotService;

@@ -30,6 +30,8 @@ import { DTVInspection } from "../features/admin/line_detail/DTVInspection";
 import { LineLogDTVInspection } from "../features/admin/line_log/LineLogDTVInspection";
 import { AccountDetail } from "../features/admin/account/AccountDetail";
 import { TrashAccount } from "../features/admin/account/TrashAccount";
+import { Setting } from "../features/admin/setting";
+import { ExportPreview } from "../features/admin/export/export-preview";
 
 const Root = () => {
     return <Outlet />;
@@ -164,6 +166,19 @@ export default createBrowserRouter([
                 path: "dashboard/lines/detail/log",
                 element: <LineLog />,
             },
+            {
+                path: "setting",
+                element: <Setting />,
+            },
         ],
     },
+    {
+        path: config.pathPrefix,
+        children : [
+            {
+                path: "export-preview",
+                element: <ExportPreview />,
+            },
+        ]
+    }
 ]);

@@ -22,6 +22,7 @@ export const SideBar = () => {
         report: false,
         log: false,
         user: false,
+        setting: false,
     });
 
     const setActive = (e) => {
@@ -74,12 +75,7 @@ export const SideBar = () => {
                                 />
                             </NavItem>
                         </div>
-                        {/* <div onClick={() => setActive('report')}>
-                            <NavItem label={`Report`} isActive={bar.report} icon={<HiOutlineDocumentText className='text-2xl' />}>
-                                <NavItem to={`report`} label={`Production`} child={true} />
-                                <NavItem to={``} label={`Servo Motor`} child={true} />
-                            </NavItem>
-                        </div> */}
+
                         {/* <div onClick={() => setActive("user")}>
                             <NavItem
                                 label={`User`}
@@ -97,14 +93,15 @@ export const SideBar = () => {
                                     child={true}
                                 />
                             </NavItem>
-                        </div>
+                        </div> */}
                         <div onClick={() => setActive("setting")}>
                             <NavItem
+                                to={`setting`}
                                 label={`Settings`}
                                 isActive={bar.setting}
                                 icon={<SettingsIcon />}
                             />
-                        </div> */}
+                        </div>
                     </div>
                 </div>
                 <div

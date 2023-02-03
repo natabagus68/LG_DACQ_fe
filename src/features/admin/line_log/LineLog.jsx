@@ -30,8 +30,8 @@ const Line1AsisLogTable = ({ alert: _alert }) => {
         q: queryParam.get("q") || "",
         per_page: queryParam.get("per_page") || 10,
         judgement: queryParam.get("judgement") || "",
-        start_date: queryParam.get("start_date") || "",
-        end_date: queryParam.get("end_date") || "",
+        start_date: !queryParam.get("start_date") || queryParam.get("start_date") == '' || queryParam.get("start_date") == 'undefined' ? moment().startOf('hour').format('YYYY-MM-DDTHH:mm:ss') : queryParam.get("start_date"),
+        end_date: !queryParam.get("end_date") || queryParam.get("end_date") == '' || queryParam.get("end_date") == 'undefined' ? moment().endOf('hour').format('YYYY-MM-DDTHH:mm:ss') : queryParam.get("end_date"),
     });
     const { data: line1AsisLogs, isLoading: line1AsisLogsLoading } =
         useGetLine1AsisLogsQuery(qParams);
@@ -373,7 +373,7 @@ export const LineLog = () => {
 const Judgement = ({ item, onClick = () => {} }) => {
     return (
         <>
-            <Menu as="div" className={`relative w-min`}>
+            <Menu as="div" className={`relativFe w-min`}>
                 <Menu.Button
                     as={`div`}
                     className={`flex items-center justify-center gap-2 px-3 py-1 rounded-full 

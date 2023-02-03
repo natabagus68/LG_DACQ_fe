@@ -1,15 +1,7 @@
 import React from "react";
-import {
-    HomeIcon,
-    PlusIcon,
-    EyeIcon,
-    EditIcon,
-    SearchIcon,
-    TrashIcon,
-} from "../../../common/components/icons";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { HomeIcon } from "../../../common/components/icons";
+import { Link, useParams } from "react-router-dom";
 import { config } from "../../../common/utils/config";
-import Switch from "../../../common/components/input/Switch";
 import { useGetDetailUserQuery } from "../../../app/services/userService";
 
 export const AccountDetail = () => {
@@ -63,7 +55,9 @@ export const AccountDetail = () => {
                                             Role
                                         </div>
                                         <div className="py-2 px-4 text-[#5D6369]">
-                                            {user.roles.map(item => item.name).join(', ')}
+                                            {user.roles
+                                                .map((item) => item.name)
+                                                .join(", ")}
                                         </div>
                                     </div>
                                 </div>
@@ -72,7 +66,13 @@ export const AccountDetail = () => {
                                 <div className="mb-4 text-[#1A5130] font-semibold text-lg">
                                     Photo Profile
                                 </div>
-                                <div className="rounded-full w-[226px] h-[226px] bg-gray-50 animate-pulse"></div>
+                                {userLoading ? (
+                                    <div className="rounded-full w-[226px] h-[226px] bg-gray-50 animate-pulse"></div>
+                                ) : (
+                                    <div className="rounded-full w-[226px] h-[226px] bg-gray-50 animate-pulse">
+                                        <img src={user.image} alt="No Image" />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

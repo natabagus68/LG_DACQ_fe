@@ -60,7 +60,7 @@ export const optionManualService = apiSlice.injectEndpoints({
         }),
         line1OptionManualUpdateManualNg: builder.mutation({
             query: (description) => ({
-                url: "process/line-1/option-manual/manual-ng-cause",
+                url: "process/line-1/option-manual/ng-cause",
                 method: "POST",
                 body: { description },
             }),
@@ -68,7 +68,7 @@ export const optionManualService = apiSlice.injectEndpoints({
         }),
         line1OptionManualTopManualNg: builder.query({
             query: () => ({
-                url: "process/line-1/option-manual/manual-ng-causes",
+                url: "process/line-1/option-manual/ng-cause",
             }),
             providesTags: ["Line 1 OptionManual Manual Ng Cause"],
             transformResponse: (res) => res?.data || [],

@@ -82,7 +82,7 @@ export const Line1OptionAutoLogTable = ({ alert: _alert }) => {
                         onChange={(e) =>
                             setQParams((queryParam) => ({
                                 ...queryParam,
-                                start_date: e.target.value,
+                                start_date: moment(new Date(e.target.value)).utc().format('YYYY-MM-DDTHH:mm'),
                             }))
                         }
                     />
@@ -94,7 +94,7 @@ export const Line1OptionAutoLogTable = ({ alert: _alert }) => {
                         onChange={(e) =>
                             setQParams((queryParam) => ({
                                 ...queryParam,
-                                end_date: e.target.value,
+                                end_date: moment(new Date(e.target.value)).utc().format('YYYY-MM-DDTHH:mm'),
                             }))
                         }
                     />

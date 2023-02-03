@@ -5,7 +5,6 @@ export const userService = apiSlice.injectEndpoints({
         getUsers: builder.query({
             query: (params = {}) => ({
                 url: `_/users?${Object.keys(params)
-                    .filter((item) => params[item] && params[item] !== "")
                     .map((item) => `${item}=${params[item]}`)
                     .join("&")}`,
             }),
@@ -47,4 +46,8 @@ export const userService = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetUsersQuery, useToogleActiveUserMutation } = userService;
+export const {
+    useGetUsersQuery,
+    useToogleActiveUserMutation,
+    useGetDetailUserQuery,
+} = userService;

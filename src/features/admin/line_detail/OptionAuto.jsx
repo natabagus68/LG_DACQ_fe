@@ -45,12 +45,13 @@ const OptionAutoChart = ({
     ngRate,
     setNgRate,
 }) => {
+    const interval = useSelector((state) => state.setting.interval);
     const chartRef = useRef();
     const {
         data: line1OptionAutoProcessChart = [],
         isLoading: line1OptionAutoProcessChartLoading,
     } = useGetLine1OptionAutoProcessChartQuery(searchParams.frequent, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const data = useMemo(() => {
         return {
@@ -316,11 +317,12 @@ export const OpenAlert = ({ alert, setAlert }) => {
 };
 
 const TopAutoNgTable = ({ searchParams, setSearchParams }) => {
+    const interval = useSelector((state) => state.setting.interval);
     const {
         data: line1OptionAutoTop5NgCause = [],
         isLoading: line1OptionAutoTop5NgCauseLoading,
     } = useGetLine1OptionAutoTop5NgCauseQuery(searchParams, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     return (
         <Table>
@@ -396,6 +398,7 @@ const TopManualNgTable = () => {
 };
 
 export const OptionAuto = () => {
+    const interval = useSelector((state) => state.setting.interval);
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
     const manualNgOn = useSelector((state) => state.line1OptionAuto.manualNgOn);
@@ -419,13 +422,13 @@ export const OptionAuto = () => {
         data: line1OptionAutoCount = {},
         isLoading: line1OptionAutoCountLoading,
     } = useGetLine1OptionAutoCountQuery(searchParams, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const {
         data: line1OptionAutoTopTenLogs = [],
         isLoading: line1OptionAutoTopTenLogsLoading,
     } = useGetLine1OptionAutoTopTenLogsQuery(null, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const [syncMutation, { isLoading: syncMutationLoading }] =
         useLine1OptionAutoSyncMutation();

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HomeIcon } from "../../../common/components/icons";
+import { DownloadIcon, HomeIcon } from "../../../common/components/icons";
 import { Card } from "../../../common/components/Card";
 import { Switch } from "@headlessui/react";
 import { HiOutlineChevronRight } from "react-icons/hi";
@@ -55,21 +55,24 @@ import {
     useGetLine1DtvInspectionTopNgCauseQuery,
     useLine1DtvInspectionTopManualNgQuery,
 } from "../../../app/services/dtvInspectionService";
+import { ExportDialog } from "../export/export-dialog";
+import { useRef } from "react";
 
 export const Line1 = () => {
+    const interval = useSelector((state) => state.setting.interval);
     const [ppmOn, setPpmOn] = useState(false);
     const asisManualNgOn = useSelector((state) => state.line1Asis.manualNgOn);
     const { data: line1AsisTopManualNg } = useGetLine1AsisTopManualNgQuery();
     const { data: line1AsisChartLastWeek = [] } =
         useGetLine1AsisChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const { data: line1AsisTopNgCause } = useGetLine1AsisTopNgCauseQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: interval,
     });
     const { data: line1AsisNgRatio, isLoading: line1AsisNgRatioLoading } =
         useGetLine1AsisNgRatioQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const asisChartData = useMemo(() => {
         return {
@@ -81,19 +84,19 @@ export const Line1 = () => {
     }, [line1AsisChartLastWeek, ppmOn]);
     const { data: line1OnepoleTwopoleChartLastWeek = [] } =
         useGetLine1OnepoleTwopoleChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const {
         data: line1OnepoleTwopoleNgRatio,
         isLoading: line1OnepoleTwopoleNgRatioLoading,
     } = useGetLine1NgRatioOnepoleTwopoleQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: interval,
     });
     const {
         data: line1OnepoleTwopoleTopManualNg,
         isLoading: line1OnepoleTwopoleTopManualNgLoading,
     } = useLine1OnepoleTwopoleTopManualNgQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: interval,
     });
     const onepoleTwopoleChartData = useMemo(() => {
         return {
@@ -110,17 +113,17 @@ export const Line1 = () => {
     const { data: line1HipotTopManualNg } = useLine1HipotTopManualNgQuery();
     const { data: line1HipotChartLastWeek = [] } =
         useGetLine1HipotChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const { data: line1HipotTopNgCause } = useGetLine1HipotTopNgCauseQuery(
         null,
         {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         }
     );
     const { data: line1HipotNgRatio, isLoading: line1HipotNgRatioLoading } =
         useGetLine1HipotNgRatioQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const hipotChartData = useMemo(() => {
         return {
@@ -138,17 +141,17 @@ export const Line1 = () => {
         useLine1WhiteBalanceTopManualNgQuery();
     const { data: line1WhiteBalanceChartLastWeek = [] } =
         useGetLine1WhiteBalanceChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const { data: line1WhiteBalanceTopNgCause } =
         useGetLine1WhiteBalanceTopNgCauseQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const {
         data: line1WhiteBalanceNgRatio,
         isLoading: line1WhiteBalanceNgRatioLoading,
     } = useGetLine1WhiteBalanceNgRatioQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: interval,
     });
     const whiteBalanceChartData = useMemo(() => {
         return {
@@ -168,17 +171,17 @@ export const Line1 = () => {
         useLine1ShipmodeTopManualNgQuery();
     const { data: line1ShipmodeChartLastWeek = [] } =
         useGetLine1ShipmodeChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const { data: line1ShipmodeTopNgCause } =
         useGetLine1ShipmodeTopNgCauseQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const {
         data: line1ShipmodeNgRatio,
         isLoading: line1ShipmodeNgRatioLoading,
     } = useGetLine1ShipmodeNgRatioQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: interval,
     });
     const shipmodeChartData = useMemo(() => {
         return {
@@ -195,17 +198,17 @@ export const Line1 = () => {
         useLine1OptionAutoTopManualNgQuery();
     const { data: line1OptionAutoChartLastWeek = [] } =
         useGetLine1OptionAutoChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const { data: line1OptionAutoTopNgCause } =
         useGetLine1OptionAutoTopNgCauseQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const {
         data: line1OptionAutoNgRatio = null,
         isLoading: line1OptionAutoNgRatioLoading,
     } = useGetLine1OptionAutoNgRatioQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: interval,
     });
     const optionAutoChartData = useMemo(() => {
         return {
@@ -222,17 +225,17 @@ export const Line1 = () => {
         useLine1OptionManualTopManualNgQuery();
     const { data: line1OptionManualChartLastWeek = [] } =
         useGetLine1OptionManualChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const { data: line1OptionManualTopNgCause } =
         useGetLine1OptionManualTopNgCauseQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const {
         data: line1OptionManualNgRatio = null,
         isLoading: line1OptionManualNgRatioLoading,
     } = useGetLine1OptionManualNgRatioQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: interval,
     });
     const optionManualChartData = useMemo(() => {
         return {
@@ -251,17 +254,17 @@ export const Line1 = () => {
         useLine1DtvInspectionTopManualNgQuery();
     const { data: line1DtvInspectionChartLastWeek = [] } =
         useGetLine1DtvInspectionChartLastWeekQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const { data: line1DtvInspectionTopNgCause } =
         useGetLine1DtvInspectionTopNgCauseQuery(null, {
-            pollingInterval: 10000,
+            pollingInterval: interval,
         });
     const {
         data: line1DtvInspectionNgRatio,
         isLoading: line1DtvInspectionNgRatioLoading,
     } = useGetLine1DtvInspectionNgRatioQuery(null, {
-        pollingInterval: 10000,
+        pollingInterval: interval,
     });
     const dtvInspectionChartData = useMemo(() => {
         return {
@@ -273,10 +276,11 @@ export const Line1 = () => {
             ),
         };
     }, [line1DtvInspectionChartLastWeek, ppmOn]);
+    const exportDialogRef = useRef();
     return (
         <>
             <div className="h-full p-[2%] flex font-inter flex-col bg-white">
-                <div className="text-[#A9A8A8] flex items-center justify-between mb-3">
+                <div className="flex items-center gap-4 text-[#A9A8A8] mb-3">
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
@@ -291,7 +295,7 @@ export const Line1 = () => {
                             Line 1
                         </span>
                     </div>
-                    <div className="flex items-center gap-1 text-[#2E3032] text-sm">
+                    <div className="flex items-center ml-auto gap-1 text-[#2E3032] text-sm">
                         <span>NG Rate</span>
                         {/* <Switch togglePrimary /> */}
                         <Switch
@@ -313,6 +317,30 @@ export const Line1 = () => {
                         </Switch>
                         <span>PPM</span>
                     </div>
+                    {/* export button */}
+                    <button
+                        onClick={(e) => exportDialogRef.current.toogle()}
+                        className="flex gap-2 items-center rounded border border-[#EAEAEA] text-black font-semibold px-3 h-[30px] hover:shadow"
+                    >
+                        <svg
+                            width={12}
+                            height={12}
+                            viewBox="0 0 12 12"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M6.00016 4.83333V8.33333M6.00016 8.33333L4.00016 6.58333M6.00016 8.33333L8.00016 6.58333M9.3335 11.25H2.66683C1.93045 11.25 1.3335 10.7277 1.3335 10.0833V1.91667C1.3335 1.27233 1.93045 0.75 2.66683 0.75H6.39069C6.5675 0.75 6.73707 0.811458 6.86209 0.920854L10.4716 4.07915C10.5966 4.18854 10.6668 4.33691 10.6668 4.49162V10.0833C10.6668 10.7277 10.0699 11.25 9.3335 11.25Z"
+                                stroke="#514E4E"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                        <span>Export</span>
+                    </button>
+                    {/* export button */}
+                    <ExportDialog ref={exportDialogRef} />
                 </div>
                 <div className="grid grid-rows-2 gap-6">
                     <div className="flex-1 grid lg:grid-cols-4 justify-between gap-6">

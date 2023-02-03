@@ -54,16 +54,16 @@ export const Asis = () => {
             ? { to_date: _searchParams.get("to_date") }
             : {}),
     });
-    const [frequent, setFrequent] = useState("hourly");
+    const interval = useSelector((state) => state.setting.interval);
     const { data: line1AsisCounter = {}, isLoading: line1AsisCounterLoading } =
         useGetLine1AsisCounterQuery(searchParams, {
-            pollingInterval: 5000,
+            pollingInterval: interval,
         });
     const {
         data: line1AsisTopTenLogs = [],
         isLoading: line1AsisTopTenLogsLoading,
     } = useGetLine1AsisTopTenLogsQuery(null, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const [alert, setAlert] = useState();
     const viewImage = (e, image) => {
@@ -471,17 +471,19 @@ const AsisChart = ({
     ngRate,
     setNgRate,
 }) => {
+    const chartRef = useRef();
+    const interval = useSelector((state) => state.setting.interval);
     const {
         data: line1AsisProcessChart = [],
         isLoading: line1AsisProcessChartLoading,
     } = useGetLine1AsisProcessChartQuery(searchParams.frequent, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const data = useMemo(() => {
         return {
             labels: line1AsisProcessChart.map((item) => item?.x || "-"),
             datas: line1AsisProcessChart.map(
-                (item) => (item?.y || 0) * (ppmOn ? 10000 : 1)
+                (item) => (item?.y || 0) * (ppmOn ? 100000 : 1)
             ),
         };
     }, [line1AsisProcessChart, ppmOn]);
@@ -844,11 +846,12 @@ export const OpenAlert = ({ alert, setAlert }) => {
 };
 
 const TopAutoNgTable = ({ searchParams, setSearchParams }) => {
+    const interval = useSelector((state) => state.setting.interval);
     const {
         data: line1AsisTop5NgCause = [],
         isLoading: line1AsisTop5NgCauseLoading,
     } = useGetLine1Top5NgCauseQuery(searchParams, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     return (
         <Table>
@@ -875,11 +878,6 @@ const TopAutoNgTable = ({ searchParams, setSearchParams }) => {
                 </Table.Tr>
             </Table.Thead>
             <tbody>
-                {/* {line1AsisTop5NgCauseLoading && (
-                    <>
-                        <div className="flex flex-1 bg-red-300"></div>
-                    </>
-                )} */}
                 {line1AsisTop5NgCause.map((item, i) => (
                     <Table.Tr key={i}>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">

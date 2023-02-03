@@ -22,29 +22,19 @@ export const whiteBalanceService = apiSlice.injectEndpoints({
         }),
         getLine1WhiteBalanceTopNgCause: builder.query({
             query: () => ({
-                url: "process/line-1/white-balance/top-ng-cause",
+                url: "process/line-1/white-balance/top-ng-model",
             }),
             transformResponse: (res) => res?.data?.[0] || {},
         }),
-        getLine1WhiteBalanceNgCount: builder.query({
+        getLine1WhiteBalanceCount: builder.query({
             query: (query) => ({
-                url: `process/line-1/white-balance/auto-ng-causes/quantity-ng?${Object.keys(
+                url: `process/line-1/white-balance/auto-ng-causes/quantity?${Object.keys(
                     query
                 )
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyNg || 0,
-        }),
-        getLine1WhiteBalanceOkCount: builder.query({
-            query: (query) => ({
-                url: `process/line-1/white-balance/auto-ng-causes/quantity-ok?${Object.keys(
-                    query
-                )
-                    .map((item) => `${item}=${query[item]}`)
-                    .join("&")}`,
-            }),
-            transformResponse: (res) => res?.data?.qtyOk || 0,
+            transformResponse: (res) => res?.data || {},
         }),
         getLine1WhiteBalanceTopTenLogs: builder.query({
             query: () => ({
@@ -53,8 +43,12 @@ export const whiteBalanceService = apiSlice.injectEndpoints({
             transformResponse: (res) => res?.data || [],
         }),
         getLine1WhiteBalanceTop5NgCause: builder.query({
-            query: () => ({
-                url: "process/line-1/white-balance/auto-ng-causes/top5",
+            query: (params) => ({
+                url: `process/line-1/white-balance/auto-ng-causes/top5?${Object.keys(
+                    params
+                )
+                    .map((item) => `${item}=${params[item]}`)
+                    .join("&")}`,
             }),
             transformResponse: (res) => res?.data || [],
         }),
@@ -75,11 +69,13 @@ export const whiteBalanceService = apiSlice.injectEndpoints({
         }),
         line1WhiteBalanceLogs: builder.query({
             query: (data = []) => ({
-                url: `process/line-1/white-balance/auto-ng-causes?${Object.keys(data)
+                url: `process/line-1/white-balance/auto-ng-causes?${Object.keys(
+                    data
+                )
                     .map((item, i) => `${item}=${data[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data || [],
+            transformResponse: (res) => res?.data || { total: 0, data: [] },
         }),
         line1WhiteBalanceSync: builder.mutation({
             query: (data) => {
@@ -89,6 +85,13 @@ export const whiteBalanceService = apiSlice.injectEndpoints({
                 };
             },
         }),
+        line1WhiteBalanceDestroy: builder.mutation({
+            query: (id) => ({
+                url: `process/line-1/white-balance/auto-ng-cause/${id}`,
+                method: "delete",
+            }),
+            invalidatesTags: ["Line 1 White Balance Logs"],
+        }),
     }),
 });
 
@@ -97,12 +100,12 @@ export const {
     useGetLine1WhiteBalanceProcessChartQuery,
     useGetLine1WhiteBalanceChartLastWeekQuery,
     useGetLine1WhiteBalanceTopNgCauseQuery,
-    useGetLine1WhiteBalanceNgCountQuery,
-    useGetLine1WhiteBalanceOkCountQuery,
+    useGetLine1WhiteBalanceCountQuery,
     useGetLine1WhiteBalanceTopTenLogsQuery,
     useGetLine1WhiteBalanceTop5NgCauseQuery,
     useLine1WhiteBalanceUpdateManualNgMutation,
     useLine1WhiteBalanceTopManualNgQuery,
     useLine1WhiteBalanceLogsQuery,
     useLine1WhiteBalanceSyncMutation,
+    useLine1WhiteBalanceDestroyMutation
 } = whiteBalanceService;

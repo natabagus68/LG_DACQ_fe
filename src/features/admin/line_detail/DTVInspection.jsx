@@ -42,12 +42,13 @@ const DtvInspectionChart = ({
     ngRate,
     setNgRate,
 }) => {
+    const interval = useSelector((state) => state.setting.interval);
     const chartRef = useRef();
     const {
         data: line1DtvInspectionProcessChart = [],
         isLoading: line1DtvInspectionProcessChartLoading,
     } = useGetLine1DtvInspectionProcessChartQuery(searchParams.frequent, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const data = useMemo(() => {
         return {
@@ -421,11 +422,12 @@ export const OpenAlert = ({ alert, setAlert }) => {
 };
 
 const TopAutoNgTable = ({ searchParams, setSearchParams }) => {
+    const interval = useSelector((state) => state.setting.interval);
     const {
         data: line1DtvInspectionTop5NgCause = [],
         isLoading: line1DtvInspectionTop5NgCauseLoading,
     } = useGetLine1Top5NgCauseQuery(searchParams, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     return (
         <Table>
@@ -495,6 +497,7 @@ const TopManualNgTable = () => {
 };
 
 export const DTVInspection = () => {
+    const interval = useSelector((state) => state.setting.interval);
     const dispatch = useDispatch();
     const [ppmOn, setPpmOn] = useState(false);
     const manualNgOn = useSelector(
@@ -520,13 +523,13 @@ export const DTVInspection = () => {
         data: line1DtvInspectionCount = {},
         isLoading: line1DtvInspectionCountLoading,
     } = useGetLine1DtvInspectionCountQuery(searchParams, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const {
         data: line1DtvInspectionTopTenLogs = [],
         isLoading: line1DtvInspectionTopTenLogsLoading,
     } = useGetLine1DtvInspectionTopTenLogsQuery(null, {
-        pollingInterval: 5000,
+        pollingInterval: interval,
     });
     const [alert, setAlert] = useState();
     const viewImage = (e, image) => {
