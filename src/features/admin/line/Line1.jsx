@@ -57,6 +57,8 @@ import {
 } from "../../../app/services/dtvInspectionService";
 import { ExportDialog } from "../export/export-dialog";
 import { useRef } from "react";
+import useDiskInfo from "./disk-info";
+import { humanFileSize } from "../../../common/utils/humanFileSize";
 
 export const Line1 = () => {
     const interval = useSelector((state) => state.setting.interval);
@@ -170,7 +172,11 @@ export const Line1 = () => {
     const { data: line1ShipmodeTopManualNg } =
         useLine1ShipmodeTopManualNgQuery();
     const { data: line1ShipmodeChartLastWeek = [] } =
-        useGetLine1ShipmodeChartLastWeekQuery(null, {
+        useGetLine1ShipmodeChartLastWeekQuery('weekly', {
+            pollingInterval: interval,
+        });
+    const { data: line1ShipmodeChartLastWeekInstop = [] } =
+        useGetLine1ShipmodeChartLastWeekQuery('weekly-instop', {
             pollingInterval: interval,
         });
     const { data: line1ShipmodeTopNgCause } =
@@ -191,6 +197,14 @@ export const Line1 = () => {
             ),
         };
     }, [line1ShipmodeChartLastWeek, ppmOn]);
+    const shipmodeChartDataInstop = useMemo(() => {
+        return {
+            labels: line1ShipmodeChartLastWeekInstop.map((item) => item?.x || "-"),
+            datas: line1ShipmodeChartLastWeekInstop.map(
+                (item) => (item?.y || 0) * (ppmOn ? 10000 : 1)
+            ),
+        };
+    }, [line1ShipmodeChartLastWeekInstop, ppmOn]);
     const optionAutoManualNgOn = useSelector(
         (state) => state.line1OptionAuto.manualNgOn
     );
@@ -277,6 +291,7 @@ export const Line1 = () => {
         };
     }, [line1DtvInspectionChartLastWeek, ppmOn]);
     const exportDialogRef = useRef();
+    const diskInfo = useDiskInfo();
     return (
         <>
             <div className="h-full p-[2%] flex font-inter flex-col bg-white">
@@ -285,7 +300,7 @@ export const Line1 = () => {
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
                         <Link
-                            to={`${config.pathPrefix}dashboard`}
+                            to={ `${config.pathPrefix}dashboard` }
                             className="font-semibold text-sm"
                         >
                             Dashboard
@@ -295,36 +310,42 @@ export const Line1 = () => {
                             Line 1
                         </span>
                     </div>
+                    { diskInfo.disk.map(item => (
+                        <div className="px-3 py-1 rounded flex gap-4">
+                            <span>Mounted : {item.mounted}</span>
+                            <span>Blocks : {humanFileSize(item.blocks)}</span>
+                            <span>Free : {humanFileSize(item.available)}</span>
+                            <span>Used : {humanFileSize(item.used)}</span>
+                        </div>
+                    )) }
                     <div className="flex items-center ml-auto gap-1 text-[#2E3032] text-sm">
                         <span>NG Rate</span>
-                        {/* <Switch togglePrimary /> */}
+                        {/* <Switch togglePrimary /> */ }
                         <Switch
-                            as={`div`}
-                            checked={ppmOn}
-                            onChange={setPpmOn}
-                            className={`${
-                                ppmOn ? "bg-blue-600" : "bg-gray-200"
-                            } cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full`}
+                            as={ `div` }
+                            checked={ ppmOn }
+                            onChange={ setPpmOn }
+                            className={ `${ppmOn ? "bg-blue-600" : "bg-gray-200"
+                                } cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full` }
                         >
                             <span className="sr-only">
                                 Enable notifications
                             </span>
                             <span
-                                className={`${
-                                    ppmOn ? "translate-x-6" : "translate-x-1"
-                                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                                className={ `${ppmOn ? "translate-x-6" : "translate-x-1"
+                                    } inline-block h-4 w-4 transform rounded-full bg-white transition` }
                             />
                         </Switch>
                         <span>PPM</span>
                     </div>
-                    {/* export button */}
+                    {/* export button */ }
                     <button
-                        onClick={(e) => exportDialogRef.current.toogle()}
+                        onClick={ (e) => exportDialogRef.current.toogle() }
                         className="flex gap-2 items-center rounded border border-[#EAEAEA] text-black font-semibold px-3 h-[30px] hover:shadow"
                     >
                         <svg
-                            width={12}
-                            height={12}
+                            width={ 12 }
+                            height={ 12 }
                             viewBox="0 0 12 12"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
@@ -339,8 +360,8 @@ export const Line1 = () => {
                         </svg>
                         <span>Export</span>
                     </button>
-                    {/* export button */}
-                    <ExportDialog ref={exportDialogRef} />
+                    {/* export button */ }
+                    <ExportDialog ref={ exportDialogRef } />
                 </div>
                 <div className="grid grid-rows-2 gap-6">
                     <div className="flex-1 grid lg:grid-cols-4 justify-between gap-6">
@@ -353,8 +374,7 @@ export const Line1 = () => {
                                             <div className="w-6 h-6 bg-gray-300 animate-pulse"></div>
                                         </>
                                     ) : (
-                                        `${
-                                            line1AsisNgRatio?.toFixed(1) || "-"
+                                        `${line1AsisNgRatio?.toFixed(3) || "-"
                                         }%`
                                     )
                                 }
@@ -362,32 +382,32 @@ export const Line1 = () => {
                                 <div className="flex flex-col justify-between flex-1">
                                     <div className="flex gap-[14px] items-center flex-1">
                                         <ChartLine
-                                            datas={asisChartData.datas}
-                                            labels={asisChartData.labels}
-                                            width={"100%"}
-                                            height={"100%"}
+                                            datas={ asisChartData.datas }
+                                            labels={ asisChartData.labels }
+                                            width={ "100%" }
+                                            height={ "100%" }
                                         />
                                     </div>
                                     <div className="flex flex-col mt-5">
                                         <span className="text-[10px] text-[#514E4E] font-medium">
                                             NG Cause
                                         </span>
-                                        {asisManualNgOn ? (
+                                        { asisManualNgOn ? (
                                             <div className="border-[1px] rounded-xl flex flex-col justify-between p-2">
                                                 <span className="text-[10px] text-[#514E4E] font-medium">
                                                     NG Cause
                                                 </span>
                                                 <span className="text-[10px] text-[#858383] font-medium">
-                                                    {line1AsisTopManualNg?.[0]
-                                                        ?.description || "-"}
+                                                    { line1AsisTopManualNg?.[0]
+                                                        ?.description || "-" }
                                                 </span>
                                             </div>
                                         ) : (
                                             <div className="border-[1px] rounded-xl flex justify-between">
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1 border-r">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1AsisTopNgCause?.model ||
-                                                            "-"}
+                                                        { line1AsisTopNgCause?.model ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         Model Name
@@ -395,18 +415,18 @@ export const Line1 = () => {
                                                 </div>
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1AsisTopNgCause?.ng_cause ||
-                                                            "-"}
+                                                        { line1AsisTopNgCause?.ng_cause ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         NG Summary
                                                     </span>
                                                 </div>
                                             </div>
-                                        )}
+                                        ) }
                                         <div className="flex justify-end pt-2">
                                             <NavLink
-                                                to={`asis`}
+                                                to={ `asis` }
                                                 className="flex items-center gap-1 text-[#4E5BA6] text-xs font-medium"
                                             >
                                                 <span>Details</span>
@@ -426,10 +446,9 @@ export const Line1 = () => {
                                             <div className="w-6 h-6 bg-gray-300 animate-pulse"></div>
                                         </>
                                     ) : (
-                                        `${
-                                            (
-                                                line1OnepoleTwopoleNgRatio || 0
-                                            )?.toFixed(1) || "-"
+                                        `${(
+                                            line1OnepoleTwopoleNgRatio || 0
+                                        )?.toFixed(3) || "-"
                                         }%`
                                     )
                                 }
@@ -443,8 +462,8 @@ export const Line1 = () => {
                                             labels={
                                                 onepoleTwopoleChartData.labels
                                             }
-                                            width={"100%"}
-                                            height={"100%"}
+                                            width={ "100%" }
+                                            height={ "100%" }
                                         />
                                     </div>
                                     <div className="flex flex-col mt-5">
@@ -453,13 +472,13 @@ export const Line1 = () => {
                                                 NG Cause
                                             </span>
                                             <span className="text-[10px] text-[#858383] font-medium">
-                                                {line1OnepoleTwopoleTopManualNg?.[0]
-                                                    ?.description || "-"}
+                                                { line1OnepoleTwopoleTopManualNg?.[0]
+                                                    ?.description || "-" }
                                             </span>
                                         </div>
                                         <div className="flex justify-end pt-2">
                                             <NavLink
-                                                to={`onepole-twopole`}
+                                                to={ `onepole-twopole` }
                                                 className="flex items-center gap-1 text-[#4E5BA6] text-xs font-medium"
                                             >
                                                 <span>Details</span>
@@ -479,8 +498,7 @@ export const Line1 = () => {
                                             <div className="w-6 h-6 bg-gray-300 animate-pulse"></div>
                                         </>
                                     ) : (
-                                        `${
-                                            line1HipotNgRatio?.toFixed(1) || "-"
+                                        `${line1HipotNgRatio?.toFixed(3) || "-"
                                         }%`
                                     )
                                 }
@@ -488,32 +506,32 @@ export const Line1 = () => {
                                 <div className="flex flex-col justify-between flex-1">
                                     <div className="flex gap-[14px] items-center flex-1">
                                         <ChartLine
-                                            datas={hipotChartData.datas}
-                                            labels={hipotChartData.labels}
-                                            width={"100%"}
-                                            height={"100%"}
+                                            datas={ hipotChartData.datas }
+                                            labels={ hipotChartData.labels }
+                                            width={ "100%" }
+                                            height={ "100%" }
                                         />
                                     </div>
                                     <div className="flex flex-col mt-5">
                                         <span className="text-[10px] text-[#514E4E] font-medium">
                                             NG Cause
                                         </span>
-                                        {hipotManualNgOn ? (
+                                        { hipotManualNgOn ? (
                                             <div className="border-[1px] rounded-xl flex flex-col justify-between p-2">
                                                 <span className="text-[10px] text-[#514E4E] font-medium">
                                                     NG Cause
                                                 </span>
                                                 <span className="text-[10px] text-[#858383] font-medium">
-                                                    {line1HipotTopManualNg?.[0]
-                                                        ?.description || "-"}
+                                                    { line1HipotTopManualNg?.[0]
+                                                        ?.description || "-" }
                                                 </span>
                                             </div>
                                         ) : (
                                             <div className="border-[1px] rounded-xl flex justify-between">
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1 border-r">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1HipotTopNgCause?.model ||
-                                                            "-"}
+                                                        { line1HipotTopNgCause?.model ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         Model Name
@@ -521,18 +539,18 @@ export const Line1 = () => {
                                                 </div>
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1HipotTopNgCause?.ng_cause ||
-                                                            "-"}
+                                                        { line1HipotTopNgCause?.ng_cause ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         NG Summary
                                                     </span>
                                                 </div>
                                             </div>
-                                        )}
+                                        ) }
                                         <div className="flex justify-end pt-2">
                                             <NavLink
-                                                to={`hipot`}
+                                                to={ `hipot` }
                                                 className="flex items-center gap-1 text-[#4E5BA6] text-xs font-medium"
                                             >
                                                 <span>Details</span>
@@ -552,10 +570,9 @@ export const Line1 = () => {
                                             <div className="w-6 h-6 bg-gray-300 animate-pulse"></div>
                                         </>
                                     ) : (
-                                        `${
-                                            line1OptionAutoNgRatio?.toFixed(
-                                                1
-                                            ) || "-"
+                                        `${line1OptionAutoNgRatio?.toFixed(
+                                            3
+                                        ) || "-"
                                         }%`
                                     )
                                 }
@@ -563,32 +580,32 @@ export const Line1 = () => {
                                 <div className="flex flex-col justify-between flex-1">
                                     <div className="flex gap-[14px] items-center flex-1">
                                         <ChartLine
-                                            datas={optionAutoChartData.datas}
-                                            labels={optionAutoChartData.labels}
-                                            width={"100%"}
-                                            height={"100%"}
+                                            datas={ optionAutoChartData.datas }
+                                            labels={ optionAutoChartData.labels }
+                                            width={ "100%" }
+                                            height={ "100%" }
                                         />
                                     </div>
                                     <div className="flex flex-col mt-5">
                                         <span className="text-[10px] text-[#514E4E] font-medium">
                                             NG Cause
                                         </span>
-                                        {optionAutoManualNgOn ? (
+                                        { optionAutoManualNgOn ? (
                                             <div className="border-[1px] rounded-xl flex flex-col justify-between p-2">
                                                 <span className="text-[10px] text-[#514E4E] font-medium">
                                                     NG Cause
                                                 </span>
                                                 <span className="text-[10px] text-[#858383] font-medium">
-                                                    {line1OptionAutoTopManualNg?.[0]
-                                                        ?.description || "-"}
+                                                    { line1OptionAutoTopManualNg?.[0]
+                                                        ?.description || "-" }
                                                 </span>
                                             </div>
                                         ) : (
                                             <div className="border-[1px] rounded-xl flex justify-between">
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1 border-r">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1OptionAutoTopNgCause?.model_suffix ||
-                                                            "-"}
+                                                        { line1OptionAutoTopNgCause?.model_suffix ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         Model Name
@@ -596,26 +613,26 @@ export const Line1 = () => {
                                                 </div>
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1OptionAutoTopNgCause?.assy_mode !==
-                                                        ""
+                                                        { line1OptionAutoTopNgCause?.assy_mode !==
+                                                            ""
                                                             ? "ASSY MODE"
                                                             : line1OptionAutoTopNgCause?.results
-                                                                  .map(
-                                                                      (item) =>
-                                                                          item.name
-                                                                  )
-                                                                  .join(", ") ||
-                                                              "-"}
+                                                                .map(
+                                                                    (item) =>
+                                                                        item.name
+                                                                )
+                                                                .join(", ") ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         NG Summary
                                                     </span>
                                                 </div>
                                             </div>
-                                        )}
+                                        ) }
                                         <div className="flex justify-end pt-2">
                                             <NavLink
-                                                to={`option-auto`}
+                                                to={ `option-auto` }
                                                 className="flex items-center gap-1 text-[#4E5BA6] text-xs font-medium"
                                             >
                                                 <span>Details</span>
@@ -635,10 +652,9 @@ export const Line1 = () => {
                                             <div className="w-6 h-6 bg-gray-300 animate-pulse"></div>
                                         </>
                                     ) : (
-                                        `${
-                                            line1OptionManualNgRatio?.toFixed(
-                                                1
-                                            ) || "-"
+                                        `${line1OptionManualNgRatio?.toFixed(
+                                            3
+                                        ) || "-"
                                         }%`
                                     )
                                 }
@@ -646,34 +662,34 @@ export const Line1 = () => {
                                 <div className="flex flex-col justify-between flex-1">
                                     <div className="flex gap-[14px] items-center flex-1">
                                         <ChartLine
-                                            datas={optionManualChartData.datas}
+                                            datas={ optionManualChartData.datas }
                                             labels={
                                                 optionManualChartData.labels
                                             }
-                                            width={"100%"}
-                                            height={"100%"}
+                                            width={ "100%" }
+                                            height={ "100%" }
                                         />
                                     </div>
                                     <div className="flex flex-col mt-5">
                                         <span className="text-[10px] text-[#514E4E] font-medium">
                                             NG Cause
                                         </span>
-                                        {optionManualManualNgOn ? (
+                                        { optionManualManualNgOn ? (
                                             <div className="border-[1px] rounded-xl flex flex-col justify-between p-2">
                                                 <span className="text-[10px] text-[#514E4E] font-medium">
                                                     NG Cause
                                                 </span>
                                                 <span className="text-[10px] text-[#858383] font-medium">
-                                                    {line1OptionManualTopManualNg?.[0]
-                                                        ?.description || "-"}
+                                                    { line1OptionManualTopManualNg?.[0]
+                                                        ?.description || "-" }
                                                 </span>
                                             </div>
                                         ) : (
                                             <div className="border-[1px] rounded-xl flex justify-between">
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1 border-r">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1OptionManualTopNgCause?.model_suffix ||
-                                                            "-"}
+                                                        { line1OptionManualTopNgCause?.model_suffix ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         Model Name
@@ -681,26 +697,26 @@ export const Line1 = () => {
                                                 </div>
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1OptionManualTopNgCause?.assy_mode ==
-                                                        "NG"
+                                                        { line1OptionManualTopNgCause?.assy_mode ==
+                                                            "NG"
                                                             ? "ASSY MODE"
                                                             : line1OptionManualTopNgCause?.results
-                                                                  ?.map(
-                                                                      (item) =>
-                                                                          item.name
-                                                                  )
-                                                                  ?.join("") ||
-                                                              "-"}
+                                                                ?.map(
+                                                                    (item) =>
+                                                                        item.name
+                                                                )
+                                                                ?.join("") ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         NG Summary
                                                     </span>
                                                 </div>
                                             </div>
-                                        )}
+                                        ) }
                                         <div className="flex justify-end pt-2">
                                             <NavLink
-                                                to={`option-manual`}
+                                                to={ `option-manual` }
                                                 className="flex items-center gap-1 text-[#4E5BA6] text-xs font-medium"
                                             >
                                                 <span>Details</span>
@@ -720,10 +736,9 @@ export const Line1 = () => {
                                             <div className="w-6 h-6 bg-gray-300 animate-pulse"></div>
                                         </>
                                     ) : (
-                                        `${
-                                            line1DtvInspectionNgRatio?.toFixed(
-                                                1
-                                            ) || "-"
+                                        `${line1DtvInspectionNgRatio?.toFixed(
+                                            3
+                                        ) || "-"
                                         }%`
                                     )
                                 }
@@ -731,34 +746,34 @@ export const Line1 = () => {
                                 <div className="flex flex-col justify-between flex-1">
                                     <div className="flex gap-[14px] items-center flex-1">
                                         <ChartLine
-                                            datas={dtvInspectionChartData.datas}
+                                            datas={ dtvInspectionChartData.datas }
                                             labels={
                                                 dtvInspectionChartData.labels
                                             }
-                                            width={"100%"}
-                                            height={"100%"}
+                                            width={ "100%" }
+                                            height={ "100%" }
                                         />
                                     </div>
                                     <div className="flex flex-col mt-5">
                                         <span className="text-[10px] text-[#514E4E] font-medium">
                                             NG Cause
                                         </span>
-                                        {dtvInspectionManualNgOn ? (
+                                        { dtvInspectionManualNgOn ? (
                                             <div className="border-[1px] rounded-xl flex flex-col justify-between p-2">
                                                 <span className="text-[10px] text-[#514E4E] font-medium">
                                                     NG Cause
                                                 </span>
                                                 <span className="text-[10px] text-[#858383] font-medium">
-                                                    {line1DtvInspectionTopManualNg?.[0]
-                                                        ?.description || "-"}
+                                                    { line1DtvInspectionTopManualNg?.[0]
+                                                        ?.description || "-" }
                                                 </span>
                                             </div>
                                         ) : (
                                             <div className="border-[1px] rounded-xl flex justify-between">
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1 border-r">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1DtvInspectionTopNgCause?.model ||
-                                                            "-"}
+                                                        { line1DtvInspectionTopNgCause?.model ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         Model Name
@@ -766,18 +781,18 @@ export const Line1 = () => {
                                                 </div>
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1DtvInspectionTopNgCause?.ng_cause ||
-                                                            "-"}
+                                                        { line1DtvInspectionTopNgCause?.ng_cause ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         NG Summary
                                                     </span>
                                                 </div>
                                             </div>
-                                        )}
+                                        ) }
                                         <div className="flex justify-end pt-2">
                                             <NavLink
-                                                to={`dtv-inspection`}
+                                                to={ `dtv-inspection` }
                                                 className="flex items-center gap-1 text-[#4E5BA6] text-xs font-medium"
                                             >
                                                 <span>Details</span>
@@ -792,15 +807,14 @@ export const Line1 = () => {
                             <Card
                                 title="WHITE BALANCE"
                                 subTitle={
-                                    line1OptionManualNgRatioLoading ? (
+                                    line1WhiteBalanceNgRatioLoading ? (
                                         <>
                                             <div className="w-6 h-6 bg-gray-300 animate-pulse"></div>
                                         </>
                                     ) : (
-                                        `${
-                                            line1OptionManualNgRatio?.toFixed(
-                                                1
-                                            ) || "-"
+                                        `${line1WhiteBalanceNgRatio?.toFixed(
+                                            3
+                                        ) || "-"
                                         }%`
                                     )
                                 }
@@ -808,34 +822,34 @@ export const Line1 = () => {
                                 <div className="flex flex-col justify-between flex-1">
                                     <div className="flex gap-[14px] items-center flex-1">
                                         <ChartLine
-                                            datas={optionManualChartData.datas}
+                                            datas={ whiteBalanceChartData.datas }
                                             labels={
-                                                optionManualChartData.labels
+                                                whiteBalanceChartData.labels
                                             }
-                                            width={"100%"}
-                                            height={"100%"}
+                                            width={ "100%" }
+                                            height={ "100%" }
                                         />
                                     </div>
                                     <div className="flex flex-col mt-5">
                                         <span className="text-[10px] text-[#514E4E] font-medium">
                                             NG Cause
                                         </span>
-                                        {optionManualManualNgOn ? (
+                                        { whiteBalanceManualNgOn ? (
                                             <div className="border-[1px] rounded-xl flex flex-col justify-between p-2">
                                                 <span className="text-[10px] text-[#514E4E] font-medium">
                                                     NG Cause
                                                 </span>
                                                 <span className="text-[10px] text-[#858383] font-medium">
-                                                    {line1OptionManualTopManualNg?.[0]
-                                                        ?.description || "-"}
+                                                    { line1WhiteBalanceTopManualNg?.[0]
+                                                        ?.description || "-" }
                                                 </span>
                                             </div>
                                         ) : (
                                             <div className="border-[1px] rounded-xl flex justify-between">
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1 border-r">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1OptionManualTopNgCause?.model ||
-                                                            "-"}
+                                                        { line1WhiteBalanceTopNgCause?.model ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         Model Name
@@ -843,18 +857,18 @@ export const Line1 = () => {
                                                 </div>
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1OptionManualTopNgCause?.ng_cause ||
-                                                            "-"}
+                                                        { line1WhiteBalanceTopNgCause?.ng_cause ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         NG Summary
                                                     </span>
                                                 </div>
                                             </div>
-                                        )}
+                                        ) }
                                         <div className="flex justify-end pt-2">
                                             <NavLink
-                                                to={`white-balance`}
+                                                to={ `white-balance` }
                                                 className="flex items-center gap-1 text-[#4E5BA6] text-xs font-medium"
                                             >
                                                 <span>Details</span>
@@ -874,9 +888,8 @@ export const Line1 = () => {
                                             <div className="w-6 h-6 bg-gray-300 animate-pulse"></div>
                                         </>
                                     ) : (
-                                        `${
-                                            line1ShipmodeNgRatio?.toFixed(1) ||
-                                            "-"
+                                        `${line1ShipmodeNgRatio?.toFixed(3) ||
+                                        "-"
                                         }%`
                                     )
                                 }
@@ -884,34 +897,57 @@ export const Line1 = () => {
                                 <div className="flex flex-col justify-between flex-1">
                                     <div className="flex gap-[14px] items-center flex-1">
                                         <ChartLine
-                                            datas={optionManualChartData.datas}
+                                            datas={ shipmodeChartData.datas }
                                             labels={
-                                                optionManualChartData.labels
+                                                shipmodeChartData.labels
                                             }
-                                            width={"100%"}
-                                            height={"100%"}
+                                            datasets={ [
+                                                {
+                                                    label: "Data",
+                                                    data: shipmodeChartDataInstop.datas,
+                                                    datasetStrokeWidth: 6,
+                                                    pointDotStrokeWidth: 8,
+                                                    backgroundColor: "yellow",
+                                                    borderColor: "yellow",
+                                                    tension: 0.5,
+                                                    pointRadius: 4,
+                                                    borderWidth: 1,
+                                                    fill: {
+                                                        target: "origin",
+                                                        above: "#ffff006b",
+                                                    },
+                                                },
+                                            ] }
+                                            width={ "100%" }
+                                            height={ "100%" }
                                         />
+                                    </div>
+                                    <div className="flex justify-center items-center gap-3">
+                                        <div className="w-[10px] h-[10px] rounded-full bg-[#0BA5EC]"></div>
+                                        Instart
+                                        <div className="w-[10px] h-[10px] rounded-full bg-[yellow]"></div>
+                                        Instop
                                     </div>
                                     <div className="flex flex-col mt-5">
                                         <span className="text-[10px] text-[#514E4E] font-medium">
                                             NG Cause
                                         </span>
-                                        {optionManualManualNgOn ? (
+                                        { shipmodeManualNgOn ? (
                                             <div className="border-[1px] rounded-xl flex flex-col justify-between p-2">
                                                 <span className="text-[10px] text-[#514E4E] font-medium">
                                                     NG Cause
                                                 </span>
                                                 <span className="text-[10px] text-[#858383] font-medium">
-                                                    {line1ShipmodeTopManualNg?.[0]
-                                                        ?.description || "-"}
+                                                    { line1ShipmodeTopManualNg?.[0]
+                                                        ?.description || "-" }
                                                 </span>
                                             </div>
                                         ) : (
                                             <div className="border-[1px] rounded-xl flex justify-between">
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1 border-r">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1ShipmodeTopNgCause?.model ||
-                                                            "-"}
+                                                        { line1ShipmodeTopNgCause?.model ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         Model Name
@@ -919,18 +955,18 @@ export const Line1 = () => {
                                                 </div>
                                                 <div className="flex flex-col justify-center items-center py-2 flex-1">
                                                     <span className="text-xs font-bold text-[#12B76A]">
-                                                        {line1ShipmodeTopNgCause?.ng_cause ||
-                                                            "-"}
+                                                        { line1ShipmodeTopNgCause?.ng_cause ||
+                                                            "-" }
                                                     </span>
                                                     <span className="text-[10px] text-[#858383] font-medium">
                                                         NG Summary
                                                     </span>
                                                 </div>
                                             </div>
-                                        )}
+                                        ) }
                                         <div className="flex justify-end pt-2">
                                             <NavLink
-                                                to={`shipmode`}
+                                                to={ `shipmode` }
                                                 className="flex items-center gap-1 text-[#4E5BA6] text-xs font-medium"
                                             >
                                                 <span>Details</span>

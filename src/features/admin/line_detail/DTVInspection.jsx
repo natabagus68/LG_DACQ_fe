@@ -77,7 +77,7 @@ const DtvInspectionChart = ({
         <ChartLine
             datas={data.datas}
             labels={data.labels}
-            height="100%"
+            height={'100%'}
             width="100%"
             ref={chartRef}
             onClick={(event) => {

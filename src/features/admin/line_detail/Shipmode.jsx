@@ -89,21 +89,21 @@ export const Shipmode = () => {
     };
     return (
         <>
-            {alert && <OpenAlert alert={alert} setAlert={setAlert} />}
+            { alert && <OpenAlert alert={ alert } setAlert={ setAlert } /> }
             <div className="relative h-full p-6 flex font-inter flex-col gap-4 bg-white">
                 <div className="text-[#A9A8A8] flex items-center justify-between mb-3">
                     <div className="flex items-center gap-1">
                         <HomeIcon width="12px" height="13px" />
                         <span className="text-sm">/</span>
                         <Link
-                            to={`${config.pathPrefix}dashboard`}
+                            to={ `${config.pathPrefix}dashboard` }
                             className="font-semibold text-sm"
                         >
                             Dashboard
                         </Link>
                         <span className="text-sm">/</span>
                         <Link
-                            to={`${config.pathPrefix}lines/line-1`}
+                            to={ `${config.pathPrefix}lines/line-1` }
                             className="font-semibold text-sm"
                         >
                             Line 1
@@ -118,16 +118,16 @@ export const Shipmode = () => {
                     <div className="flex gap-2 mb-3">
                         <form
                             className="flex gap-2 flex-1"
-                            onSubmit={submitSync}
+                            onSubmit={ submitSync }
                         >
-                            {/* <Input type="date" /> */}
+                            {/* <Input type="date" /> */ }
                             <Input
                                 type="text"
                                 placeholder="Shipmode file directory"
                                 required
-                                value={syncForm.path}
-                                className={`w-full`}
-                                onChange={(e) =>
+                                value={ syncForm.path }
+                                className={ `w-full` }
+                                onChange={ (e) =>
                                     setSyncForm((old) => ({
                                         ...old,
                                         base_path: e.target.value,
@@ -148,64 +148,60 @@ export const Shipmode = () => {
                                 </span>
                                 <div className="flex items-center gap-2">
                                     <div
-                                        onClick={() =>
+                                        onClick={ () =>
                                             setSearchParams((params) => ({
                                                 frequent: "hourly",
                                             }))
                                         }
-                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            searchParams.frequent == "hourly"
-                                                ? "text-black border-[1px]"
-                                                : "text-[#858383]"
-                                        }`}
+                                        className={ `flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${searchParams.frequent == "hourly"
+                                            ? "text-black border-[1px]"
+                                            : "text-[#858383]"
+                                            }` }
                                     >
                                         <span className="text-[11px] font-semibold">
                                             Hourly
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() =>
+                                        onClick={ () =>
                                             setSearchParams((params) => ({
                                                 frequent: "daily",
                                             }))
                                         }
-                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            searchParams.frequent == "daily"
-                                                ? "text-black border-[1px]"
-                                                : "text-[#858383]"
-                                        }`}
+                                        className={ `flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${searchParams.frequent == "daily"
+                                            ? "text-black border-[1px]"
+                                            : "text-[#858383]"
+                                            }` }
                                     >
                                         <span className="text-[11px] font-semibold">
                                             Daily
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() =>
+                                        onClick={ () =>
                                             setSearchParams((params) => ({
                                                 frequent: "monthly",
                                             }))
                                         }
-                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            searchParams.frequent == "monthly"
-                                                ? "text-black border-[1px]"
-                                                : "text-[#858383]"
-                                        }`}
+                                        className={ `flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${searchParams.frequent == "monthly"
+                                            ? "text-black border-[1px]"
+                                            : "text-[#858383]"
+                                            }` }
                                     >
                                         <span className="text-[11px] font-semibold">
                                             Monthly
                                         </span>
                                     </div>
                                     <div
-                                        onClick={() =>
+                                        onClick={ () =>
                                             setSearchParams((params) => ({
                                                 frequent: "annually",
                                             }))
                                         }
-                                        className={`flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${
-                                            searchParams.frequent == "annually"
-                                                ? "text-black border-[1px]"
-                                                : "text-[#858383]"
-                                        }`}
+                                        className={ `flex gap-1 items-center cursor-pointer w-[79px] h-[30px] justify-center rounded-sm ${searchParams.frequent == "annually"
+                                            ? "text-black border-[1px]"
+                                            : "text-[#858383]"
+                                            }` }
                                     >
                                         <span className="text-[11px] font-semibold">
                                             Annual
@@ -216,42 +212,38 @@ export const Shipmode = () => {
                                     <div className="flex items-center gap-2 text-[#2E3032] text-sm">
                                         <span>NG Rate</span>
                                         <Switch
-                                            as={`div`}
-                                            checked={ppmOn}
-                                            onChange={setPpmOn}
-                                            className={`${
-                                                ppmOn
-                                                    ? "bg-blue-600"
-                                                    : "bg-gray-200"
-                                            } cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full`}
+                                            as={ `div` }
+                                            checked={ ppmOn }
+                                            onChange={ setPpmOn }
+                                            className={ `${ppmOn
+                                                ? "bg-blue-600"
+                                                : "bg-gray-200"
+                                                } cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full` }
                                         >
                                             <span className="sr-only">
                                                 Enable notifications
                                             </span>
                                             <span
-                                                className={`${
-                                                    ppmOn
-                                                        ? "translate-x-6"
-                                                        : "translate-x-1"
-                                                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                                                className={ `${ppmOn
+                                                    ? "translate-x-6"
+                                                    : "translate-x-1"
+                                                    } inline-block h-4 w-4 transform rounded-full bg-white transition` }
                                             />
                                         </Switch>
                                         <span>PPM</span>
                                     </div>
                                     <div className="rounded border px-2 py-1 min-w-[98px] flex justify-center items-center">
                                         <div className="text-xl font-semibold">
-                                            {ngRate}
+                                            { (((line1ShipmodeCount?.instop_ng - line1ShipmodeCount?.instart_skip) / (line1ShipmodeCount?.instop_ng + line1ShipmodeCount?.instop_ok + line1ShipmodeCount?.instop_skip) * 100) * (ppmOn ? 10000 : 1)).toFixed(3) }
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="w-full h-full">
                                 <ShipmodeChart
-                                    ppmOn={ppmOn}
-                                    searchParams={searchParams}
-                                    setSearchParams={setSearchParams}
-                                    ngRate={ngRate}
-                                    setNgRate={setNgRate}
+                                    ppmOn={ ppmOn }
+                                    searchParams={ searchParams }
+                                    setSearchParams={ setSearchParams }
                                 />
                             </div>
                         </div>
@@ -260,93 +252,93 @@ export const Shipmode = () => {
                 <div className="grid grid-cols-5 gap-4">
                     <div className="col-span-3 flex gap-4 flex-col">
                         <div className="grid grid-cols-2 gap-4">
-                            <Card className={`py-[21px] px-[10px] flex`}>
+                            <Card className={ `py-[21px] px-[10px] flex` }>
                                 <div className="text-xl font-bold mx-auto mb-2">
                                     InStart
                                 </div>
                                 <div className="flex gap-2 justify-around">
                                     <Link
-                                        to={`log?judgement=ok&process=Instart&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                                        to={ `log?judgement=ok&process=Instart&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}` }
                                     >
                                         <div className="flex flex-col items-center cursor-pointer transition p-4 hover:shadow hover:-translate-y-1">
                                             <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm px-3">
                                                 Quantity OK
                                             </span>
                                             <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                                {line1ShipmodeCount?.instart_ok ||
-                                                    0}
+                                                { line1ShipmodeCount?.instart_ok ||
+                                                    0 }
                                             </span>
                                         </div>
                                     </Link>
                                     <Link
-                                        to={`log?judgement=ng&process=Instart&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                                        to={ `log?judgement=ng&process=Instart&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}` }
                                     >
                                         <div className="flex flex-col items-center cursor-pointer transition p-4 hover:shadow hover:-translate-y-1">
                                             <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm px-3">
                                                 Quantity NG
                                             </span>
                                             <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                                {line1ShipmodeCount?.instart_ng ||
-                                                    0}
+                                                { line1ShipmodeCount?.instart_ng ||
+                                                    0 }
                                             </span>
                                         </div>
                                     </Link>
                                     <Link
-                                        to={`log?judgement=skip&process=Instart&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                                        to={ `log?judgement=skip&process=Instart&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}` }
                                     >
                                         <div className="flex flex-col items-center cursor-pointer transition p-4 hover:shadow hover:-translate-y-1">
                                             <span className="bg-gray-100 h-[32px] rounded-xl flex items-center justify-center text-gray-600 text-sm px-3">
                                                 Quantity SKIP
                                             </span>
                                             <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                                {line1ShipmodeCount?.instart_skip ||
-                                                    0}
+                                                { line1ShipmodeCount?.instart_skip ||
+                                                    0 }
                                             </span>
                                         </div>
                                     </Link>
                                 </div>
                             </Card>
-                            <Card className={`py-[21px] px-[10px] flex`}>
+                            <Card className={ `py-[21px] px-[10px] flex` }>
                                 <div className="text-xl font-bold mx-auto mb-2">
                                     InStop
                                 </div>
                                 <div className="flex gap-2 justify-around">
                                     <Link
-                                        to={`log?judgement=ok&process=Instop&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                                        to={ `log?judgement=ok&process=Instop&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}` }
                                     >
                                         <div className="flex flex-col items-center cursor-pointer transition p-4 hover:shadow hover:-translate-y-1">
                                             <span className="bg-[#B6E9D1] h-[32px] rounded-xl flex items-center justify-center text-[#084D2D] text-sm px-3">
                                                 Quantity OK
                                             </span>
                                             <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                                {line1ShipmodeCount?.instop_ok ||
-                                                    0}
+                                                { line1ShipmodeCount?.instop_ok ||
+                                                    0 }
                                             </span>
                                         </div>
                                     </Link>
                                     <Link
-                                        to={`log?judgement=ng&process=Instop&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                                        to={ `log?judgement=ng&process=Instop&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}` }
                                     >
                                         <div className="flex flex-col items-center cursor-pointer transition p-4 hover:shadow hover:-translate-y-1">
                                             <span className="bg-[#FAC5C1] h-[32px] rounded-xl flex items-center justify-center text-[#DE1B1B] text-sm px-3">
                                                 Quantity NG
                                             </span>
                                             <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                                {line1ShipmodeCount?.instop_ng ||
-                                                    0}
+                                                { line1ShipmodeCount?.instop_ng ||
+                                                    0 }
                                             </span>
                                         </div>
                                     </Link>
                                     <Link
-                                        to={`log?judgement=skip&process=Instop&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}`}
+                                        to={ `log?judgement=skip&process=Instop&frequent=${searchParams.frequent}&start_date=${searchParams.from_date}&end_date=${searchParams.to_date}` }
                                     >
                                         <div className="flex flex-col items-center cursor-pointer transition p-4 hover:shadow hover:-translate-y-1">
                                             <span className="bg-gray-100 h-[32px] rounded-xl flex items-center justify-center text-gray-600 text-sm px-3">
                                                 Quantity SKIP
                                             </span>
                                             <span className="text-[#2D2A2A] m-auto text-[40px] font-bold">
-                                                {line1ShipmodeCount?.instop_skip ||
-                                                    0}
+                                                { line1ShipmodeCount?.instop_skip ||
+                                                    0 }
                                             </span>
                                         </div>
                                     </Link>
@@ -357,7 +349,7 @@ export const Shipmode = () => {
                             <div className="flex justify-between pb-1 items-center">
                                 <span className="font-bold text-lg">Log</span>
                                 <Link
-                                    to={"log"}
+                                    to={ "log" }
                                     className="flex gap-1 items-center px-3 py-2 bg-[#229BD8] text-white rounded-md"
                                 >
                                     <span className="text-[11px] font-semibold">
@@ -367,62 +359,61 @@ export const Shipmode = () => {
                                 </Link>
                             </div>
                             <Table>
-                                <Table.Thead className={`bg-[#D0D3D9]`}>
+                                <Table.Thead className={ `bg-[#D0D3D9]` }>
                                     <Table.Tr>
                                         <Table.Th
                                             className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
+                                            order={ false }
                                         >
                                             Model
                                         </Table.Th>
                                         <Table.Th
                                             className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
+                                            order={ false }
                                         >
                                             Serial Number
                                         </Table.Th>
                                         <Table.Th
                                             className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
+                                            order={ false }
                                         >
                                             Judgement
                                         </Table.Th>
                                         <Table.Th
                                             className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
-                                            order={false}
+                                            order={ false }
                                         >
                                             NG Cause
                                         </Table.Th>
                                     </Table.Tr>
                                 </Table.Thead>
                                 <tbody>
-                                    {line1ShipmodeTopTenLogs.map((item, i) => (
+                                    { line1ShipmodeTopTenLogs.map((item, i) => (
                                         <Table.Tr
-                                            key={i}
-                                            className={`even:bg-[#F0F1F3]`}
+                                            key={ i }
+                                            className={ `even:bg-[#F0F1F3]` }
                                         >
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.model || "-"}
+                                                { item.model || "-" }
                                             </Table.Td>
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.sn || "-"}
+                                                { item.sn || "-" }
                                             </Table.Td>
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
                                                 <span
-                                                    className={`px-3 py-1 rounded-full text-xs ${
-                                                        item.ok
-                                                            ? "bg-[#B6E9D1] text-[#084D2D]"
-                                                            : "bg-[#FAC5C1] text-[#F04438]"
-                                                    }`}
+                                                    className={ `px-3 py-1 rounded-full text-xs ${item.ok
+                                                        ? "bg-[#B6E9D1] text-[#084D2D]"
+                                                        : "bg-[#FAC5C1] text-[#F04438]"
+                                                        }` }
                                                 >
-                                                    {item.ok ? "OK" : "NO"}
+                                                    { item.ok ? "OK" : "NO" }
                                                 </span>
                                             </Table.Td>
                                             <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
-                                                {item.ng_cause || "-"}
+                                                { item.ng_cause || "-" }
                                             </Table.Td>
                                         </Table.Tr>
-                                    ))}
+                                    )) }
                                 </tbody>
                             </Table>
                         </div>
@@ -430,38 +421,36 @@ export const Shipmode = () => {
                     <div className="col-span-2 flex flex-col gap-4 px-6 py-7 border rounded-xl">
                         <div className="flex justify-between items-center pb-1">
                             <span className="font-bold text-lg">
-                                {manualNgOn
+                                { manualNgOn
                                     ? "Manual NG Cause"
-                                    : "Trending NG Cause"}
+                                    : "Trending NG Cause" }
                             </span>
                             <div className="flex gap-4">
                                 <div className="flex items-center gap-2 text-[#2E3032] text-sm">
                                     <Switch
-                                        as={`div`}
-                                        checked={manualNgOn}
-                                        onChange={setManualNgOn}
-                                        className={`${
-                                            manualNgOn
-                                                ? "bg-blue-600"
-                                                : "bg-gray-200"
-                                        } cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full`}
+                                        as={ `div` }
+                                        checked={ manualNgOn }
+                                        onChange={ setManualNgOn }
+                                        className={ `${manualNgOn
+                                            ? "bg-blue-600"
+                                            : "bg-gray-200"
+                                            } cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full` }
                                     >
                                         <span className="sr-only">
                                             Enable notifications
                                         </span>
                                         <span
-                                            className={`${
-                                                manualNgOn
-                                                    ? "translate-x-6"
-                                                    : "translate-x-1"
-                                            } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                                            className={ `${manualNgOn
+                                                ? "translate-x-6"
+                                                : "translate-x-1"
+                                                } inline-block h-4 w-4 transform rounded-full bg-white transition` }
                                         />
                                     </Switch>
                                     <span>Inactive</span>
                                 </div>
                                 <button
-                                    disabled={!manualNgOn}
-                                    onClick={() =>
+                                    disabled={ !manualNgOn }
+                                    onClick={ () =>
                                         setAlert({
                                             bool: true,
                                             comp: "addData",
@@ -477,33 +466,33 @@ export const Shipmode = () => {
                             </div>
                         </div>
                         <div className="flex">
-                            {manualNgOn ? (
+                            { manualNgOn ? (
                                 <TopManualNgTable
-                                    searchParams={searchParams}
-                                    setSearchParams={setSearchParams}
+                                    searchParams={ searchParams }
+                                    setSearchParams={ setSearchParams }
                                 />
                             ) : (
                                 <TopAutoNgTable
-                                    searchParams={searchParams}
-                                    setSearchParams={setSearchParams}
+                                    searchParams={ searchParams }
+                                    setSearchParams={ setSearchParams }
                                 />
-                            )}
+                            ) }
                         </div>
                     </div>
                 </div>
             </div>
-            {syncMutationLoading && (
+            { syncMutationLoading && (
                 <>
                     <div className="flex justify-center items-center w-screen h-screen fixed top-0 left-0 bg-white/50 z-50">
                         <SyncIcon
-                            width={120}
-                            height={120}
+                            width={ 120 }
+                            height={ 120 }
                             fill="black"
-                            className={`animate-spin`}
+                            className={ `animate-spin` }
                         />
                     </div>
                 </>
-            )}
+            ) }
         </>
     );
 };
@@ -512,8 +501,6 @@ const ShipmodeChart = ({
     searchParams,
     setSearchParams,
     ppmOn,
-    ngRate,
-    setNgRate,
 }) => {
     const interval = useSelector((state) => state.setting.interval);
     const chartRef = useRef();
@@ -531,27 +518,47 @@ const ShipmodeChart = ({
             ),
         };
     }, [line1ShipmodeProcessChart, ppmOn]);
+    const {
+        data: line1ShipmodeProcessChartInstop = [],
+        isLoading: line1ShipmodeProcessChartInstopLoading,
+    } = useGetLine1ShipmodeProcessChartQuery(`${searchParams.frequent}-instop`, {
+        pollingInterval: interval,
+    });
+    const dataInstop = useMemo(() => {
+        return {
+            labels: line1ShipmodeProcessChartInstop.map((item) => item?.x || "-"),
+            datas: line1ShipmodeProcessChartInstop.map(
+                (item) => (item?.y || 0) * (ppmOn ? 10000 : 1)
+            ),
+        };
+    }, [line1ShipmodeProcessChartInstop, ppmOn]);
     const dispatch = useDispatch();
     const [selectedChart, setSelectedChart] = useState(false);
-    useEffect(() => {
-        setNgRate(
-            parseFloat(
-                data?.datas[
-                    selectedChart == false
-                        ? data?.datas?.length - 1
-                        : selectedChart
-                ]
-            ).toFixed(2)
-        );
-    }, [data, selectedChart]);
     return (
         <ChartLine
-            datas={data.datas}
-            labels={data.labels}
-            height="100%"
+            datas={ data.datas }
+            datasets={ [
+                {
+                    label: "Data",
+                    data: dataInstop.datas,
+                    datasetStrokeWidth: 6,
+                    pointDotStrokeWidth: 8,
+                    backgroundColor: "yellow",
+                    borderColor: "yellow",
+                    tension: 0.5,
+                    pointRadius: 4,
+                    borderWidth: 1,
+                    fill: {
+                        target: "origin",
+                        above: "#ffff006b",
+                    },
+                },
+            ] }
+            labels={ data.labels }
+            height={ '100%' }
             width="100%"
-            ref={chartRef}
-            onClick={(event) => {
+            ref={ chartRef }
+            onClick={ (event) => {
                 const [lineEl] = getElementAtEvent(chartRef.current, event);
                 setSelectedChart(lineEl.index);
                 if (lineEl) {
@@ -621,7 +628,7 @@ const ShipmodeChart = ({
                         to_date: to_date.format(),
                     }));
                 }
-            }}
+            } }
         />
     );
 };
@@ -654,17 +661,17 @@ const CompExcel = ({ setAlert }) => {
             </div>
             <div className="flex flex-col gap-2 ">
                 <div className="flex gap-2">
-                    <input type={"radio"} name="date" checked />
+                    <input type={ "radio" } name="date" checked />
                     <span className="text-xs">Latest</span>
                 </div>
                 <div className="flex gap-2">
-                    <input type={"radio"} name="date" />
+                    <input type={ "radio" } name="date" />
                     <span className="text-xs">Custom</span>
                 </div>
             </div>
             <div className="flex flex-col">
                 <input
-                    type={"date"}
+                    type={ "date" }
                     className="flex-1 border-[1px] p-2 rounded-sm outline-none text-[#DADBDB]"
                 />
             </div>
@@ -685,7 +692,7 @@ const CompExcel = ({ setAlert }) => {
             </div>
             <div className="flex gap-2">
                 <div
-                    onClick={() => setAlert(false)}
+                    onClick={ () => setAlert(false) }
                     className="h-[44px] cursor-pointer flex-1 text-[16px] font-medium border-[1px] flex items-center justify-center rounded-md"
                 >
                     Cancel
@@ -716,7 +723,7 @@ const CompAddData = ({ setAlert }) => {
         line1ShipmodeUpdateManualNg(description);
     };
     return (
-        <form onSubmit={line1ShipmodeSubmitManualNg}>
+        <form onSubmit={ line1ShipmodeSubmitManualNg }>
             <div className="w-[432px] flex flex-col gap-2">
                 <div className="flex gap-4 items-center">
                     <NgCauseIcon />
@@ -727,13 +734,13 @@ const CompAddData = ({ setAlert }) => {
                 <span className="font-medium text-[16px]">Description</span>
                 <div className="flex flex-col">
                     <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        value={ description }
+                        onChange={ (e) => setDescription(e.target.value) }
                         className="outline-none border rounded-xl h-[185px] px-4 py-3"
                     />
                     <div className="flex justify-end">
                         <span className="text-[12px]">
-                            {description.length}/500
+                            { description.length }/500
                         </span>
                     </div>
                 </div>
@@ -741,7 +748,7 @@ const CompAddData = ({ setAlert }) => {
                     <button
                         type="button"
                         role="button"
-                        onClick={() => setAlert(false)}
+                        onClick={ () => setAlert(false) }
                         className="h-[44px] cursor-pointer flex-1 text-[16px] font-medium border-[1px] flex items-center justify-center rounded-md"
                     >
                         Cancel
@@ -768,20 +775,20 @@ export const CompImage = ({ setAlert }) => {
     return (
         <div className="w-[432px] flex flex-col gap-2 items-end">
             <HiX
-                onClick={() => setAlert(false)}
+                onClick={ () => setAlert(false) }
                 className="cursor-pointer text-[24px]"
             />
-            <img src={`${config.assetUrl}${selectedLogImage}`} alt="" />
+            <img src={ `${config.assetUrl}${selectedLogImage}` } alt="" />
         </div>
     );
 };
 
 export const OpenAlert = ({ alert, setAlert }) => {
     return (
-        <Alert action={alert.bool}>
-            {alert.comp === "excel" && <CompExcel setAlert={setAlert} />}
-            {alert.comp === "addData" && <CompAddData setAlert={setAlert} />}
-            {alert.comp === "image" && <CompImage setAlert={setAlert} />}
+        <Alert action={ alert.bool }>
+            { alert.comp === "excel" && <CompExcel setAlert={ setAlert } /> }
+            { alert.comp === "addData" && <CompAddData setAlert={ setAlert } /> }
+            { alert.comp === "image" && <CompImage setAlert={ setAlert } /> }
         </Alert>
     );
 };
@@ -799,44 +806,44 @@ const TopAutoNgTable = ({ searchParams, setSearchParams }) => {
             <Table.Thead>
                 <Table.Tr>
                     <Table.Th
-                        className={`bg-[#E2F1FF] py-2 text-sm`}
-                        order={false}
+                        className={ `bg-[#E2F1FF] py-2 text-sm` }
+                        order={ false }
                     >
                         Model
                     </Table.Th>
                     <Table.Th
-                        className={`bg-[#E2F1FF] py-2 text-sm`}
-                        order={false}
+                        className={ `bg-[#E2F1FF] py-2 text-sm` }
+                        order={ false }
                     >
                         NG Cause
                     </Table.Th>
                     <Table.Th
-                        className={`bg-[#E2F1FF] py-2 text-sm`}
-                        order={false}
+                        className={ `bg-[#E2F1FF] py-2 text-sm` }
+                        order={ false }
                     >
                         Timestamp
                     </Table.Th>
                 </Table.Tr>
             </Table.Thead>
             <tbody>
-                {line1ShipmodeTop5NgCauseLoading && (
+                { line1ShipmodeTop5NgCauseLoading && (
                     <>
                         <div className="flex flex-1 bg-red-300"></div>
                     </>
-                )}
-                {line1ShipmodeTop5NgCause.map((item, i) => (
-                    <Table.Tr key={i}>
+                ) }
+                { line1ShipmodeTop5NgCause.map((item, i) => (
+                    <Table.Tr key={ i }>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">
-                            {item.model || "-"}
+                            { item.model || "-" }
                         </Table.Td>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">
-                            {item.ng_cause || "-"}
+                            { item.ng_cause || "-" }
                         </Table.Td>
                         <Table.Td className="whitespace-nowrap py-2 text-sm">
-                            {item.logged_at || "-"}
+                            { item.logged_at || "-" }
                         </Table.Td>
                     </Table.Tr>
-                ))}
+                )) }
             </tbody>
         </Table>
     );
@@ -855,12 +862,12 @@ const TopManualNgTable = () => {
     return (
         <>
             <div className="flex flex-col gap-4">
-                {topManualNg.map((item, i) => (
-                    <div key={i} className="flex items-center gap-2">
+                { topManualNg.map((item, i) => (
+                    <div key={ i } className="flex items-center gap-2">
                         <ManualNgIcon />
-                        <span>{item.description}</span>
+                        <span>{ item.description }</span>
                     </div>
-                ))}
+                )) }
             </div>
         </>
     );

@@ -88,7 +88,7 @@ export const optionAutoService = apiSlice.injectEndpoints({
         }),
         line1OptionAutoDestroy: builder.mutation({
             query: (id) => ({
-                url: `process/line-1/asis/auto-ng-cause/${id}`,
+                url: `process/line-1/option-auto/auto-ng-cause/${id}`,
                 method: "delete",
             }),
             invalidatesTags: ["Line 1 Option Auto Logs"],

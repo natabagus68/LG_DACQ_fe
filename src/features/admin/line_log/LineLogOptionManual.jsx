@@ -1,39 +1,29 @@
 import React, { useState } from "react";
-import { HomeIcon, SearchIcon } from "../../../common/components/icons";
-import { Link, NavLink, useSearchParams } from "react-router-dom";
+import { FilterIcon, HomeIcon, SearchIcon } from "../../../common/components/icons";
+import { Link, useSearchParams } from "react-router-dom";
 import { HiOutlineArrowCircleDown } from "react-icons/hi";
 import { Table } from "../../../common/components/table/Table";
 import { useLine1OptionManualLogsQuery } from "../../../app/services/optionManualService";
 import { OpenAlert } from "../line_detail/OptionManual";
-import { useDispatch } from "react-redux";
 import moment from "moment";
 import { config } from "../../../common/utils";
 import { useEffect } from "react";
 
-export const Line1OptionManualLogTable = ({
-    perPage: _perPage,
-    q: _q,
-    page: _page,
-    alert: _alert,
-}) => {
-    const [perPage, setPerpage] = _perPage;
-    const [page, setPage] = _page;
-    const [q, setQ] = _q;
-    const [alert, setAlert] = _alert;
-    const dispatch = useDispatch();
-    const {
-        data: line1OptionManualLogs,
-        isLoading: line1OptionManualLogsLoading,
-    } = useLine1OptionManualLogsQuery({
-        page: page || 1,
-        q: q || "",
-        per_page: perPage || 10,
+export const Line1OptionManualLogTable = ({ alert: _alert }) => {
+    const [queryParam, setQueryParam] = useSearchParams();
+    const [qParams, setQParams] = useState({
+        page: queryParam.get("page") || 1,
+        q: queryParam.get("q") || "",
+        per_page: queryParam.get("per_page") || 10,
+        judgement: queryParam.get("judgement") || "",
+        start_date: queryParam.get("start_date") || "",
+        end_date: queryParam.get("end_date") || "",
     });
-
-    const viewImage = (e, image) => {
-        e.preventDefault();
-        setAlert({ comp: "image", bool: true });
-    };
+    const { data: line1OptionManualLogs, isLoading: line1OptionManualLogsLoading } =
+        useLine1OptionManualLogsQuery(qParams);
+    useEffect(() => {
+        setQueryParam(qParams, { replace: true });
+    }, [qParams]);
     return (
         <>
             <div className="py-[18px] px-[24px] flex justify-between items-center">
@@ -41,8 +31,13 @@ export const Line1OptionManualLogTable = ({
                     <span>Show</span>
                     <select
                         className="px-2 py-1 bg-white border rounded-lg"
-                        value={perPage}
-                        onChange={(e) => setPerpage(e.target.value)}
+                        value={qParams.per_page}
+                        onChange={(e) =>
+                            setQParams((queryParam) => ({
+                                ...queryParam,
+                                per_page: e.target.value,
+                            }))
+                        }
                     >
                         <option value="10">10</option>
                         <option value="25">25</option>
@@ -51,15 +46,70 @@ export const Line1OptionManualLogTable = ({
                     </select>
                     <span>Entries</span>
                 </div>
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center shadow-md h-[40px] rounded-[5px] gap-[10px] px-[18px]">
-                        Search for Models & Serial number
+                <div className="relative flex gap-2 items-center rounded-lg overflow-hidden border py-3">
+                    <div className="absolute top-0 h-full flex justify-center items-center p-3">
+                        <FilterIcon
+                            width={20}
+                            height={20}
+                            fill={`#A9A8A8`}
+                            className={``}
+                        />
                     </div>
+                    <select
+                        className="pl-10 pr-2 py-1 bg-white rounded-lg"
+                        value={qParams.judgement}
+                        onChange={(e) =>
+                            setQParams((queryParam) => ({
+                                ...queryParam,
+                                judgement: e.target.value,
+                            }))
+                        }
+                    >
+                        <option value="" disabled>
+                            Filter Judgement
+                        </option>
+                        <option value="">All</option>
+                        <option value="ng">NG</option>
+                        <option value="ok">OK</option>
+                    </select>
+                </div>
+                <div className="flex gap-2 items-center">
+                    <span>Start</span>
+                    <input
+                        className="px-2 py-1 bg-white border rounded-lg"
+                        value={qParams.start_date}
+                        type="datetime-local"
+                        onChange={(e) =>
+                            setQParams((queryParam) => ({
+                                ...queryParam,
+                                start_date: moment(new Date(e.target.value)).utc().format('YYYY-MM-DDTHH:mm'),
+                            }))
+                        }
+                    />
+                    End
+                    <input
+                        className="px-2 py-1 bg-white border rounded-lg"
+                        value={qParams.end_date}
+                        type="datetime-local"
+                        onChange={(e) =>
+                            setQParams((queryParam) => ({
+                                ...queryParam,
+                                end_date: moment(new Date(e.target.value)).utc().format('YYYY-MM-DDTHH:mm'),
+                            }))
+                        }
+                    />
+                </div>
+                <div className="flex items-center gap-4">
                     <div className="flex items-center border-[1px] border-[#A9A8A8] h-[40px] rounded-[5px] gap-[10px] px-[18px]">
                         <SearchIcon width="14" height="14" fill="#514E4E" />
                         <input
-                            value={q}
-                            onChange={(e) => setQ(e.target.value)}
+                            value={qParams.q}
+                            onChange={(e) =>
+                                setQParams((queryParam) => ({
+                                    ...queryParam,
+                                    q: e.target.value,
+                                }))
+                            }
                             type="text"
                             className="bg-transparent outline-none w-[150px] text-[#A4A6A8] font-inter font-normal placeholder:text-[#CACBCD]"
                             placeholder="Search..."
@@ -104,11 +154,12 @@ export const Line1OptionManualLogTable = ({
                         </Table.Tr>
                     </Table.Thead>
                     <tbody>
-                        {line1OptionManualLogs?.map((item) => {
+                        {line1OptionManualLogs?.data?.map((item, i) => {
                             return (
-                                <Table.Tr className={`even:bg-[#F8F7FF]`}>
+                                <Table.Tr className={`even:bg-[#F8F7FF]`} key={i}>
                                     <Table.Td className="whitespace-nowrap py-4 ">
-                                        {item?.model_suffix || "-"}
+                                        {item?.model_suffix?.split(".")?.[0] ||
+                                            "-"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         {item?.set_id || "-"}
@@ -126,10 +177,10 @@ export const Line1OptionManualLogTable = ({
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         {item?.assy_mode == "NG"
-                                            ? "ASSY MODE"
+                                            ? `ASSY_MODE`
                                             : item?.results
                                                   ?.map((item) => item.name)
-                                                  ?.join("") || "-"}
+                                                  ?.join(" ") || "-"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         {item?.time
@@ -144,33 +195,41 @@ export const Line1OptionManualLogTable = ({
                     </tbody>
                 </Table>
                 <div className="flex justify-between items-center pt-4">
-                    {/* <span className="text-[#646566] text-base">Showing 1 to 10 of 57 entries</span> */}
-                    <div className="flex ml-auto">
+                    <div className="rounded px-4 py-2 text-semibold border">
+                        TOTAL : {line1OptionManualLogs?.total}
+                    </div>
+                    <div className="ml-auto flex">
                         <div
                             className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-l-[5px] flex items-center cursor-pointer"
                             onClick={(e) =>
-                                setPage((page) => (page > 1 ? page - 1 : 1))
+                                setQParams((qParams) => ({
+                                    ...qParams,
+                                    page:
+                                        parseInt(qParams.page || 1) > 1
+                                            ? parseInt(qParams.page || 1) - 1
+                                            : 1,
+                                }))
                             }
                         >
                             Previous
                         </div>
                         <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center bg-[#617E8C] text-white">
-                            {page}
+                            {qParams.page}
                         </div>
-                        {/* <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">2</div>
-                        <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">3</div>
-                        <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">4</div>
-                        <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">...</div>
-                        <div className="h-[38px] p-3 border-[1px] border-[#A9A8A8] flex items-center">8</div> */}
                         <div
                             className="h-[38px] p-3 border-[1px] border-[#A9A8A8] rounded-r-[5px] flex items-center cursor-pointer"
-                            onClick={(e) =>
-                                setPage((page) =>
-                                    line1OptionManualLogs.length == perPage
-                                        ? page + 1
-                                        : page
-                                )
-                            }
+                            onClick={(e) => {
+                                setQParams((qParams) => ({
+                                    ...qParams,
+                                    page:
+                                        parseInt(
+                                            line1OptionManualLogs?.data?.length ||
+                                                0
+                                        ) == qParams.per_page
+                                            ? parseInt(qParams.page || 1) + 1
+                                            : parseInt(qParams.page || 1),
+                                }));
+                            }}
                         >
                             Next
                         </div>
@@ -182,10 +241,6 @@ export const Line1OptionManualLogTable = ({
 };
 
 export const LineLogOptionManual = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const page = useState(1);
-    const q = useState("");
-    const perPage = useState(10);
     const _alert = useState();
     const [alert, setAlert] = _alert;
     return (
@@ -229,19 +284,16 @@ export const LineLogOptionManual = () => {
                                 Log
                             </span>
                             <button
-                                disabled
+                                onClick={(e) =>
+                                    setAlert({ comp: "excel", bool: true })
+                                }
                                 className="flex gap-1 text-white items-center px-[14px] py-[6px] bg-[#229BD8] h-[32px] rounded-md"
                             >
                                 <HiOutlineArrowCircleDown />
                                 <span>Download</span>
                             </button>
                         </div>
-                        <Line1OptionManualLogTable
-                            page={page}
-                            perPage={perPage}
-                            q={q}
-                            alert={_alert}
-                        />
+                        <Line1OptionManualLogTable alert={_alert} />
                     </div>
                 </div>
             </div>

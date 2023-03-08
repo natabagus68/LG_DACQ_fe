@@ -5,7 +5,7 @@ export const ProcessItem = ({
     ngRate = "",
     judgements = [],
     topModelNg = null,
-    chartData = []
+    chartData = [],
 }) => {
     return (
         <>
@@ -32,17 +32,17 @@ export const ProcessItem = ({
                             NG Rate
                         </div>
                         <ChartLine
-                                            datas={chartData.map(item => item.y)}
-                                            labels={chartData.map(item => item.x)}
-                                            width={"100%"}
-                                            height={"100%"}
-                                        />
+                            datas={chartData.map((item) => item.y)}
+                            labels={chartData.map((item) => item.x)}
+                            width={"100%"}
+                            height={"100%"}
+                        />
                     </div>
                     <div className="flex flex-wrap gap-3 justify-center">
                         {judgements.map((item, i) => (
                             <div
                                 key={i}
-                                className="flex flex-col border rounded-lg py-2 px-1 items-center text-[10px]"
+                                className="flex flex-col min-w-[60px] border rounded-lg py-2 px-1 items-center text-[10px]"
                             >
                                 <span className="text-[#858383]">
                                     {item.name}

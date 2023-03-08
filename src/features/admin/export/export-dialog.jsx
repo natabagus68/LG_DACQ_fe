@@ -7,7 +7,7 @@ import { config } from "../../../common/utils";
 export const ExportDialog = forwardRef((props, ref) => {
     const [exportDialogIsShow, setExportDialogIsShow] = useState(false);
     const [exportParams, _setExportParams] = useState({
-        time_frequent: "hourly",
+        frequent: "hourly",
         start_date: null,
         end_date: null,
     });
@@ -68,10 +68,10 @@ export const ExportDialog = forwardRef((props, ref) => {
                         <div className="grid grid-cols-4 flex-1 gap-2">
                             <div
                                 onClick={(e) =>
-                                    setExportParams("time_frequent", "hourly")
+                                    setExportParams("frequent", "hourly")
                                 }
                                 className={`rounded border px-3 py-3 text-center hover:shadow hover:border-blue-400 cursor-pointer ${
-                                    exportParams.time_frequent == "hourly"
+                                    exportParams.frequent == "hourly"
                                         ? "border-[#229BD8] font-semibold"
                                         : ""
                                 }`}
@@ -80,10 +80,10 @@ export const ExportDialog = forwardRef((props, ref) => {
                             </div>
                             <div
                                 onClick={(e) =>
-                                    setExportParams("time_frequent", "daily")
+                                    setExportParams("frequent", "daily")
                                 }
                                 className={`rounded border px-3 py-3 text-center hover:shadow hover:border-blue-400 cursor-pointer ${
-                                    exportParams.time_frequent == "daily"
+                                    exportParams.frequent == "daily"
                                         ? "border-[#229BD8] font-semibold"
                                         : ""
                                 }`}
@@ -92,10 +92,10 @@ export const ExportDialog = forwardRef((props, ref) => {
                             </div>
                             <div
                                 onClick={(e) =>
-                                    setExportParams("time_frequent", "monthly")
+                                    setExportParams("frequent", "monthly")
                                 }
                                 className={`rounded border px-3 py-3 text-center hover:shadow hover:border-blue-400 cursor-pointer ${
-                                    exportParams.time_frequent == "monthly"
+                                    exportParams.frequent == "monthly"
                                         ? "border-[#229BD8] font-semibold"
                                         : ""
                                 }`}
@@ -104,10 +104,10 @@ export const ExportDialog = forwardRef((props, ref) => {
                             </div>
                             <div
                                 onClick={(e) =>
-                                    setExportParams("time_frequent", "annualy")
+                                    setExportParams("frequent", "annualy")
                                 }
                                 className={`rounded border px-3 py-3 text-center hover:shadow hover:border-blue-400 cursor-pointer ${
-                                    exportParams.time_frequent == "annualy"
+                                    exportParams.frequent == "annualy"
                                         ? "border-[#229BD8] font-semibold"
                                         : ""
                                 }`}

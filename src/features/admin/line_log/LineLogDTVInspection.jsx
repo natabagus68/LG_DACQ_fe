@@ -25,8 +25,8 @@ export const Line1DtvInspectionLogTable = ({ alert: _alert }) => {
         q: queryParam.get("q") || "",
         per_page: queryParam.get("per_page") || 10,
         judgement: queryParam.get("judgement") || "",
-        start_date: moment(queryParam.get("start_date") || null).format('YYYY-MM-DDTHH:mm'),
-        end_date: moment(queryParam.get("end_date") || null).format('YYYY-MM-DDTHH:mm'),
+        start_date: queryParam.get("start_date") !== 'undefined' ? moment(queryParam.get("start_date")).format('YYYY-MM-DDTHH:mm') : '',
+        end_date: queryParam.get("end_date") !== 'undefined' ? moment(queryParam.get("end_date")).format('YYYY-MM-DDTHH:mm') : '',
     });
     const {
         data: line1DtvInspectionLogs,
@@ -36,8 +36,8 @@ export const Line1DtvInspectionLogTable = ({ alert: _alert }) => {
         q: qParams.q,
         per_page: qParams.per_page,
         judgement: qParams.judgement,
-        start_date: moment(qParams.start_date).utc().format(),
-        end_date: moment(qParams.end_date).utc().format(),
+        start_date: qParams.start_date !== '' ? moment(qParams.start_date).utc().format() : '',
+        end_date: qParams.end_date !== '' ? moment(qParams.end_date).utc().format() : '',
     });
     useEffect(() => {
         setQueryParam(qParams, { replace: true });

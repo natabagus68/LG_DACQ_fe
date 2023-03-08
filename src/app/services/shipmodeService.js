@@ -15,8 +15,8 @@ export const shipmodeService = apiSlice.injectEndpoints({
             transformResponse: (res) => res?.data || [],
         }),
         getLine1ShipmodeChartLastWeek: builder.query({
-            query: () => ({
-                url: "process/line-1/shipmode/chart?frequent=weekly",
+            query: (frequent) => ({
+                url: `process/line-1/shipmode/chart?frequent=${frequent}`,
             }),
             transformResponse: (res) => res?.data || [],
         }),

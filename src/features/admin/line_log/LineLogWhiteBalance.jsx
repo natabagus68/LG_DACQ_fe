@@ -228,6 +228,12 @@ export const Line1WhiteBalanceLogTable = ({ alert: _alert }) => {
                                 className="py-4 bg-[#E2F1FF]"
                                 order={false}
                             >
+                                MODEL FILE
+                            </Table.Th>
+                            <Table.Th
+                                className="py-4 bg-[#E2F1FF]"
+                                order={false}
+                            >
                                 TIMESTAMP
                             </Table.Th>
                         </Table.Tr>
@@ -297,6 +303,9 @@ export const Line1WhiteBalanceLogTable = ({ alert: _alert }) => {
                                         >
                                             {item?.judgement == 'OK' ? "OK" : "NG"}
                                         </span>
+                                    </Table.Td>
+                                    <Table.Td className="whitespace-nowrap py-4 ">
+                                        {item?.model_file || "~"}
                                     </Table.Td>
                                     <Table.Td className="whitespace-nowrap py-4 ">
                                         {item?.logged_at

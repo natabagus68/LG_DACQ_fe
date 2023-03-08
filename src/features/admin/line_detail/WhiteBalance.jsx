@@ -33,6 +33,8 @@ import { config } from "../../../common/utils";
 import { Input } from "../../../common/components/input/Input";
 import SyncIcon from "../../../common/components/icons/SyncIcon";
 import { useRef } from "react";
+import { getElementAtEvent } from "react-chartjs-2";
+import moment from "moment/moment";
 
 const WhiteBalanceChart = ({
     searchParams,
@@ -74,7 +76,7 @@ const WhiteBalanceChart = ({
         <ChartLine
             datas={data.datas}
             labels={data.labels}
-            height="100%"
+            height={'100%'}
             width="100%"
             ref={chartRef}
             onClick={(event) => {
@@ -691,6 +693,12 @@ export const WhiteBalance = () => {
                                         >
                                             NG Cause
                                         </Table.Th>
+                                        <Table.Th
+                                            className="whitespace-nowrap bg-red-[#D0D3D9] text-[#2D2A2A] text-xs"
+                                            order={false}
+                                        >
+                                            Model File
+                                        </Table.Th>
                                     </Table.Tr>
                                 </Table.Thead>
                                 <tbody>
@@ -709,16 +717,19 @@ export const WhiteBalance = () => {
                                                 <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
                                                     <span
                                                         className={`px-3 py-1 rounded-full text-xs ${
-                                                            item.ok
+                                                            item.judgement == 'OK'
                                                                 ? "bg-[#B6E9D1] text-[#084D2D]"
                                                                 : "bg-[#FAC5C1] text-[#F04438]"
                                                         }`}
                                                     >
-                                                        {item.ok ? "OK" : "NO"}
+                                                        {item.judgement}
                                                     </span>
                                                 </Table.Td>
                                                 <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
                                                     {item.ng_cause || "-"}
+                                                </Table.Td>
+                                                <Table.Td className="whitespace-nowrap py-1 border-b border-[#D0D3D9] bg-transparent">
+                                                    {item.model_file || "-"}
                                                 </Table.Td>
                                             </Table.Tr>
                                         )

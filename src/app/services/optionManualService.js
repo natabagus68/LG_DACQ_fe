@@ -26,25 +26,15 @@ export const optionManualService = apiSlice.injectEndpoints({
             }),
             transformResponse: (res) => res?.data?.[0] || {},
         }),
-        getLine1OptionManualNgCount: builder.query({
-            query: (query) => ({
-                url: `process/line-1/option-manual/manual-ng-causes/quantity-ng?${Object.keys(
+        getLine1OptionManualCount: builder.query({
+            query: (query = {}) => ({
+                url: `process/line-1/option-manual/auto-ng-causes/quantity?${Object.keys(
                     query
                 )
                     .map((item) => `${item}=${query[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data?.qtyNg || 0,
-        }),
-        getLine1OptionManualOkCount: builder.query({
-            query: (query) => ({
-                url: `process/line-1/option-manual/manual-ng-causes/quantity-ok?${Object.keys(
-                    query
-                )
-                    .map((item) => `${item}=${query[item]}`)
-                    .join("&")}`,
-            }),
-            transformResponse: (res) => res?.data?.qtyOk || 0,
+            transformResponse: (res) => res?.data || {},
         }),
         getLine1OptionManualTopTenLogs: builder.query({
             query: () => ({
@@ -53,14 +43,18 @@ export const optionManualService = apiSlice.injectEndpoints({
             transformResponse: (res) => res?.data || [],
         }),
         getLine1OptionManualTop5NgCause: builder.query({
-            query: () => ({
-                url: "process/line-1/option-manual/manual-ng-causes/top5",
+            query: (params = {}) => ({
+                url: `process/line-1/option-manual/auto-ng-causes/top5?${Object.keys(
+                    params
+                )
+                    .map((item) => `${item}=${params[item]}`)
+                    .join("&")}`,
             }),
             transformResponse: (res) => res?.data || [],
         }),
         line1OptionManualUpdateManualNg: builder.mutation({
             query: (description) => ({
-                url: "process/line-1/option-manual/ng-cause",
+                url: "process/line-1/option-manual/manual-ng-cause",
                 method: "POST",
                 body: { description },
             }),
@@ -68,20 +62,21 @@ export const optionManualService = apiSlice.injectEndpoints({
         }),
         line1OptionManualTopManualNg: builder.query({
             query: () => ({
-                url: "process/line-1/option-manual/ng-cause",
+                url: "process/line-1/option-manual/manual-ng-causes",
             }),
             providesTags: ["Line 1 OptionManual Manual Ng Cause"],
             transformResponse: (res) => res?.data || [],
         }),
         line1OptionManualLogs: builder.query({
             query: (data = []) => ({
-                url: `process/line-1/option-manual/manual-ng-causes?${Object.keys(
+                url: `process/line-1/option-manual/auto-ng-causes?${Object.keys(
                     data
                 )
                     .map((item, i) => `${item}=${data[item]}`)
                     .join("&")}`,
             }),
-            transformResponse: (res) => res?.data || [],
+            invalidatesTags: ["Line 1 Option Auto Logs"],
+            transformResponse: (res) => res?.data || { total: 0, data: [] },
         }),
         line1OptionManualSync: builder.mutation({
             query: (data) => {
@@ -91,6 +86,13 @@ export const optionManualService = apiSlice.injectEndpoints({
                 };
             },
         }),
+        line1OptionManualDestroy: builder.mutation({
+            query: (id) => ({
+                url: `process/line-1/option-manual/auto-ng-cause/${id}`,
+                method: "delete",
+            }),
+            invalidatesTags: ["Line 1 Option Auto Logs"],
+        }),
     }),
 });
 
@@ -99,12 +101,12 @@ export const {
     useGetLine1OptionManualProcessChartQuery,
     useGetLine1OptionManualChartLastWeekQuery,
     useGetLine1OptionManualTopNgCauseQuery,
-    useGetLine1OptionManualNgCountQuery,
-    useGetLine1OptionManualOkCountQuery,
+    useGetLine1OptionManualCountQuery,
     useGetLine1OptionManualTopTenLogsQuery,
     useGetLine1OptionManualTop5NgCauseQuery,
     useLine1OptionManualUpdateManualNgMutation,
     useLine1OptionManualTopManualNgQuery,
     useLine1OptionManualLogsQuery,
     useLine1OptionManualSyncMutation,
+    useLine1OptionManualDestroyMutation,
 } = optionManualService;

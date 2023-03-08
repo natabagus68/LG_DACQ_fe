@@ -8,7 +8,7 @@ export const Setting = () => {
     const dispatch = useDispatch();
     const availableOptions = [
         1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000,
-    ].map((item) => item * 60);
+    ].map((item) => item);
     return (
         <>
             <div className="flex flex-1 flex-col h-full bg-white px-7 py-7">
