@@ -30,7 +30,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     line1DtvInspectionSetManualNg,
     line1DtvInspectionSetSelectedLogImage,
-} from "./line1DtvInspectionSlice";
+} from "./line1DTVInspectionSlice";
 import { config } from "../../../common/utils";
 import { getElementAtEvent } from "react-chartjs-2";
 import moment from "moment";
@@ -77,7 +77,7 @@ const DtvInspectionChart = ({
         <ChartLine
             datas={data.datas}
             labels={data.labels}
-            height={'100%'}
+            height={"100%"}
             width="100%"
             ref={chartRef}
             onClick={(event) => {

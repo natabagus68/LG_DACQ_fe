@@ -10,7 +10,7 @@ import { Table } from "../../../common/components/table/Table";
 import { useGetLine1DtvInspectionLogsQuery } from "../../../app/services/dtvInspectionService";
 import { OpenAlert } from "../line_detail/DTVInspection";
 import { useDispatch } from "react-redux";
-import { line1DtvInspectionSetSelectedLogImage } from "../line_detail/line1DtvInspectionSlice";
+import { line1DtvInspectionSetSelectedLogImage } from "../line_detail/line1DTVInspectionSlice";
 import moment from "moment/moment";
 import { useEffect } from "react";
 import { config } from "../../../common/utils";
@@ -25,8 +25,16 @@ export const Line1DtvInspectionLogTable = ({ alert: _alert }) => {
         q: queryParam.get("q") || "",
         per_page: queryParam.get("per_page") || 10,
         judgement: queryParam.get("judgement") || "",
-        start_date: queryParam.get("start_date") !== 'undefined' ? moment(queryParam.get("start_date")).format('YYYY-MM-DDTHH:mm') : '',
-        end_date: queryParam.get("end_date") !== 'undefined' ? moment(queryParam.get("end_date")).format('YYYY-MM-DDTHH:mm') : '',
+        start_date:
+            queryParam.get("start_date") !== "undefined"
+                ? moment(queryParam.get("start_date")).format(
+                      "YYYY-MM-DDTHH:mm"
+                  )
+                : "",
+        end_date:
+            queryParam.get("end_date") !== "undefined"
+                ? moment(queryParam.get("end_date")).format("YYYY-MM-DDTHH:mm")
+                : "",
     });
     const {
         data: line1DtvInspectionLogs,
@@ -36,14 +44,22 @@ export const Line1DtvInspectionLogTable = ({ alert: _alert }) => {
         q: qParams.q,
         per_page: qParams.per_page,
         judgement: qParams.judgement,
-        start_date: qParams.start_date !== '' ? moment(qParams.start_date).utc().format() : '',
-        end_date: qParams.end_date !== '' ? moment(qParams.end_date).utc().format() : '',
+        start_date:
+            qParams.start_date !== ""
+                ? moment(qParams.start_date).utc().format()
+                : "",
+        end_date:
+            qParams.end_date !== ""
+                ? moment(qParams.end_date).utc().format()
+                : "",
     });
     useEffect(() => {
         setQueryParam(qParams, { replace: true });
     }, [qParams]);
+
     const viewImage = (e, image) => {
         e.preventDefault();
+        console.log(image);
         dispatch(line1DtvInspectionSetSelectedLogImage(image));
         setAlert({ comp: "image", bool: true });
     };
